@@ -2,16 +2,16 @@ import DarkMode from '@/components/DarkMode';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
-import { Form, redirect, useNavigate, useNavigation } from 'react-router';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { Form, useNavigate } from 'react-router';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase.client';
-import type { FirebaseError } from 'firebase-admin';
 import GoogleIcon from './GoogleIcon';
 import { useState } from 'react';
+import GAlert from '@/components/GAlert';
 
 export default function Login() {
 	const navigate = useNavigate();
-	const [error, setError] = useState<string | null>(null);
+	const [error, setError] = useState<string>('');
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	async function googleSignIn() {
@@ -30,8 +30,8 @@ export default function Login() {
 
 	return (
 		<>
-			<DarkMode />
-			<div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+			<div className="flex gap-5 min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+				<DarkMode />
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 					<img
 						alt="Your Company"
@@ -43,7 +43,11 @@ export default function Login() {
 					</GText>
 				</div>
 
-				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+				<GAlert type="error" setError={setError}>
+					{error}
+				</GAlert>
+
+				<div className="flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-sm">
 					<Form navigate={false} method="POST" className="space-y-6">
 						<GInput name="email" label="Email address" type="email" required autoComplete="email" />
 
@@ -64,7 +68,7 @@ export default function Login() {
 						</GButton>
 					</Form>
 
-					<p className="mt-10 text-center text-sm/6 text-gray-500">
+					<p className=" text-center text-sm/6 text-gray-500">
 						Not a member?{' '}
 						<a href="#" className="font-semibold text-blue-600 hover:text-blue-500">
 							Sign up
