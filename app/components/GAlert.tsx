@@ -3,10 +3,9 @@ import type { JSX, ReactNode } from 'react';
 import { CheckCircle, Info, TriangleAlert, XCircle, X } from 'lucide-react';
 
 interface AlertProps {
-	hasCloseButton?: boolean;
 	type: 'error' | 'info' | 'success' | 'warning';
 	children: ReactNode;
-	setError: (error: string) => void;
+	setError?: (error: string) => void;
 	className?: string;
 }
 
@@ -46,7 +45,6 @@ const typeElements = {
 
 export default function Alert({
 	className = '',
-	hasCloseButton = true,
 	type,
 	children,
 	setError,
@@ -64,7 +62,7 @@ export default function Alert({
 				<div className="ml-3">
 					<p className={`${typeElements[type].button} text-sm font-medium`}>{children}</p>
 				</div>
-				{hasCloseButton && (
+				{setError && (
 					<div className="ml-auto pl-3">
 						<div className="-mx-1.5 -my-1.5">
 							<button
