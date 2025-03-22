@@ -40,7 +40,7 @@ export default function DarkMode() {
 				{isDark ? (
 					<SunIcon className="size-5 text-yellow-500" aria-hidden="true" />
 				) : (
-					<MoonIcon className="size-5 text-indigo-500" aria-hidden="true" />
+					<MoonIcon className="size-5 text-blue-500" aria-hidden="true" />
 				)}
 			</span>
 		</Switch>
