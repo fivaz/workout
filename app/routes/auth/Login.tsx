@@ -2,7 +2,7 @@ import DarkMode from '@/components/DarkMode';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
-import { Form, useActionData, useNavigate } from 'react-router';
+import { Form, useActionData, useNavigate, useNavigation } from 'react-router';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import GoogleIcon from './GoogleIcon';
 import { useState } from 'react';
@@ -24,25 +24,33 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Login() {
-	const navigate = useNavigate();
-	// const [error, setError] = useState<string>('');
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-
-	async function googleSignIn() {
-		setIsLoading(true);
+	const [googleError, setGoogleError] = useState<string | null>(null);
+	const navigation = useNavigation();
+	const actionData = useActionData<typeof action>();
+	async function handleGoogleSignIn() {
 		try {
 			const provider = new GoogleAuthProvider();
-			await signInWithPopup(auth, provider);
-			navigate('/');
-		} catch (err) {
-			// setError('Failed to login. Please try again.');
-			console.error('Login error:', err);
-		} finally {
-			setIsLoading(false);
+			const result = await signInWithPopup(auth, provider);
+			const idToken = await result.user.getIdToken();
+
+			// Submit the ID token to the server action
+			const formData = new FormData();
+			formData.append('idToken', idToken);
+
+			const response = await fetch('/login', {
+				method: 'POST',
+				body: formData,
+			});
+
+			if (!response.ok) {
+				const data = await response.json();
+				throw new Error(data.error || 'Google sign-in failed');
+			}
+			// If successful, the server will redirect to /dashboard
+		} catch (error) {
+			setGoogleError(error instanceof Error ? error.message : 'Google sign-in failed');
 		}
 	}
-
-	const actionData = useActionData<typeof action>();
 
 	return (
 		<>
@@ -59,7 +67,7 @@ export default function Login() {
 					</GText>
 				</div>
 
-				<GAlert type="error">{actionData?.error}</GAlert>
+				<GAlert type="error">{actionData?.error || googleError}</GAlert>
 
 				<div className="flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-sm">
 					<Form className="space-y-6">
@@ -67,16 +75,16 @@ export default function Login() {
 
 						<GInput name="password" label="Password" type="password" required />
 
-						<GButton isLoading={isLoading} type="submit">
+						<GButton isLoading={navigation.state === 'submitting'} type="submit">
 							Sign in
 						</GButton>
 
 						<GButton
 							className="bg-white border border-gray-300"
 							color="none"
-							isLoading={isLoading}
+							isLoading={navigation.state === 'submitting'}
 							type="button"
-							onClick={googleSignIn}
+							onClick={handleGoogleSignIn}
 						>
 							<GoogleIcon />
 						</GButton>
@@ -96,18 +104,16 @@ export default function Login() {
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();
-	const email = formData.get('email') as string;
-	const password = formData.get('password') as string;
+	const idToken = formData.get('idToken') as string;
+
+	if (!idToken) {
+		return { error: 'No ID token provided', status: 400 };
+	}
 
 	try {
-		// Client-side auth to get ID token (in practice, this could be moved client-side)
-		const userCredential = await signInWithEmailAndPassword(auth, email, password);
-		const idToken = await userCredential.user.getIdToken();
-
-		// Verify token and create session
 		const decodedToken = await adminAuth.verifyIdToken(idToken);
 		const sessionCookie = await adminAuth.createSessionCookie(idToken, {
-			expiresIn: 60 * 60 * 24 * 5 * 1000,
+			expiresIn: 60 * 60 * 24 * 5 * 1000, // 5 days
 		});
 
 		const session = await getSession(request);

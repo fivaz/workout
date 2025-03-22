@@ -15,5 +15,5 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Logout() {
-	return null; // This could redirect automatically or show a logout button
+	return <a href="/login">login</a>; // This could redirect automatically or show a logout button
 }

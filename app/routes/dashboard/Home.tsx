@@ -26,6 +26,7 @@ export default function Home() {
 	return (
 		<div>
 			<h1>Welcome, {userId}</h1>
+			<a href="/logout">logout</a>
 		</div>
 	);
 }
