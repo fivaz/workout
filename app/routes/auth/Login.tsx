@@ -36,6 +36,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Login({ loaderData }: Route.ComponentProps) {
 	const { error } = loaderData;
+	const navigate = useNavigate();
 
 	const [googleError, setGoogleError] = useState<string | null>(null);
 	const navigation = useNavigation();
@@ -59,6 +60,8 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 				const data = await response.json();
 				throw new Error(data.error || 'Google sign-in failed');
 			}
+
+			navigate('/');
 			// If successful, the server will redirect to /dashboard
 		} catch (error) {
 			setGoogleError(error instanceof Error ? error.message : 'Google sign-in failed');
