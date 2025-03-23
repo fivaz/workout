@@ -3,16 +3,16 @@ import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
 import { data, Form, NavLink, redirect, useNavigate, useNavigation } from 'react-router';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import GoogleIcon from './GoogleIcon';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import GAlert from '@/components/GAlert';
 import { auth } from '@/lib/firebase.client';
 import { adminAuth } from '@/lib/firebase.server';
 import { commitSession, getSession } from '@/sessions.server';
 import type { Route } from './+types/Login';
 import { ROUTES } from '@/lib/consts';
-import { googleSignIn } from '@/routes/auth/service';
+import { getErrorMessage, googleSignIn } from '@/routes/auth/service';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const session = await getSession(request.headers.get('Cookie'));
@@ -36,15 +36,35 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 	const { error } = loaderData;
 	const navigate = useNavigate();
 
-	const [googleError, setGoogleError] = useState<string | null>(null);
+	const [clientError, setClientError] = useState<string>('');
 	const navigation = useNavigation();
+
+	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+
+		// Get form data
+		const formData = new FormData(event.currentTarget);
+		const email = formData.get('email') as string;
+		const password = formData.get('password') as string;
+
+		try {
+			// Sign in user with email and password
+			const result = await signInWithEmailAndPassword(auth, email, password);
+
+			console.log(result.user);
+			// Navigate to home page on successful login
+			// navigate('/');
+		} catch (error) {
+			setClientError(getErrorMessage(error));
+		}
+	}
 
 	async function handleGoogleSignIn() {
 		try {
 			await googleSignIn();
-			navigate('/');
+			navigate(ROUTES.HOME);
 		} catch (error) {
-			setGoogleError(error instanceof Error ? error.message : 'Google sign-in failed');
+			setClientError(getErrorMessage(error));
 		}
 	}
 
@@ -62,13 +82,26 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 					</GText>
 				</div>
 
-				<GAlert type="error">{error || googleError}</GAlert>
+				<GAlert type="error">{clientError || error}</GAlert>
 
 				<div className="flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-sm">
-					<Form className="space-y-6">
-						<GInput name="email" label="Email address" type="email" required autoComplete="email" />
+					<form className="space-y-6" onSubmit={handleSubmit}>
+						<GInput
+							name="email"
+							label="Email address"
+							type="email"
+							required
+							autoComplete="email"
+							defaultValue="test@test.com"
+						/>
 
-						<GInput name="password" label="Password" type="password" required />
+						<GInput
+							name="password"
+							label="Password"
+							type="password"
+							required
+							defaultValue="123456"
+						/>
 
 						<GButton isLoading={navigation.state === 'submitting'} type="submit">
 							Sign in
@@ -92,7 +125,7 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 						>
 							<GoogleIcon />
 						</GButton>
-					</Form>
+					</form>
 
 					<p className=" text-center text-sm/6 text-gray-500">
 						Not a member?{' '}

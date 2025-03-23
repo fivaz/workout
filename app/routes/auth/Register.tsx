@@ -33,7 +33,7 @@ export default function Register({ loaderData }: Route.ComponentProps) {
 	const { error } = loaderData;
 	const navigate = useNavigate();
 
-	const [clientError, setClientError] = useState<string | null>(null);
+	const [clientError, setClientError] = useState<string>('');
 	const navigation = useNavigation();
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -97,7 +97,13 @@ export default function Register({ loaderData }: Route.ComponentProps) {
 							defaultValue="test@test.com"
 						/>
 
-						<GInput name="password" label="Password" type="password" required defaultValue="1" />
+						<GInput
+							name="password"
+							label="Password"
+							type="password"
+							required
+							defaultValue="123456"
+						/>
 
 						<GButton isLoading={navigation.state === 'submitting'} type="submit">
 							Sign in
