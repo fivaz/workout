@@ -2,7 +2,7 @@ import DarkMode from '@/components/DarkMode';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
-import { Form, useActionData, useNavigate, useNavigation } from 'react-router';
+import { data, Form, useActionData, useNavigate, useNavigation } from 'react-router';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import GoogleIcon from './GoogleIcon';
 import { useState } from 'react';
@@ -13,20 +13,33 @@ import { redirect } from 'react-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase.client';
 import { adminAuth } from '@/lib/firebase.server';
-import { commitSession, getSession } from '@/lib/session';
+import { getSession, commitSession } from '@/sessions.server';
+import type { Route } from './+types/Login';
 
-export async function loader({ request }: LoaderFunctionArgs) {
-	const session = await getSession(request);
-	if (session.get('userId')) {
+export async function loader({ request }: Route.LoaderArgs) {
+	const session = await getSession(request.headers.get('Cookie'));
+
+	if (session.has('userId')) {
+		// Redirect to the home page if they are already signed in.
 		return redirect('/');
 	}
-	return {};
+
+	return data(
+		{ error: session.get('error') },
+		{
+			headers: {
+				'Set-Cookie': await commitSession(session),
+			},
+		},
+	);
 }
 
-export default function Login() {
+export default function Login({ loaderData }: Route.ComponentProps) {
+	const { error } = loaderData;
+
 	const [googleError, setGoogleError] = useState<string | null>(null);
 	const navigation = useNavigation();
-	const actionData = useActionData<typeof action>();
+
 	async function handleGoogleSignIn() {
 		try {
 			const provider = new GoogleAuthProvider();
@@ -67,7 +80,7 @@ export default function Login() {
 					</GText>
 				</div>
 
-				<GAlert type="error">{actionData?.error || googleError}</GAlert>
+				<GAlert type="error">{error || googleError}</GAlert>
 
 				<div className="flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-sm">
 					<Form className="space-y-6">
@@ -102,9 +115,11 @@ export default function Login() {
 	);
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-	const formData = await request.formData();
-	const idToken = formData.get('idToken') as string;
+export async function action({ request }: Route.ActionArgs) {
+	const session = await getSession(request.headers.get('Cookie'));
+
+	const form = await request.formData();
+	const idToken = form.get('idToken') as string;
 
 	if (!idToken) {
 		return { error: 'No ID token provided', status: 400 };
@@ -112,20 +127,27 @@ export async function action({ request }: ActionFunctionArgs) {
 
 	try {
 		const decodedToken = await adminAuth.verifyIdToken(idToken);
-		const sessionCookie = await adminAuth.createSessionCookie(idToken, {
-			expiresIn: 60 * 60 * 24 * 5 * 1000, // 5 days
-		});
+		// const sessionCookie = await adminAuth.createSessionCookie(idToken, {
+		// 	expiresIn: 60 * 60 * 24 * 5 * 1000, // 5 days
+		// });
 
-		const session = await getSession(request);
-		session.set('sessionCookie', sessionCookie);
+		// session.set('sessionCookie', sessionCookie);
 		session.set('userId', decodedToken.uid);
 
+		// Login succeeded, send them to the home page.
 		return redirect('/', {
 			headers: {
 				'Set-Cookie': await commitSession(session),
 			},
 		});
 	} catch (error) {
-		return { error: error instanceof Error ? error.message : 'Authentication failed', status: 400 };
+		session.flash('error', error instanceof Error ? error.message : 'Authentication failed');
+
+		// Redirect back to the login page with errors.
+		return redirect('/login', {
+			headers: {
+				'Set-Cookie': await commitSession(session),
+			},
+		});
 	}
 }
