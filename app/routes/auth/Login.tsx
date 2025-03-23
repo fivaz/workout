@@ -2,19 +2,16 @@ import DarkMode from '@/components/DarkMode';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
-import { data, Form, useActionData, useNavigate, useNavigation } from 'react-router';
+import { data, Form, NavLink, redirect, useNavigate, useNavigation } from 'react-router';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import GoogleIcon from './GoogleIcon';
 import { useState } from 'react';
 import GAlert from '@/components/GAlert';
-
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { redirect } from 'react-router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase.client';
 import { adminAuth } from '@/lib/firebase.server';
-import { getSession, commitSession } from '@/sessions.server';
+import { commitSession, getSession } from '@/sessions.server';
 import type { Route } from './+types/Login';
+import { ROUTES } from '@/lib/consts';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const session = await getSession(request.headers.get('Cookie'));
@@ -71,7 +68,7 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 	return (
 		<>
 			<div className="flex gap-5 min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-				<DarkMode />
+				<NavLink to="/test">Test</NavLink>
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 					<img
 						alt="Your Company"
@@ -94,6 +91,15 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 						<GButton isLoading={navigation.state === 'submitting'} type="submit">
 							Sign in
 						</GButton>
+
+						<div className="relative mt-10">
+							<div aria-hidden="true" className="absolute inset-0 flex items-center">
+								<div className="w-full border-t border-gray-200" />
+							</div>
+							<div className="relative flex justify-center text-sm/6 font-medium">
+								<span className="bg-white px-6 text-gray-900">Or continue with</span>
+							</div>
+						</div>
 
 						<GButton
 							className="bg-white border border-gray-300"
