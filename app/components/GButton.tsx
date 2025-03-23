@@ -28,7 +28,7 @@ export default function GButton({
 	return (
 		<button
 			className={clsx(
-				'flex gap-2 w-full justify-center items-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 ',
+				'flex gap-2 cursor-pointer w-full justify-center items-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 ',
 				{
 					'opacity-70': isLoading || disabled,
 				},

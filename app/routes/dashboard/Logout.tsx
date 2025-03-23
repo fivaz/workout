@@ -3,7 +3,7 @@ import { redirect } from 'react-router';
 import { destroySession, getSession } from '@/sessions.server';
 import type { Route } from './+types/Logout';
 
-export async function action({ request }: Route.ActionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
 	const session = await getSession(request.headers.get('Cookie'));
 	return redirect('/login', {
 		headers: {
@@ -13,13 +13,5 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function LogoutRoute() {
-	return (
-		<>
-			<p>Are you sure you want to log out?</p>
-			<Form method="post">
-				<button>Logout</button>
-			</Form>
-			<Link to="/">Never mind</Link>
-		</>
-	);
+	return null;
 }

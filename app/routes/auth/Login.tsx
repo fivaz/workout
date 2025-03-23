@@ -12,6 +12,7 @@ import { adminAuth } from '@/lib/firebase.server';
 import { commitSession, getSession } from '@/sessions.server';
 import type { Route } from './+types/Login';
 import { ROUTES } from '@/lib/consts';
+import { googleSignIn } from '@/routes/auth/service';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const session = await getSession(request.headers.get('Cookie'));
@@ -40,26 +41,8 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 
 	async function handleGoogleSignIn() {
 		try {
-			const provider = new GoogleAuthProvider();
-			const result = await signInWithPopup(auth, provider);
-			const idToken = await result.user.getIdToken();
-
-			// Submit the ID token to the server action
-			const formData = new FormData();
-			formData.append('idToken', idToken);
-
-			const response = await fetch('/login', {
-				method: 'POST',
-				body: formData,
-			});
-
-			if (!response.ok) {
-				const data = await response.json();
-				throw new Error(data.error || 'Google sign-in failed');
-			}
-
+			await googleSignIn();
 			navigate('/');
-			// If successful, the server will redirect to /dashboard
 		} catch (error) {
 			setGoogleError(error instanceof Error ? error.message : 'Google sign-in failed');
 		}
@@ -68,7 +51,6 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 	return (
 		<>
 			<div className="flex gap-5 min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-				<NavLink to="/test">Test</NavLink>
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 					<img
 						alt="Your Company"
@@ -114,9 +96,12 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 
 					<p className=" text-center text-sm/6 text-gray-500">
 						Not a member?{' '}
-						<a href="/register" className="font-semibold text-blue-600 hover:text-blue-500">
+						<NavLink
+							to={ROUTES.REGISTER}
+							className="font-semibold text-blue-600 hover:text-blue-500"
+						>
 							Sign up
-						</a>
+						</NavLink>
 					</p>
 				</div>
 			</div>
