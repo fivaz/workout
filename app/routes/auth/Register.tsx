@@ -1,5 +1,4 @@
-import type { Route } from './+types/Register';
-import { data, NavLink, redirect, useFetcher } from 'react-router';
+import { NavLink, useFetcher } from 'react-router';
 import { type FormEvent, useEffect, useState } from 'react';
 import { getErrorMessage, googleSignIn, register } from '@/routes/auth/service';
 import GText from '@/components/GText';
@@ -8,24 +7,6 @@ import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GoogleIcon from '@/routes/auth/GoogleIcon';
 import { ROUTES } from '@/lib/consts';
-import { commitSession, getSession } from '@/sessions.server';
-
-export async function loader({ request }: Route.LoaderArgs) {
-	const session = await getSession(request.headers.get('Cookie'));
-
-	if (session.has('userId')) {
-		// Redirect to the home page if they are already signed in.
-		return redirect('/');
-	}
-	return data(
-		{ error: session.get('error') },
-		{
-			headers: {
-				'Set-Cookie': await commitSession(session),
-			},
-		},
-	);
-}
 
 export default function Register() {
 	const [error, setError] = useState<string>('');
