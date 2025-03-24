@@ -1,4 +1,10 @@
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import {
+	createUserWithEmailAndPassword,
+	GoogleAuthProvider,
+	signInWithEmailAndPassword,
+	signInWithPopup,
+	updateProfile,
+} from 'firebase/auth';
 import { auth } from '@/lib/firebase.client';
 import { FirebaseError } from 'firebase/app';
 import type { FormEvent } from 'react';
@@ -42,4 +48,21 @@ export async function login(event: FormEvent<HTMLFormElement>) {
 	// Sign in user with email and password
 	const result = await signInWithEmailAndPassword(auth, email, password);
 	return await result.user.getIdToken();
+}
+
+export async function register(event: FormEvent<HTMLFormElement>) {
+	event.preventDefault();
+
+	// Get form data
+	const formData = new FormData(event.currentTarget);
+	const name = formData.get('name') as string;
+	const email = formData.get('email') as string;
+	const password = formData.get('password') as string;
+
+	// Create user with email and password
+	const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+	// Update user profile with name
+	await updateProfile(userCredential.user, { displayName: name });
+	return await userCredential.user.getIdToken();
 }

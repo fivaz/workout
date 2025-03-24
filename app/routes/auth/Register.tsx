@@ -1,7 +1,7 @@
 import type { Route } from './+types/Register';
-import { data, Form, NavLink, redirect, useNavigate, useNavigation } from 'react-router';
-import { type FormEvent, useState } from 'react';
-import { getErrorMessage, googleSignIn } from '@/routes/auth/service';
+import { data, NavLink, redirect, useFetcher } from 'react-router';
+import { type FormEvent, useEffect, useState } from 'react';
+import { getErrorMessage, googleSignIn, register } from '@/routes/auth/service';
 import GText from '@/components/GText';
 import GAlert from '@/components/GAlert';
 import GInput from '@/components/GInput';
@@ -9,8 +9,6 @@ import GButton from '@/components/GButton';
 import GoogleIcon from '@/routes/auth/GoogleIcon';
 import { ROUTES } from '@/lib/consts';
 import { commitSession, getSession } from '@/sessions.server';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '@/lib/firebase.client';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const session = await getSession(request.headers.get('Cookie'));
@@ -29,42 +27,43 @@ export async function loader({ request }: Route.LoaderArgs) {
 	);
 }
 
-export default function Register({ loaderData }: Route.ComponentProps) {
-	const { error } = loaderData;
-	const navigate = useNavigate();
+export default function Register() {
+	const [error, setError] = useState<string>('');
+	const [isLoading, setIsLoading] = useState(false);
 
-	const [clientError, setClientError] = useState<string>('');
-	const navigation = useNavigation();
+	const fetcher = useFetcher();
+	const isSubmitting = isLoading || fetcher.state === 'submitting' || fetcher.state === 'loading';
+
+	// Handle fetcher response (success or error)
+	useEffect(() => {
+		if (fetcher.state === 'idle' && fetcher.data) {
+			if (fetcher.data.error) {
+				setError(fetcher.data.error); // Display server-side error
+			}
+		}
+	}, [fetcher.state, fetcher.data]);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-
-		// Get form data
-		const formData = new FormData(event.currentTarget);
-		const name = formData.get('name') as string;
-		const email = formData.get('email') as string;
-		const password = formData.get('password') as string;
-
+		setIsLoading(true);
 		try {
-			// Create user with email and password
-			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-			// Update user profile with name
-			await updateProfile(userCredential.user, { displayName: name });
-
-			// Navigate to home page on success
-			navigate('/');
+			const idToken = await register(event);
+			void fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
 		} catch (error) {
-			setClientError(getErrorMessage(error));
+			setError(getErrorMessage(error));
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
 	async function handleGoogleSignIn() {
+		setIsLoading(true);
 		try {
-			await googleSignIn();
-			navigate(ROUTES.HOME);
+			const idToken = await googleSignIn();
+			void fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
 		} catch (error) {
-			setClientError(getErrorMessage(error));
+			setError(getErrorMessage(error));
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
@@ -82,31 +81,20 @@ export default function Register({ loaderData }: Route.ComponentProps) {
 					</GText>
 				</div>
 
-				<GAlert type="error">{clientError || error}</GAlert>
+				<GAlert type="error" setError={setError}>
+					{error}
+				</GAlert>
 
 				<div className="flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-sm">
-					<form className="space-y-6" onSubmit={handleSubmit}>
-						<GInput name="name" label="Full name" required defaultValue="test" />
+					<fetcher.Form className="space-y-6" onSubmit={handleSubmit} method="post">
+						<GInput name="name" label="Full name" required />
 
-						<GInput
-							name="email"
-							label="Email address"
-							type="email"
-							required
-							autoComplete="email"
-							defaultValue="test@test.com"
-						/>
+						<GInput name="email" label="Email address" type="email" required autoComplete="email" />
 
-						<GInput
-							name="password"
-							label="Password"
-							type="password"
-							required
-							defaultValue="123456"
-						/>
+						<GInput name="password" label="Password" type="password" required />
 
-						<GButton isLoading={navigation.state === 'submitting'} type="submit">
-							Sign in
+						<GButton isLoading={isSubmitting} type="submit">
+							Sign up
 						</GButton>
 
 						<div className="relative mt-10">
@@ -121,13 +109,13 @@ export default function Register({ loaderData }: Route.ComponentProps) {
 						<GButton
 							className="bg-white border border-gray-300"
 							color="none"
-							isLoading={navigation.state === 'submitting'}
+							isLoading={isSubmitting}
 							type="button"
 							onClick={handleGoogleSignIn}
 						>
 							<GoogleIcon />
 						</GButton>
-					</form>
+					</fetcher.Form>
 
 					<p className=" text-center text-sm/6 text-gray-500">
 						Already a member?{' '}

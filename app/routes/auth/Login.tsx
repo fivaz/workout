@@ -1,21 +1,10 @@
-import DarkMode from '@/components/DarkMode';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
-import {
-	data,
-	Form,
-	NavLink,
-	redirect,
-	useFetcher,
-	useNavigate,
-	useNavigation,
-} from 'react-router';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { data, NavLink, redirect, useFetcher } from 'react-router';
 import GoogleIcon from './GoogleIcon';
 import { type FormEvent, useEffect, useState } from 'react';
 import GAlert from '@/components/GAlert';
-import { auth } from '@/lib/firebase.client';
 import { adminAuth } from '@/lib/firebase.server';
 import { commitSession, getSession } from '@/sessions.server';
 import type { Route } from './+types/Login';
@@ -40,22 +29,29 @@ export async function loader({ request }: Route.LoaderArgs) {
 	);
 }
 
-export default function Login({ loaderData }: Route.ComponentProps) {
-	const { error } = loaderData;
-
-	const [clientError, setClientError] = useState<string>('');
+export default function Login() {
+	const [error, setError] = useState<string>('');
 	const [isLoading, setIsLoading] = useState(false);
 
 	const fetcher = useFetcher();
 	const isSubmitting = isLoading || fetcher.state === 'submitting' || fetcher.state === 'loading';
 
+	// Handle fetcher response (success or error)
+	useEffect(() => {
+		if (fetcher.state === 'idle' && fetcher.data) {
+			if (fetcher.data.error) {
+				setError(fetcher.data.error); // Display server-side error
+			}
+		}
+	}, [fetcher.state, fetcher.data]);
+
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		setIsLoading(true);
 		try {
 			const idToken = await login(event);
-			fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
+			void fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
 		} catch (error) {
-			setClientError(getErrorMessage(error));
+			setError(getErrorMessage(error));
 		} finally {
 			setIsLoading(false);
 		}
@@ -65,9 +61,9 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 		setIsLoading(true);
 		try {
 			const idToken = await googleSignIn();
-			fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
+			void fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
 		} catch (error) {
-			setClientError(getErrorMessage(error));
+			setError(getErrorMessage(error));
 		} finally {
 			setIsLoading(false);
 		}
@@ -87,28 +83,15 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 					</GText>
 				</div>
 
-				<GAlert type="error" setError={setClientError}>
-					{clientError || error}
+				<GAlert type="error" setError={setError}>
+					{error}
 				</GAlert>
 
 				<div className="flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-sm">
 					<fetcher.Form className="space-y-6" onSubmit={handleSubmit} method="post">
-						<GInput
-							name="email"
-							label="Email address"
-							type="email"
-							required
-							autoComplete="email"
-							defaultValue="test@test.com"
-						/>
+						<GInput name="email" label="Email address" type="email" required autoComplete="email" />
 
-						<GInput
-							name="password"
-							label="Password"
-							type="password"
-							required
-							defaultValue="123456"
-						/>
+						<GInput name="password" label="Password" type="password" required />
 
 						<GButton isLoading={isSubmitting} type="submit">
 							Sign in
@@ -150,7 +133,6 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-	console.log('action');
 	const session = await getSession(request.headers.get('Cookie'));
 
 	try {
