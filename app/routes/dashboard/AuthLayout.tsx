@@ -1,9 +1,13 @@
-import { Outlet, redirect, useNavigate } from 'react-router';
+import { data, Form, Outlet, redirect, useNavigate } from 'react-router';
 import AuthProvider from '@/lib/auth/authProvider';
 import isAuth from '@/lib/auth/useAuth';
 import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase.client';
+import type { Route } from './+types/AuthLayout';
+import { getSession } from '@/sessions.server';
+import { ROUTES } from '@/lib/consts';
+import { Button } from '@headlessui/react';
 
 // export async function clientLoader() {
 // 	// mock slow response from firebase
@@ -17,6 +21,17 @@ import { auth } from '@/lib/firebase.client';
 // 		throw redirect('/');
 // 	}
 // }
+
+export async function loader({ request }: Route.LoaderArgs) {
+	const session = await getSession(request.headers.get('Cookie'));
+	const userId = session.get('userId');
+
+	if (!userId) {
+		return redirect(ROUTES.LOGIN);
+	}
+
+	return data({ userId });
+}
 
 export default function AuthLayout() {
 	const navigate = useNavigate();
@@ -33,7 +48,10 @@ export default function AuthLayout() {
 
 	return (
 		<AuthProvider>
-			<div className="h-screen bg-red-500">
+			<Form method="post" action={ROUTES.LOGOUT}>
+				<Button type="submit">Logout</Button>
+			</Form>
+			<div className="h-screen bg-red-200">
 				<Outlet />
 			</div>
 		</AuthProvider>

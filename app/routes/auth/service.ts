@@ -26,21 +26,9 @@ export function getErrorMessage(error: unknown): string {
 }
 
 export async function googleSignIn() {
-	try {
-		const provider = new GoogleAuthProvider();
-		const result = await signInWithPopup(auth, provider);
-		const idToken = await result.user.getIdToken();
-
-		await fetch('/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ idToken }),
-		});
-	} catch (error) {
-		throw new Error(getErrorMessage(error));
-	}
+	const provider = new GoogleAuthProvider();
+	const result = await signInWithPopup(auth, provider);
+	return await result.user.getIdToken();
 }
 
 export async function login(event: FormEvent<HTMLFormElement>) {
@@ -51,37 +39,7 @@ export async function login(event: FormEvent<HTMLFormElement>) {
 	const email = formData.get('email') as string;
 	const password = formData.get('password') as string;
 
-	try {
-		// Sign in user with email and password
-		const result = await signInWithEmailAndPassword(auth, email, password);
-		const idToken = await result.user.getIdToken();
-
-		const response = await persistToken(idToken);
-
-		console.log(response);
-	} catch (error) {
-		throw new Error(getErrorMessage(error));
-	}
-}
-
-async function persistToken(idToken: string) {
-	console.log('persistToken');
-
-	const response = await fetch('/login', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ idToken }),
-	});
-
-	const data = await response.json();
-
-	console.log('data', data);
-
-	if (!response.ok) {
-		throw new Error(data.error);
-	}
-
-	return data;
+	// Sign in user with email and password
+	const result = await signInWithEmailAndPassword(auth, email, password);
+	return await result.user.getIdToken();
 }

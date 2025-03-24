@@ -2,7 +2,15 @@ import DarkMode from '@/components/DarkMode';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
-import { data, Form, NavLink, redirect, useNavigate, useNavigation } from 'react-router';
+import {
+	data,
+	Form,
+	NavLink,
+	redirect,
+	useFetcher,
+	useNavigate,
+	useNavigation,
+} from 'react-router';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import GoogleIcon from './GoogleIcon';
 import { type FormEvent, useEffect, useState } from 'react';
@@ -34,27 +42,34 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Login({ loaderData }: Route.ComponentProps) {
 	const { error } = loaderData;
-	const navigate = useNavigate();
 
 	const [clientError, setClientError] = useState<string>('');
+	const [isLoading, setIsLoading] = useState(false);
 
-	const navigation = useNavigation();
+	const fetcher = useFetcher();
+	const isSubmitting = isLoading || fetcher.state === 'submitting' || fetcher.state === 'loading';
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+		setIsLoading(true);
 		try {
-			await login(event);
-			navigate(ROUTES.HOME);
+			const idToken = await login(event);
+			fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
 		} catch (error) {
 			setClientError(getErrorMessage(error));
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
 	async function handleGoogleSignIn() {
+		setIsLoading(true);
 		try {
-			await googleSignIn();
-			navigate(ROUTES.HOME);
+			const idToken = await googleSignIn();
+			fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
 		} catch (error) {
 			setClientError(getErrorMessage(error));
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
@@ -77,7 +92,7 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 				</GAlert>
 
 				<div className="flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-sm">
-					<form className="space-y-6" onSubmit={handleSubmit}>
+					<fetcher.Form className="space-y-6" onSubmit={handleSubmit} method="post">
 						<GInput
 							name="email"
 							label="Email address"
@@ -95,29 +110,29 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 							defaultValue="123456"
 						/>
 
-						<GButton isLoading={navigation.state === 'submitting'} type="submit">
+						<GButton isLoading={isSubmitting} type="submit">
 							Sign in
 						</GButton>
+					</fetcher.Form>
 
-						<div className="relative mt-10">
-							<div aria-hidden="true" className="absolute inset-0 flex items-center">
-								<div className="w-full border-t border-gray-200" />
-							</div>
-							<div className="relative flex justify-center text-sm/6 font-medium">
-								<span className="bg-white px-6 text-gray-900">Or continue with</span>
-							</div>
+					<div className="relative mt-10">
+						<div aria-hidden="true" className="absolute inset-0 flex items-center">
+							<div className="w-full border-t border-gray-200" />
 						</div>
+						<div className="relative flex justify-center text-sm/6 font-medium">
+							<span className="bg-white px-6 text-gray-900">Or continue with</span>
+						</div>
+					</div>
 
-						<GButton
-							className="bg-white border border-gray-300"
-							color="none"
-							isLoading={navigation.state === 'submitting'}
-							type="button"
-							onClick={handleGoogleSignIn}
-						>
-							<GoogleIcon />
-						</GButton>
-					</form>
+					<GButton
+						className="bg-white border border-gray-300"
+						color="none"
+						isLoading={isSubmitting}
+						type="button"
+						onClick={handleGoogleSignIn}
+					>
+						<GoogleIcon />
+					</GButton>
 
 					<p className=" text-center text-sm/6 text-gray-500">
 						Not a member?{' '}
@@ -134,20 +149,16 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 	);
 }
 
-export async function clientAction({ request, serverAction }: Route.ClientActionArgs) {}
-
 export async function action({ request }: Route.ActionArgs) {
 	console.log('action');
 	const session = await getSession(request.headers.get('Cookie'));
 
 	try {
-		throw new Error('test');
-
-		const body = await request.json();
-		const { idToken } = body;
+		const formData = await request.formData();
+		const idToken = formData.get('idToken')?.toString();
 
 		if (!idToken) {
-			return { error: 'No ID token provided', status: 400 };
+			return data({ error: 'No ID token provided' }, { status: 400 });
 		}
 
 		const decodedToken = await adminAuth.verifyIdToken(idToken);
