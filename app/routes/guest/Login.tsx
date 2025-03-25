@@ -9,7 +9,7 @@ import { adminAuth } from '@/lib/firebase.server';
 import { commitSession, getSession } from '@/sessions.server';
 import type { Route } from './+types/Login';
 import { ROUTES } from '@/lib/consts';
-import { getErrorMessage, googleSignIn, login } from '@/routes/auth/service';
+import { getErrorMessage, googleSignIn, login } from '@/routes/guest/service';
 
 export default function Login() {
 	const [error, setError] = useState<string>('');

@@ -1,5 +1,5 @@
 import { adminDb } from '@/lib/firebase.server';
-import type { Exercise } from '@/routes/dashboard/exercise/model';
+import type { Exercise } from '@/routes/auth/exercise/model';
 import { DB } from '@/lib/consts';
 
 export async function getExercises(userId: string) {

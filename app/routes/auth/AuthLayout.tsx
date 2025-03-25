@@ -37,7 +37,7 @@ export default function AuthLayout() {
 			<Form method="post" action={ROUTES.LOGOUT}>
 				<Button type="submit">Logout</Button>
 			</Form>
-			<div className="h-screen bg-red-200">
+			<div className="h-screen">
 				<Outlet />
 			</div>
 		</AuthProvider>
