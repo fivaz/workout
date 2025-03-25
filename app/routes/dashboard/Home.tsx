@@ -1,35 +1,39 @@
-import { data, type LoaderFunctionArgs } from 'react-router';
-import { redirect } from 'react-router';
-import { useLoaderData } from 'react-router';
-// import { adminAuth } from '@/lib/firebase.server';
+import { data, redirect, useLoaderData } from 'react-router';
 import type { Route } from './+types/Home';
-import { getSession } from '@/sessions.server';
+import { checkUser } from '@/sessions.server';
+import { getExercises } from '@/routes/dashboard/exercise/repository';
 
 export async function loader({ request }: Route.LoaderArgs) {
-	const session = await getSession(request.headers.get('Cookie'));
+	try {
+		const userId = await checkUser(request);
 
-	if (!session.has('userId')) {
-		// Redirect to the home page if they are already signed in.
-		return redirect('/login');
+		// Fetch exercises from Firestore
+		const exercises = await getExercises(userId);
+
+		return data({ userId, exercises, error: null });
+	} catch (error) {
+		console.error(error);
+		if (error instanceof Response) {
+			return redirect('/login');
+		}
+		return data(
+			{
+				exercises: [],
+				userId: '',
+				error: 'Failed to fetch exercises',
+			},
+			{ status: 500 },
+		);
 	}
-
-	return data({ userId: session.get('userId') });
-
-	// try {
-	// 	// const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie);
-	// 	return { userId: decodedClaims.uid };
-	// } catch (error) {
-	// 	return redirect('/login');
-	// }
 }
 
 export default function Home() {
-	const { userId } = useLoaderData<typeof loader>();
+	const { userId, error, exercises } = useLoaderData<typeof loader>();
 
 	return (
-		<div>
-			<h1>Welcome, {userId}</h1>
-			<a href="/logout">logout</a>
-		</div>
+		<pre>
+			userId: {userId}
+			exercises length: {exercises.length}
+		</pre>
 	);
 }

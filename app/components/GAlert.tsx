@@ -3,7 +3,7 @@ import type { JSX, ReactNode } from 'react';
 import { CheckCircle, Info, TriangleAlert, XCircle, X } from 'lucide-react';
 
 interface AlertProps {
-	type: 'error' | 'info' | 'success' | 'warning';
+	type?: 'error' | 'info' | 'success' | 'warning';
 	children: ReactNode;
 	setError?: (error: string) => void;
 	className?: string;
@@ -45,7 +45,7 @@ const typeElements = {
 
 export default function Alert({
 	className = '',
-	type,
+	type = 'error',
 	children,
 	setError,
 }: AlertProps): JSX.Element | null {

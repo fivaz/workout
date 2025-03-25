@@ -4,3 +4,8 @@ export const ROUTES = {
 	LOGOUT: '/logout',
 	HOME: '/',
 };
+
+export const DB = {
+	USERS: 'users',
+	EXERCISES: 'exercises',
+};
