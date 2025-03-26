@@ -29,9 +29,27 @@ export async function getExercises(userId: string) {
 }
 
 export async function updateExercise(userId: string, formData: FormData) {
-	const exercise = buildExercise(userId, formData);
-	console.log(exercise);
+	try {
+		const exercise = buildExercise(userId, formData);
+		const exercisesRef = adminDb.collection(getExercisePath(userId)).doc(exercise.id);
 
-	const exercisesRef = adminDb.collection(getExercisePath(userId)).doc(exercise.id);
-	await exercisesRef.set({ ...exercise, updatedAt: new Date().toISOString() }, { merge: true });
+		await exercisesRef.set({ ...exercise, updatedAt: new Date().toISOString() }, { merge: true });
+
+		console.log(`Exercise with ID: ${exercise.id} successfully updated for user: ${userId}`);
+	} catch (error) {
+		console.error(`Error updating exercise with ID for user: ${userId}`, error);
+		throw error; // Re-throw the error to be handled by the caller if needed
+	}
+}
+export async function deleteExercise(userId: string, id: string) {
+	try {
+		const exercisePath = getExercisePath(userId);
+		const exerciseRef = adminDb.collection(exercisePath).doc(id);
+
+		await exerciseRef.delete();
+		console.log(`Exercise with ID: ${id} successfully deleted for user: ${userId}`);
+	} catch (error) {
+		console.error(`Error deleting exercise with ID: ${id} for user: ${userId}`, error);
+		throw error;
+	}
 }

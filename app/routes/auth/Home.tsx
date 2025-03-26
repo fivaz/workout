@@ -49,7 +49,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-	console.log('action');
 	const userId = await checkUser(request);
 
 	const formData = await request.formData();

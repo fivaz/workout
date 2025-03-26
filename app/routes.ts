@@ -5,6 +5,9 @@ export default [
 		route('login', 'routes/guest/Login.tsx'),
 		route('register', 'routes/guest/Register.tsx'),
 	]),
-	layout('routes/auth/AuthLayout.tsx', [index('routes/auth/Home.tsx')]),
+	layout('routes/auth/AuthLayout.tsx', [
+		index('routes/auth/Home.tsx'),
+		route('delete', 'routes/auth/exercise/ExerciseRow.tsx'),
+	]),
 	route('logout', 'routes/auth/Logout.tsx'),
 ] satisfies RouteConfig;
