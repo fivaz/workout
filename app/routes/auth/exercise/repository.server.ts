@@ -1,9 +1,18 @@
 import { adminDb } from '@/lib/firebase.server';
-import { buildExercise, type Exercise } from '@/routes/auth/exercise/model';
+import { type Exercise } from '@/routes/auth/exercise/model';
 import { DB } from '@/lib/consts';
 
 function getExercisePath(userId: string) {
 	return `/${DB.USERS}/${userId}/${DB.EXERCISES}/`;
+}
+
+export function buildExercise(userId: string, formData: FormData): Omit<Exercise, 'updatedAt'> {
+	const id = (formData.get('id') as string) || adminDb.collection(getExercisePath(userId)).doc().id;
+
+	return {
+		id,
+		name: formData.get('name') as string,
+	};
 }
 
 export async function getExercises(userId: string) {
@@ -19,9 +28,10 @@ export async function getExercises(userId: string) {
 	);
 }
 
-export async function addExercise(userId: string, formData: FormData) {
-	const exercise = buildExercise(formData);
+export async function updateExercise(userId: string, formData: FormData) {
+	const exercise = buildExercise(userId, formData);
+	console.log(exercise);
 
-	const exercisesRef = adminDb.collection(getExercisePath(userId));
-	await exercisesRef.add(exercise);
+	const exercisesRef = adminDb.collection(getExercisePath(userId)).doc(exercise.id);
+	await exercisesRef.set({ ...exercise, updatedAt: new Date().toISOString() }, { merge: true });
 }
