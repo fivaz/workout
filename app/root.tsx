@@ -12,6 +12,7 @@ import type { Route } from './+types/root';
 import './app.css';
 import DarkMode from '@/components/DarkMode';
 import { LoaderCircle, LoaderCircleIcon } from 'lucide-react';
+import { Transition } from '@headlessui/react';
 
 export const links: Route.LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -51,7 +52,10 @@ export default function App() {
 	return (
 		<>
 			<DarkMode />
-			{isNavigating && <LoaderCircleIcon className="size-9 animate-spin" />}
+			<Transition show={isNavigating}>
+				<LoaderCircleIcon className="transition duration-300 ease-in data-[closed]:opacity-0 absolute top-0 right-0 size-9 animate-spin" />
+			</Transition>
+
 			<Outlet />
 		</>
 	);
