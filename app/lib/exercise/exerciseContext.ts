@@ -7,6 +7,7 @@ interface ExerciseContextType {
 	exercises: Exercise[];
 	loading: boolean;
 	error: string | null;
+	success: string | null;
 	createExercise: (exercise: Exercise) => void;
 	updateExercise: (exercise: Exercise) => void;
 	deleteExercise: (exerciseId: string) => void;
@@ -17,6 +18,7 @@ export const ExerciseContext = createContext<ExerciseContextType>({
 	exercises: [],
 	loading: false,
 	error: null,
+	success: null,
 	createExercise: (exercise: Exercise) => {},
 	updateExercise: (exercise: Exercise) => {},
 	deleteExercise: (exerciseId: string) => {},

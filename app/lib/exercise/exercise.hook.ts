@@ -1,4 +1,3 @@
-// exercise.service.ts
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth/authContext';
 import type { Exercise } from '@/lib/exercise/exercise.model';
@@ -9,55 +8,53 @@ import {
 	updateExercise,
 } from '@/lib/exercise/exercise.repository';
 
-// Single useExercises Hook
 export function useCRUDExercises() {
 	const { user } = useAuth();
 	const [exercises, setExercises] = useState<Exercise[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null); // New success state
 
 	// Fetch exercises with real-time updates
-	useEffect(
-		function () {
-			if (!user) {
-				setExercises([]);
+	useEffect(() => {
+		if (!user) {
+			setExercises([]);
+			setLoading(false);
+			return;
+		}
+
+		setLoading(true);
+		const unsubscribe = getExercises(
+			user.uid,
+			(exercisesData) => {
+				setExercises(exercisesData);
 				setLoading(false);
-				return;
-			}
+			},
+			(err) => {
+				setError(err);
+				setLoading(false);
+			},
+		);
 
-			setLoading(true);
-			const unsubscribe = getExercises(
-				user.uid,
-				(exercisesData) => {
-					setExercises(exercisesData);
-					setLoading(false);
-				},
-				(err) => {
-					setError(err);
-					setLoading(false);
-				},
-			);
-
-			return function () {
-				unsubscribe();
-			};
-		},
-		[user],
-	);
+		return () => {
+			unsubscribe();
+		};
+	}, [user]);
 
 	// CRUD operations with shared state
 	async function handleCreateExercise(exercise: Exercise) {
 		if (!user) {
 			setError('User must be authenticated');
-			throw new Error('User must be authenticated');
+			return;
 		}
 
 		setLoading(true);
 		try {
-			return await createExercise(user.uid, exercise);
+			const newExercise = await createExercise(user.uid, exercise);
+			setSuccess(`Exercise "${exercise.name}" created successfully`);
+			return newExercise;
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Failed to create exercise');
-			throw err;
 		} finally {
 			setLoading(false);
 		}
@@ -66,15 +63,15 @@ export function useCRUDExercises() {
 	async function handleUpdateExercise(exercise: Exercise) {
 		if (!user) {
 			setError('User must be authenticated');
-			throw new Error('User must be authenticated');
+			return;
 		}
 
 		setLoading(true);
 		try {
 			await updateExercise(user.uid, exercise);
+			setSuccess(`Exercise "${exercise.name}" updated successfully`);
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Failed to update exercise');
-			throw err;
 		} finally {
 			setLoading(false);
 		}
@@ -83,15 +80,15 @@ export function useCRUDExercises() {
 	async function handleDeleteExercise(exerciseId: string) {
 		if (!user) {
 			setError('User must be authenticated');
-			throw new Error('User must be authenticated');
+			return;
 		}
 
 		setLoading(true);
 		try {
 			await deleteExercise(user.uid, exerciseId);
+			setSuccess('Exercise deleted successfully');
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Failed to delete exercise');
-			throw err;
 		} finally {
 			setLoading(false);
 		}
@@ -101,6 +98,7 @@ export function useCRUDExercises() {
 		exercises,
 		loading,
 		error,
+		success,
 		createExercise: handleCreateExercise,
 		updateExercise: handleUpdateExercise,
 		deleteExercise: handleDeleteExercise,

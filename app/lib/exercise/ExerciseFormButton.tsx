@@ -4,8 +4,8 @@ import { DialogActions, DialogBody, DialogTitle, GDialog } from '@/components/GD
 import GInput from '@/components/GInput';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 import { useExercises } from '@/lib/exercise/exerciseContext';
-import { toast, ToastContainer } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css'; // Don't forget to include the CSS
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function ExerciseFormButton({
 	children,
@@ -15,29 +15,23 @@ export function ExerciseFormButton({
 	size,
 }: PropsWithChildren<{ exercise: Exercise } & GButtonProps>) {
 	const [isOpen, setIsOpen] = useState(false);
-	const { createExercise, updateExercise, deleteExercise, loading, error } = useExercises();
+	const { createExercise, updateExercise, deleteExercise, loading, error, success } =
+		useExercises();
 
-	// Add useEffect to handle loading and error states
 	useEffect(() => {
-		let toastId: string | number | null = null;
-
-		if (loading) {
-			toastId = toast.loading('Processing...');
-		} else if (error) {
+		if (error) {
 			toast.error(error, {
-				toastId: 'exercise-error', // Unique ID to prevent duplicate error toasts
+				toastId: 'exercise-error', // Unique ID to prevent duplicates
 			});
+		} else if (success) {
+			toast.success(success, {
+				toastId: 'exercise-success', // Unique ID to prevent duplicates
+			});
+			setIsOpen(false); // Close dialog on success
 		}
+	}, [loading, error, success]);
 
-		// Cleanup function to dismiss loading toast when loading is complete
-		return () => {
-			if (toastId !== null) {
-				toast.dismiss(toastId);
-			}
-		};
-	}, [loading, error]);
-
-	function handleSubmit(e: FormEvent<HTMLFormElement>) {
+	async function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 		const newExercise: Exercise = {
@@ -51,7 +45,7 @@ export function ExerciseFormButton({
 		}
 	}
 
-	function handleDelete() {
+	async function handleDelete() {
 		void deleteExercise(exercise.id);
 	}
 
@@ -68,7 +62,7 @@ export function ExerciseFormButton({
 			</GButton>
 			<GDialog open={isOpen} onClose={setIsOpen}>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle>{exercise.id ? 'Add' : 'Create'} exercise</DialogTitle>
+					<DialogTitle>{exercise.id ? 'Edit' : 'Create'} exercise</DialogTitle>
 					<DialogBody>
 						<GInput label="name" defaultValue={exercise.name} />
 					</DialogBody>
