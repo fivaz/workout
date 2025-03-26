@@ -8,4 +8,5 @@ export const ROUTES = {
 export const DB = {
 	USERS: 'users',
 	EXERCISES: 'exercises',
+	SETS: 'sets',
 };

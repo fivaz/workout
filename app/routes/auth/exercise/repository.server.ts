@@ -1,9 +1,11 @@
 import { adminDb } from '@/lib/firebase.server';
 import { type Exercise } from '@/routes/auth/exercise/model';
 import { DB } from '@/lib/consts';
+import { getSetPath } from '@/routes/auth/set/repository.server';
+import { type Set } from '@/routes/auth/set/model';
 
-function getExercisePath(userId: string) {
-	return `/${DB.USERS}/${userId}/${DB.EXERCISES}/`;
+export function getExercisePath(userId: string) {
+	return `/${DB.USERS}/${userId}/${DB.EXERCISES}`;
 }
 
 export function buildExercise(userId: string, formData: FormData): Omit<Exercise, 'updatedAt'> {
@@ -19,13 +21,26 @@ export async function getExercises(userId: string) {
 	const exercisesRef = adminDb.collection(getExercisePath(userId));
 	const snapshot = await exercisesRef.get();
 
-	return snapshot.docs.map(
-		(doc) =>
-			({
-				id: doc.id,
-				...doc.data(),
-			}) as unknown as Exercise,
-	);
+	const exercisesPromises = snapshot.docs.map(async (doc) => {
+		const setsRef = adminDb.collection(getSetPath(userId, doc.id));
+		const setsSnapshot = await setsRef.get();
+
+		const sets = setsSnapshot.docs.map(
+			(setDoc) =>
+				({
+					id: setDoc.id,
+					...setDoc.data(),
+				}) as Set,
+		);
+
+		return {
+			id: doc.id,
+			...doc.data(),
+			sets,
+		} as Exercise;
+	});
+
+	return Promise.all(exercisesPromises);
 }
 
 export async function updateExercise(userId: string, formData: FormData) {

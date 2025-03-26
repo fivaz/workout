@@ -32,11 +32,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
 	return (
 		<div className="mt-5 p-3">
-			<div className="p-3 flex flex-col gap-3 border dark:border-gray-600 border-gray-200">
+			<div className="p-3 flex flex-col gap-3 rounded-md border dark:border-gray-600 border-gray-200">
 				<GText tag="h1">Exercises</GText>
 				<GAlert>{error}</GAlert>
 
-				<ul className="p-2 border border-gray-200 dark:border-gray-500 divide-y divide-gray-200 dark:divide-gray-500">
+				<ul className="flex flex-col gap-3 p-2 rounded-md border border-gray-200 dark:border-gray-500 divide-y divide-gray-200 dark:divide-gray-500">
 					{optimisticExercises.map((exercise) => (
 						<ExerciseRow key={exercise.id} exercise={exercise} />
 					))}

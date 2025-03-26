@@ -1,14 +1,8 @@
-import { adminDb } from '@/lib/firebase.server';
-
-type ExerciseHistory = {
-	weight: number;
-	repetition: number;
-};
+import { type Set } from '@/routes/auth/set/model';
 
 export type Exercise = {
 	id: string;
 	name: string;
 	updatedAt: string;
-	// image: string;
-	// history: Record<string, ExerciseHistory>;
+	sets?: Set[];
 };

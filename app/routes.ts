@@ -7,7 +7,9 @@ export default [
 	]),
 	layout('routes/auth/AuthLayout.tsx', [
 		index('routes/auth/Home.tsx'),
-		route('delete', 'routes/auth/exercise/ExerciseRow.tsx'),
+		route('exercise/:exerciseId/delete', 'routes/auth/exercise/delete.action.ts'),
+		route('exercise/:exerciseId/sets', 'routes/auth/exercise/sets.action.ts'),
+		route('exercise/:exerciseId/sets/:setId/delete', 'routes/auth/exercise/set/delete.action.ts'),
 	]),
 	route('logout', 'routes/auth/Logout.tsx'),
 ] satisfies RouteConfig;
