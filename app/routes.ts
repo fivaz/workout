@@ -1,6 +1,7 @@
 import { type RouteConfig, route, index, layout } from '@react-router/dev/routes';
 
 export default [
+	//server
 	layout('routes/server/guest/GuestLayout.tsx', [
 		route('server/login', 'routes/server/guest/Login.tsx'),
 		route('server/register', 'routes/server/guest/Register.tsx'),
@@ -15,4 +16,12 @@ export default [
 		),
 	]),
 	route('server/logout', 'routes/server/auth/Logout.tsx'),
+
+	//client
+	layout('routes/guest/GuestLayout.tsx', [
+		route('login', 'routes/guest/Login.tsx'),
+		route('register', 'routes/guest/Register.tsx'),
+	]),
+
+	layout('routes/auth/AuthLayout.tsx', [index('routes/auth/Home.tsx')]),
 ] satisfies RouteConfig;

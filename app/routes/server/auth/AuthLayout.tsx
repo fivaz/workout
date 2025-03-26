@@ -1,5 +1,5 @@
 import { data, Form, Outlet, redirect, useNavigate } from 'react-router';
-import AuthProvider from '@/lib/auth/authProvider';
+import AuthProvider from '@/lib/auth/AuthProvider';
 import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase.client';

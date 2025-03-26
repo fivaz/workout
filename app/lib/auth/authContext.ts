@@ -1,11 +1,18 @@
-import { createContext } from 'react';
-import type { AuthUser } from '@/lib/auth/authUser';
+import { createContext, useContext } from 'react';
+import type { UserModel } from '@/lib/auth/user.model';
 
 interface AuthContextType {
-	user: AuthUser | null;
-	setUser: (user: AuthUser | null) => void;
+	user: UserModel | null;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType>({ user: null });
 
 export default AuthContext;
+
+export function useAuth(): AuthContextType {
+	const context = useContext(AuthContext);
+	if (context === undefined) {
+		throw new Error('useAuth must be used within an AuthProvider');
+	}
+	return context;
+}
