@@ -15,7 +15,7 @@ export function ExerciseFormButton({ children }: PropsWithChildren) {
 				{children}
 			</GButton>
 			<GDialog open={isOpen} onClose={setIsOpen}>
-				<fetcher.Form method="post" action="/test">
+				<fetcher.Form method="post">
 					<DialogTitle>Add exercise</DialogTitle>
 					<DialogBody>
 						<GInput label="name" />

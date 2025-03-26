@@ -1,13 +1,16 @@
 import { data, redirect, useFetcher, useLoaderData } from 'react-router';
 import type { Route } from './+types/Home';
 import { checkUser } from '@/sessions.server';
-import { getExercises } from '@/routes/auth/exercise/repository';
+import { addExercise, getExercises } from '@/routes/auth/exercise/repository.server';
+import { buildExercise } from '@/routes/auth/exercise/model';
 import GText from '@/components/GText';
-import type { Exercise } from '@/routes/auth/exercise/model';
 import { DialogActions, DialogBody, DialogTitle, GDialog } from '@/components/GDialog';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import { useState } from 'react';
+import { ROUTES } from '@/lib/consts';
+import { ExerciseFormButton } from '@/routes/auth/exercise/ExerciseFormButton';
+import GAlert from '@/components/GAlert';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	try {
@@ -33,57 +36,30 @@ export async function loader({ request }: Route.LoaderArgs) {
 	}
 }
 
-export default function Home() {
-	const { userId, error, exercises } = useLoaderData<typeof loader>();
-	const fetcher = useFetcher();
-	const isSubmitting = fetcher.state === 'submitting' || fetcher.state === 'loading';
-	const [isOpen, setIsOpen] = useState(true);
-
+export default function Home({ loaderData }: Route.ComponentProps) {
+	const { error, exercises } = loaderData;
 	const optimisticExercises = [...exercises];
-
-	if (fetcher.formData) {
-		const newName = fetcher.formData.get('name') as string;
-		optimisticExercises.push({ id: Date.now(), name: newName } as unknown as Exercise);
-		console.log(optimisticExercises);
-	}
 
 	return (
 		<div className="mt-5 p-3">
 			<GText tag="h1">Exercises</GText>
-			<div>userId: {userId}</div>
-			<div>exercises length: {optimisticExercises.length}</div>
+			<GAlert>{error}</GAlert>
 			<ul>
 				{optimisticExercises.map((exercise) => (
 					<li key={exercise.id}>{exercise.name}</li>
 				))}
 			</ul>
 
-			<GDialog open={isOpen} onClose={setIsOpen}>
-				<fetcher.Form method="post" action="/test">
-					<DialogTitle>Add exercise</DialogTitle>
-					<DialogBody>
-						<GInput label="name" />
-					</DialogBody>
-					<DialogActions>
-						<GButton isLoading={isSubmitting} onClick={() => setIsOpen(false)}>
-							Cancel
-						</GButton>
-						<GButton isLoading={isSubmitting} type="submit">
-							Save
-						</GButton>
-					</DialogActions>
-				</fetcher.Form>
-			</GDialog>
+			<ExerciseFormButton>Add Exercise</ExerciseFormButton>
 		</div>
 	);
 }
 
 export async function action({ request }: Route.ActionArgs) {
-	console.log('here');
 	const userId = await checkUser(request);
 
 	const formData = await request.formData();
-	const name = formData.get('name');
+	await addExercise(userId, formData);
 
-	return redirect('/test');
+	return redirect(ROUTES.HOME);
 }
