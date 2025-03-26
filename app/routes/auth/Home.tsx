@@ -7,8 +7,6 @@ import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 export default function Home() {
 	const { exercises } = useExercises();
 
-	console.log(exercises);
-
 	const newExercise = buildEmptyExercise();
 
 	return (

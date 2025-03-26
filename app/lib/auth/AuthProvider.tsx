@@ -10,7 +10,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-			console.log('x');
 			setUser(
 				user
 					? {
