@@ -2,12 +2,8 @@ import GButton, { type GButtonProps } from '@/components/GButton';
 import { type FormEvent, type PropsWithChildren, useState } from 'react';
 import { DialogActions, DialogBody, DialogTitle, GDialog } from '@/components/GDialog';
 import GInput from '@/components/GInput';
-import {
-	useCreateExercise,
-	useDeleteExercise,
-	useUpdateExercise,
-} from '@/lib/exercise/exercise.repository';
 import type { Exercise } from '@/lib/exercise/exercise.model';
+import { useExercises } from '@/lib/exercise/exerciseContext';
 
 export function ExerciseFormButton({
 	children,
@@ -17,9 +13,7 @@ export function ExerciseFormButton({
 	size,
 }: PropsWithChildren<{ exercise: Exercise } & GButtonProps>) {
 	const [isOpen, setIsOpen] = useState(false);
-	const { createExercise } = useCreateExercise();
-	const { updateExercise } = useUpdateExercise();
-	const { deleteExercise } = useDeleteExercise();
+	const { createExercise, updateExercise, deleteExercise } = useExercises();
 
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();

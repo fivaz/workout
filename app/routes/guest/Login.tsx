@@ -77,7 +77,7 @@ export default function Login() {
 
 					<GButton
 						className="bg-white border border-gray-300"
-						color="none"
+						color="white"
 						isLoading={isLoading}
 						type="button"
 						onClick={handleGoogleSignIn}

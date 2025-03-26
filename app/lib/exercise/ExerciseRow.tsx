@@ -1,10 +1,5 @@
-import GInput from '@/components/GInput';
-import GButton from '@/components/GButton';
 import GText from '@/components/GText';
-import { XIcon } from 'lucide-react';
 import type { Exercise } from './exercise.model';
-import { useDeleteExercise, useUpdateExercise } from '@/lib/exercise/exercise.repository';
-import type { FormEvent, FormEventHandler } from 'react';
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
 
 export function ExerciseRow({ exercise }: { exercise: Exercise }) {
