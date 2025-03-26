@@ -1,9 +1,11 @@
 import GButton, { type GButtonProps } from '@/components/GButton';
-import { type FormEvent, type PropsWithChildren, useState } from 'react';
+import { type FormEvent, type PropsWithChildren, useEffect, useState } from 'react';
 import { DialogActions, DialogBody, DialogTitle, GDialog } from '@/components/GDialog';
 import GInput from '@/components/GInput';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 import { useExercises } from '@/lib/exercise/exerciseContext';
+import { toast, ToastContainer } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css'; // Don't forget to include the CSS
 
 export function ExerciseFormButton({
 	children,
@@ -13,7 +15,27 @@ export function ExerciseFormButton({
 	size,
 }: PropsWithChildren<{ exercise: Exercise } & GButtonProps>) {
 	const [isOpen, setIsOpen] = useState(false);
-	const { createExercise, updateExercise, deleteExercise } = useExercises();
+	const { createExercise, updateExercise, deleteExercise, loading, error } = useExercises();
+
+	// Add useEffect to handle loading and error states
+	useEffect(() => {
+		let toastId: string | number | null = null;
+
+		if (loading) {
+			toastId = toast.loading('Processing...');
+		} else if (error) {
+			toast.error(error, {
+				toastId: 'exercise-error', // Unique ID to prevent duplicate error toasts
+			});
+		}
+
+		// Cleanup function to dismiss loading toast when loading is complete
+		return () => {
+			if (toastId !== null) {
+				toast.dismiss(toastId);
+			}
+		};
+	}, [loading, error]);
 
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
