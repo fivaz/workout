@@ -1,4 +1,4 @@
-import { type Set } from '@/routes/auth/set/model';
+import { type Set } from '@/routes/server/auth/set/model';
 
 export type Exercise = {
 	id: string;

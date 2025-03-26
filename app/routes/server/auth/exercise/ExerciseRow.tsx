@@ -1,4 +1,4 @@
-import type { Exercise } from '@/routes/auth/exercise/model';
+import type { Exercise } from '@/routes/server/auth/exercise/model';
 import GInput from '@/components/GInput';
 import { useFetcher, useSubmit } from 'react-router';
 import GButton from '@/components/GButton';
@@ -29,13 +29,13 @@ export function ExerciseRow({ exercise }: { exercise: Exercise }) {
 					onChange={(event) => {
 						submit(event.currentTarget);
 					}}
-					action="/"
+					action="/server/"
 				>
 					<GInput name="id" defaultValue={exercise.id} type="hidden" />
 					<GInput name="name" defaultValue={exercise.name || 'error'} />
 				</fetcher.Form>
 
-				<fetcher.Form method="post" action={`/exercise/${exercise.id}/delete`}>
+				<fetcher.Form method="post" action={`/server/exercise/${exercise.id}/delete`}>
 					<GInput name="id" defaultValue={exercise.id} type="hidden" />
 					<GButton type="submit">Del</GButton>
 				</fetcher.Form>
@@ -57,7 +57,7 @@ export function ExerciseRow({ exercise }: { exercise: Exercise }) {
 								<GInput name="weight" type="number" defaultValue={set.weight} />
 								<fetcher.Form
 									method="post"
-									action={`/exercise/${exercise.id}/sets/${set.id}/delete`}
+									action={`/server/exercise/${exercise.id}/sets/${set.id}/delete`}
 								>
 									<GButton type="submit" color="white" size="p-1.5">
 										<XIcon className="size-5 text-red-500" />
@@ -71,7 +71,7 @@ export function ExerciseRow({ exercise }: { exercise: Exercise }) {
 
 				<fetcher.Form
 					method="post"
-					action={`/exercise/${exercise.id}/sets`}
+					action={`/server/exercise/${exercise.id}/sets`}
 					className="flex flex-col gap-2"
 					ref={addSetFormRef}
 				>

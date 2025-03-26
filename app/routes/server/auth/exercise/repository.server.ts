@@ -1,8 +1,8 @@
 import { adminDb } from '@/lib/firebase.server';
-import { type Exercise } from '@/routes/auth/exercise/model';
+import { type Exercise } from '@/routes/server/auth/exercise/model';
 import { DB } from '@/lib/consts';
-import { getSetPath } from '@/routes/auth/set/repository.server';
-import { type Set } from '@/routes/auth/set/model';
+import { getSetPath } from '@/routes/server/auth/set/repository.server';
+import { type Set } from '@/routes/server/auth/set/model';
 
 export function getExercisePath(userId: string) {
 	return `/${DB.USERS}/${userId}/${DB.EXERCISES}`;

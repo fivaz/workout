@@ -8,8 +8,8 @@ import GAlert from '@/components/GAlert';
 import { adminAuth } from '@/lib/firebase.server';
 import { commitSession, getSession } from '@/sessions.server';
 import type { Route } from './+types/Login';
-import { ROUTES } from '@/lib/consts';
-import { getErrorMessage, googleSignIn, login } from '@/routes/guest/service';
+import { SERVER_ROUTES } from '@/lib/consts';
+import { getErrorMessage, googleSignIn, login } from '@/routes/server/guest/service';
 
 export default function Login() {
 	const [error, setError] = useState<string>('');
@@ -31,7 +31,7 @@ export default function Login() {
 		setIsLoading(true);
 		try {
 			const idToken = await login(event);
-			void fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
+			void fetcher.submit({ idToken }, { method: 'post', action: SERVER_ROUTES.LOGIN });
 		} catch (error) {
 			setError(getErrorMessage(error));
 		} finally {
@@ -43,7 +43,7 @@ export default function Login() {
 		setIsLoading(true);
 		try {
 			const idToken = await googleSignIn();
-			void fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
+			void fetcher.submit({ idToken }, { method: 'post', action: SERVER_ROUTES.LOGIN });
 		} catch (error) {
 			setError(getErrorMessage(error));
 		} finally {
@@ -102,7 +102,7 @@ export default function Login() {
 					<p className=" text-center text-sm/6 text-gray-500">
 						Not a member?{' '}
 						<NavLink
-							to={ROUTES.REGISTER}
+							to={SERVER_ROUTES.REGISTER}
 							className="font-semibold text-blue-600 hover:text-blue-500"
 						>
 							Sign up
@@ -133,7 +133,7 @@ export async function action({ request }: Route.ActionArgs) {
 		session.set('sessionCookie', sessionCookie);
 		session.set('userId', decodedToken.uid);
 
-		return redirect('/', {
+		return redirect(SERVER_ROUTES.HOME, {
 			headers: {
 				'Set-Cookie': await commitSession(session),
 			},
@@ -141,7 +141,7 @@ export async function action({ request }: Route.ActionArgs) {
 	} catch (error) {
 		session.flash('error', error instanceof Error ? error.message : 'Authentication failed');
 		// Redirect back to the login page with errors.
-		return redirect('/login', {
+		return redirect(SERVER_ROUTES.LOGIN, {
 			headers: {
 				'Set-Cookie': await commitSession(session),
 			},

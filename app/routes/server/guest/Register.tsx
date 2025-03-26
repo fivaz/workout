@@ -1,12 +1,12 @@
 import { NavLink, useFetcher } from 'react-router';
 import { type FormEvent, useEffect, useState } from 'react';
-import { getErrorMessage, googleSignIn, register } from '@/routes/guest/service';
+import { getErrorMessage, googleSignIn, register } from '@/routes/server/guest/service';
 import GText from '@/components/GText';
 import GAlert from '@/components/GAlert';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
-import GoogleIcon from '@/routes/guest/GoogleIcon';
-import { ROUTES } from '@/lib/consts';
+import GoogleIcon from '@/routes/server/guest/GoogleIcon';
+import { SERVER_ROUTES } from '@/lib/consts';
 
 export default function Register() {
 	const [error, setError] = useState<string>('');
@@ -28,7 +28,7 @@ export default function Register() {
 		setIsLoading(true);
 		try {
 			const idToken = await register(event);
-			void fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
+			void fetcher.submit({ idToken }, { method: 'post', action: SERVER_ROUTES.LOGIN });
 		} catch (error) {
 			setError(getErrorMessage(error));
 		} finally {
@@ -40,7 +40,7 @@ export default function Register() {
 		setIsLoading(true);
 		try {
 			const idToken = await googleSignIn();
-			void fetcher.submit({ idToken }, { method: 'post', action: ROUTES.LOGIN });
+			void fetcher.submit({ idToken }, { method: 'post', action: SERVER_ROUTES.LOGIN });
 		} catch (error) {
 			setError(getErrorMessage(error));
 		} finally {
@@ -100,7 +100,10 @@ export default function Register() {
 
 					<p className=" text-center text-sm/6 text-gray-500">
 						Already a member?{' '}
-						<NavLink to={ROUTES.LOGIN} className="font-semibold text-blue-600 hover:text-blue-500">
+						<NavLink
+							to={SERVER_ROUTES.LOGIN}
+							className="font-semibold text-blue-600 hover:text-blue-500"
+						>
 							Sign in
 						</NavLink>
 					</p>

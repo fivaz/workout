@@ -5,7 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase.client';
 import type { Route } from './+types/AuthLayout';
 import { getSession } from '@/sessions.server';
-import { ROUTES } from '@/lib/consts';
+import { SERVER_ROUTES } from '@/lib/consts';
 import { Button } from '@headlessui/react';
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -13,7 +13,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 	const userId = session.get('userId');
 
 	if (!userId) {
-		return redirect(ROUTES.LOGIN);
+		return redirect(SERVER_ROUTES.LOGIN);
 	}
 
 	return data({ userId });
@@ -34,7 +34,7 @@ export default function AuthLayout() {
 
 	return (
 		<AuthProvider>
-			<Form method="post" action={ROUTES.LOGOUT}>
+			<Form method="post" action={SERVER_ROUTES.LOGOUT}>
 				<Button type="submit">Logout</Button>
 			</Form>
 			<div className="h-screen">

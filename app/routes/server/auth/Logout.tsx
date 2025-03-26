@@ -1,13 +1,12 @@
-import { type ActionFunctionArgs, Form, Link, NavLink } from 'react-router';
-import { redirect } from 'react-router';
+import { Form, redirect } from 'react-router';
 import { destroySession, getSession } from '@/sessions.server';
 import type { Route } from './+types/Logout';
-import { Button } from '@headlessui/react';
 import GButton from '@/components/GButton';
+import { SERVER_ROUTES } from '@/lib/consts';
 
 export async function action({ request }: Route.ActionArgs) {
 	const session = await getSession(request.headers.get('Cookie'));
-	return redirect('/login', {
+	return redirect(SERVER_ROUTES.LOGIN, {
 		headers: {
 			'Set-Cookie': await destroySession(session),
 		},
