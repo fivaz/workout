@@ -1,11 +1,11 @@
 import { NavLink, useNavigate } from 'react-router';
 import { type FormEvent, useState } from 'react';
-import { getErrorMessage, googleSignIn, register } from '@/routes/server/guest/service';
+import { getErrorMessage, googleSignIn, register } from '@/routes/guest/service';
 import GText from '@/components/GText';
 import GAlert from '@/components/GAlert';
 import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
-import GoogleIcon from '@/routes/server/guest/GoogleIcon';
+import GoogleIcon from '@/routes/guest/GoogleIcon';
 import { ROUTES } from '@/lib/consts';
 
 export default function Register() {

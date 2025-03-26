@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
-import type { DocumentData, QuerySnapshot } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 import {
-	collection,
-	doc,
-	getDocs,
-	getDoc,
-	setDoc,
 	addDoc,
-	updateDoc,
+	collection,
 	deleteDoc,
+	doc,
+	onSnapshot,
+	type QuerySnapshot,
+	updateDoc,
 } from 'firebase/firestore';
 import { useAuth } from '@/lib/auth/authContext';
 import { db } from '../firebase.client';
@@ -27,15 +25,19 @@ export function useGetExercises() {
 
 	useEffect(() => {
 		if (!user) {
+			setExercises([]);
 			setLoading(false);
 			return;
 		}
 
-		const fetchExercises = async () => {
-			try {
-				const exercisesRef = collection(db, getExercisePath(user.uid));
-				const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(exercisesRef);
-				const exercisesData = querySnapshot.docs.map(
+		setLoading(true);
+		const exercisesRef = collection(db, getExercisePath(user.uid));
+
+		// Real-time listener
+		const unsubscribe = onSnapshot(
+			exercisesRef,
+			(snapshot) => {
+				const exercisesData = snapshot.docs.map(
 					(doc) =>
 						({
 							id: doc.id,
@@ -43,14 +45,16 @@ export function useGetExercises() {
 						}) as Exercise,
 				);
 				setExercises(exercisesData);
-			} catch (err) {
-				setError(err instanceof Error ? err.message : 'Failed to fetch exercises');
-			} finally {
 				setLoading(false);
-			}
-		};
+			},
+			(err) => {
+				setError(err.message);
+				setLoading(false);
+			},
+		);
 
-		fetchExercises();
+		// Cleanup subscription
+		return () => unsubscribe();
 	}, [user]);
 
 	return { exercises, loading, error };
@@ -62,7 +66,7 @@ export function useCreateExercise() {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const createExercise = async (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
+	const createExercise = async (exercise: Exercise) => {
 		if (!user) {
 			throw new Error('User must be authenticated');
 		}
@@ -70,8 +74,10 @@ export function useCreateExercise() {
 		setLoading(true);
 		try {
 			const exercisesRef = collection(db, getExercisePath(user.uid));
+			// remove id
+			const { id, ...data } = exercise;
 			const newExercise = {
-				...exerciseData,
+				...data,
 				createdAt: new Date().toISOString(),
 			};
 			const docRef = await addDoc(exercisesRef, newExercise);

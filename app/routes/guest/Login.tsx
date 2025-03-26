@@ -6,7 +6,7 @@ import GoogleIcon from './GoogleIcon';
 import { type FormEvent, useState } from 'react';
 import GAlert from '@/components/GAlert';
 import { ROUTES } from '@/lib/consts';
-import { getErrorMessage, googleSignIn, login } from '@/routes/server/guest/service';
+import { getErrorMessage, googleSignIn, login } from '@/routes/guest/service';
 
 export default function Login() {
 	const [error, setError] = useState<string>('');
