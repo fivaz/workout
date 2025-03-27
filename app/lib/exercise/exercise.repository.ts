@@ -1,6 +1,14 @@
-import { addDoc, collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import {
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	onSnapshot,
+	setDoc,
+	updateDoc,
+} from 'firebase/firestore';
 import { db } from '../firebase.client';
-import { DB } from '@/lib/consts';
+import { DB, gFormatDate } from '@/lib/consts';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 
 // Base path generator
@@ -30,23 +38,32 @@ export function getExercises(
 	);
 }
 
-export async function createExercise(userId: string, exercise: Exercise) {
+export function createExercise(userId: string, exercise: Exercise): string {
 	const exercisesRef = collection(db, getExercisePath(userId));
-	const { id, ...data } = exercise; // Remove id if provided
+
+	// Generate a new document reference with a unique ID
+	const newDocRef = doc(exercisesRef);
+	const newId = newDocRef.id;
+
+	// Prepare the exercise data with the generated ID
 	const newExercise = {
-		...data,
-		createdAt: new Date().toISOString(),
+		...exercise,
+		id: newId, // Include the ID in the document
+		createdAt: gFormatDate(new Date()),
 	};
-	const docRef = await addDoc(exercisesRef, newExercise);
-	return docRef.id;
+
+	// Write the document to Firestore with the pre-generated ID
+	void setDoc(newDocRef, newExercise);
+
+	return newId;
 }
 
-export async function updateExercise(userId: string, exercise: Exercise) {
+export function updateExercise(userId: string, exercise: Exercise) {
 	const exerciseRef = doc(db, getExercisePath(userId), exercise.id);
-	await updateDoc(exerciseRef, exercise);
+	void updateDoc(exerciseRef, exercise);
 }
 
-export async function deleteExercise(userId: string, exerciseId: string) {
+export function deleteExercise(userId: string, exerciseId: string) {
 	const exerciseRef = doc(db, getExercisePath(userId), exerciseId);
-	await deleteDoc(exerciseRef);
+	void deleteDoc(exerciseRef);
 }

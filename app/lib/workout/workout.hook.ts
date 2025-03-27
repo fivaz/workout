@@ -37,7 +37,7 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 	}, [user, exerciseId, currentDate]);
 
 	// CRUD operations with shared state
-	async function handleCreateWorkout(workout: Omit<Workout, 'id'>) {
+	function handleCreateWorkout(workout: Workout) {
 		if (!user || !exerciseId) {
 			toast.error('User must be authenticated and exercise ID must be provided', {
 				toastId: 'exercise-error',
@@ -46,11 +46,10 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 		}
 
 		try {
-			const newWorkoutId = await createWorkout(user.uid, exerciseId, workout);
+			void createWorkout(user.uid, exerciseId, workout);
 			toast.success('Workout created successfully', {
 				toastId: 'exercise-success',
 			});
-			return newWorkoutId; // Return the ID for potential use
 		} catch (err) {
 			toast.error(err instanceof Error ? err.message : 'Failed to create workout', {
 				toastId: 'exercise-error',
@@ -59,7 +58,7 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 		}
 	}
 
-	async function handleUpdateWorkout(workout: Workout) {
+	function handleUpdateWorkout(workout: Workout) {
 		if (!user || !exerciseId) {
 			toast.error('User must be authenticated and exercise ID must be provided', {
 				toastId: 'exercise-error',
@@ -68,7 +67,7 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 		}
 
 		try {
-			await updateWorkout(user.uid, exerciseId, workout);
+			void updateWorkout(user.uid, exerciseId, workout);
 			toast.success('Workout updated successfully', {
 				toastId: 'exercise-success',
 			});
@@ -80,7 +79,7 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 		}
 	}
 
-	async function handleDeleteWorkout(workoutId: string) {
+	function handleDeleteWorkout(workoutId: string) {
 		if (!user || !exerciseId) {
 			toast.error('User must be authenticated and exercise ID must be provided', {
 				toastId: 'exercise-error',
@@ -89,7 +88,7 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 		}
 
 		try {
-			await deleteWorkout(user.uid, exerciseId, workoutId);
+			void deleteWorkout(user.uid, exerciseId, workoutId);
 			toast.success('Workout deleted successfully', {
 				toastId: 'exercise-success',
 			});

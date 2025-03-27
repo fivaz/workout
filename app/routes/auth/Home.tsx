@@ -5,12 +5,15 @@ import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
 import { buildEmptyWorkout } from '@/lib/workout/workout.model';
+import { gFormatDate } from '@/lib/consts';
 
 export default function Home() {
 	const { exercises } = useExercises();
 
 	const newExercise = buildEmptyExercise();
 	const newWorkout = buildEmptyWorkout();
+
+	const currentDate = gFormatDate(new Date());
 
 	return (
 		<div className="mt-5 p-3">
@@ -27,7 +30,7 @@ export default function Home() {
 
 				<ul className="flex flex-col gap-3 p-2 rounded-md border border-gray-200 dark:border-gray-500 divide-y divide-gray-200 dark:divide-gray-500">
 					{exercises.map((exercise) => (
-						<ExerciseRow key={exercise.id} exercise={exercise} />
+						<ExerciseRow key={exercise.id} exercise={exercise} currentDate={currentDate} />
 					))}
 				</ul>
 			</div>

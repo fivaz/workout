@@ -7,16 +7,14 @@ export type WorkoutSet = {
 
 export type Workout = {
 	id: string;
-	date: string;
 	sets: WorkoutSet[];
 	createdAt: string;
 };
 
-export function buildEmptyWorkout() {
+export function buildEmptyWorkout(): Workout {
 	return {
 		id: '',
-		date: gFormatDate(new Date()),
+		createdAt: gFormatDate(new Date()),
 		sets: [],
-		createdAt: new Date().toString(),
 	};
 }

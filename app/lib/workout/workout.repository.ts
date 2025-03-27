@@ -1,5 +1,5 @@
 import { db } from '../firebase.client';
-import { DB } from '@/lib/consts';
+import { DB, gFormatDate } from '@/lib/consts';
 import { buildEmptyWorkout, type Workout } from '@/lib/workout/workout.model';
 import {
 	addDoc,
@@ -29,8 +29,7 @@ export async function getLatestWorkout(
 	// Query workouts where date is <= currentDate, ordered by date descending, limited to 1
 	const q = query(
 		workoutsRef,
-		where('date', '<=', currentDate),
-		orderBy('date', 'desc'),
+		where('createdAt', '<=', currentDate),
 		orderBy('createdAt', 'desc'),
 		limit(1),
 	);
@@ -38,7 +37,6 @@ export async function getLatestWorkout(
 	const snapshot = await getDocs(q);
 
 	if (snapshot.empty) {
-		console.error('there should be a workout for exercise: ', exerciseId);
 		return buildEmptyWorkout();
 	}
 
@@ -60,13 +58,7 @@ export function getWorkouts(
 	return onSnapshot(
 		workoutsRef,
 		(snapshot) => {
-			const workoutsData = snapshot.docs.map(
-				(doc) =>
-					({
-						id: doc.id,
-						...doc.data(),
-					}) as Workout,
-			);
+			const workoutsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Workout);
 			callback(workoutsData);
 		},
 		(err) => {
@@ -75,26 +67,22 @@ export function getWorkouts(
 	);
 }
 
-export async function createWorkout(
-	userId: string,
-	exerciseId: string,
-	workout: Omit<Workout, 'id'>,
-) {
+export function createWorkout(userId: string, exerciseId: string, workout: Workout) {
 	const workoutsRef = collection(db, getWorkoutsPath(userId, exerciseId));
+	const { id, ...data } = workout;
 	const newWorkout = {
-		...workout,
-		createdAt: workout.createdAt || new Date().toISOString(),
+		...data,
+		createdAt: workout.createdAt || gFormatDate(new Date()),
 	};
-	const docRef = await addDoc(workoutsRef, newWorkout);
-	return docRef.id;
+	void addDoc(workoutsRef, newWorkout);
 }
 
-export async function updateWorkout(userId: string, exerciseId: string, workout: Workout) {
+export function updateWorkout(userId: string, exerciseId: string, workout: Workout) {
 	const workoutRef = doc(db, getWorkoutsPath(userId, exerciseId), workout.id);
-	await updateDoc(workoutRef, workout);
+	void updateDoc(workoutRef, workout);
 }
 
-export async function deleteWorkout(userId: string, exerciseId: string, workoutId: string) {
+export function deleteWorkout(userId: string, exerciseId: string, workoutId: string) {
 	const workoutRef = doc(db, getWorkoutsPath(userId, exerciseId), workoutId);
-	await deleteDoc(workoutRef);
+	void deleteDoc(workoutRef);
 }

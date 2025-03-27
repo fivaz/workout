@@ -10,6 +10,7 @@ import {
 import type { ExerciseContextType } from '@/lib/exercise/exerciseContext';
 import type { Workout } from '@/lib/workout/workout.model';
 import { toast } from 'react-toastify';
+import { createWorkout, updateWorkout } from '@/lib/workout/workout.repository';
 
 export function useCRUDExercises(): ExerciseContextType {
 	const { user } = useAuth();
@@ -41,11 +42,11 @@ export function useCRUDExercises(): ExerciseContextType {
 		}
 
 		try {
-			const newExercise = await createExercise(user.uid, exercise);
+			const newExerciseId = createExercise(user.uid, exercise);
+			void createWorkout(user.uid, newExerciseId, workout);
 			toast.success(`Exercise "${exercise.name}" created successfully`, {
 				toastId: 'exercise-success',
 			});
-			return newExercise;
 		} catch (err) {
 			toast.error(err instanceof Error ? err.message : 'Failed to create exercise', {
 				toastId: 'exercise-error',
@@ -54,14 +55,15 @@ export function useCRUDExercises(): ExerciseContextType {
 		}
 	}
 
-	async function handleUpdateExercise(exercise: Exercise) {
+	function handleUpdateExercise(exercise: Exercise, workout: Workout) {
 		if (!user) {
 			toast.error('User must be authenticated', { toastId: 'exercise-error' });
 			return;
 		}
 
 		try {
-			await updateExercise(user.uid, exercise);
+			updateExercise(user.uid, exercise);
+			updateWorkout(user.uid, exercise.id, workout);
 			toast.success(`Exercise "${exercise.name}" updated successfully`, {
 				toastId: 'exercise-success',
 			});
@@ -73,14 +75,14 @@ export function useCRUDExercises(): ExerciseContextType {
 		}
 	}
 
-	async function handleDeleteExercise(exerciseId: string) {
+	function handleDeleteExercise(exerciseId: string) {
 		if (!user) {
 			toast.error('User must be authenticated', { toastId: 'exercise-error' });
 			return;
 		}
 
 		try {
-			await deleteExercise(user.uid, exerciseId);
+			void deleteExercise(user.uid, exerciseId);
 			toast.success(`Exercise deleted successfully`, {
 				toastId: 'exercise-success',
 			});

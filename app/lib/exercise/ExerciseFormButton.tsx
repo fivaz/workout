@@ -29,6 +29,10 @@ export function ExerciseFormButton({
 
 	const { createExercise, updateExercise, deleteExercise } = useExercises();
 
+	useEffect(() => {
+		setInWorkout(workout);
+	}, [workout]);
+
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
