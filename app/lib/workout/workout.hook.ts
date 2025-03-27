@@ -4,9 +4,9 @@ import { buildEmptyWorkout, type Workout } from '@/lib/workout/workout.model';
 import {
 	createWorkout,
 	deleteWorkout,
-	getLatestWorkout, // Add this import
+	getLatestWorkout,
 	updateWorkout,
-} from '@/lib/workout/workout.repository'; // Note: fixed typo in import path
+} from '@/lib/workout/workout.repository';
 
 export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 	const { user } = useAuth();
