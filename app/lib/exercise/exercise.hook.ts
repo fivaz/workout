@@ -50,6 +50,7 @@ export function useCRUDExercises(): ExerciseContextType {
 			toast.error(err instanceof Error ? err.message : 'Failed to create exercise', {
 				toastId: 'exercise-error',
 			});
+			console.error(err);
 		}
 	}
 
@@ -68,6 +69,7 @@ export function useCRUDExercises(): ExerciseContextType {
 			toast.error(err instanceof Error ? err.message : 'Failed to update exercise', {
 				toastId: 'exercise-error',
 			});
+			console.error(err);
 		}
 	}
 
@@ -86,6 +88,7 @@ export function useCRUDExercises(): ExerciseContextType {
 			toast.error(err instanceof Error ? err.message : 'Failed to delete exercise', {
 				toastId: 'exercise-error',
 			});
+			console.error(err);
 		}
 	}
 

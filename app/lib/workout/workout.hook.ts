@@ -7,95 +7,102 @@ import {
 	getLatestWorkout,
 	updateWorkout,
 } from '@/lib/workout/workout.repository';
+import { toast } from 'react-toastify';
 
 export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 	const { user } = useAuth();
 	const [latestWorkout, setLatestWorkout] = useState<Workout>(buildEmptyWorkout());
-	const [loading, setLoading] = useState<boolean>(false);
-	const [error, setError] = useState<string | null>(null);
-	const [success, setSuccess] = useState<string | null>(null);
 
 	// Fetch or create the latest workout
 	useEffect(() => {
 		async function fetchLatestWorkout() {
 			if (!user || !exerciseId) {
 				setLatestWorkout(buildEmptyWorkout());
-				setLoading(false);
 				return;
 			}
 
-			setLoading(true);
 			try {
 				const workout = await getLatestWorkout(user.uid, exerciseId, currentDate);
 				setLatestWorkout(workout);
 			} catch (err) {
-				setError(err instanceof Error ? err.message : 'Failed to fetch or create latest workout');
-			} finally {
-				setLoading(false);
+				toast.error(
+					err instanceof Error ? err.message : 'Failed to fetch or create latest workout',
+					{ toastId: 'exercise-error' },
+				);
+				console.error(err);
 			}
 		}
 
-		fetchLatestWorkout();
+		void fetchLatestWorkout();
 	}, [user, exerciseId, currentDate]);
 
 	// CRUD operations with shared state
 	async function handleCreateWorkout(workout: Omit<Workout, 'id'>) {
 		if (!user || !exerciseId) {
-			setError('User must be authenticated and exercise ID must be provided');
+			toast.error('User must be authenticated and exercise ID must be provided', {
+				toastId: 'exercise-error',
+			});
 			return;
 		}
 
-		setLoading(true);
 		try {
 			const newWorkoutId = await createWorkout(user.uid, exerciseId, workout);
-			setSuccess('Workout created successfully');
+			toast.success('Workout created successfully', {
+				toastId: 'exercise-success',
+			});
 			return newWorkoutId; // Return the ID for potential use
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Failed to create workout');
-		} finally {
-			setLoading(false);
+			toast.error(err instanceof Error ? err.message : 'Failed to create workout', {
+				toastId: 'exercise-error',
+			});
+			console.error(err);
 		}
 	}
 
 	async function handleUpdateWorkout(workout: Workout) {
 		if (!user || !exerciseId) {
-			setError('User must be authenticated and exercise ID must be provided');
+			toast.error('User must be authenticated and exercise ID must be provided', {
+				toastId: 'exercise-error',
+			});
 			return;
 		}
 
-		setLoading(true);
 		try {
 			await updateWorkout(user.uid, exerciseId, workout);
-			setSuccess('Workout updated successfully');
+			toast.success('Workout updated successfully', {
+				toastId: 'exercise-success',
+			});
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Failed to update workout');
-		} finally {
-			setLoading(false);
+			toast.error(err instanceof Error ? err.message : 'Failed to update workout', {
+				toastId: 'exercise-error',
+			});
+			console.error(err);
 		}
 	}
 
 	async function handleDeleteWorkout(workoutId: string) {
 		if (!user || !exerciseId) {
-			setError('User must be authenticated and exercise ID must be provided');
+			toast.error('User must be authenticated and exercise ID must be provided', {
+				toastId: 'exercise-error',
+			});
 			return;
 		}
 
-		setLoading(true);
 		try {
 			await deleteWorkout(user.uid, exerciseId, workoutId);
-			setSuccess('Workout deleted successfully');
+			toast.success('Workout deleted successfully', {
+				toastId: 'exercise-success',
+			});
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Failed to delete workout');
-		} finally {
-			setLoading(false);
+			toast.error(err instanceof Error ? err.message : 'Failed to delete workout', {
+				toastId: 'exercise-error',
+			});
+			console.error(err);
 		}
 	}
 
 	return {
 		latestWorkout,
-		loading,
-		error,
-		success,
 		createWorkout: handleCreateWorkout,
 		updateWorkout: handleUpdateWorkout,
 		deleteWorkout: handleDeleteWorkout,
