@@ -4,11 +4,13 @@ import { ExerciseRow } from '@/lib/exercise/ExerciseRow';
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
+import { buildEmptyWorkout } from '@/lib/workout/workout.model';
 
 export default function Home() {
 	const { exercises } = useExercises();
 
 	const newExercise = buildEmptyExercise();
+	const newWorkout = buildEmptyWorkout();
 
 	return (
 		<div className="mt-5 p-3">
@@ -17,7 +19,7 @@ export default function Home() {
 					<GText tag="h1" className="text-lg">
 						Exercises
 					</GText>
-					<ExerciseFormButton exercise={newExercise} sets={[]}>
+					<ExerciseFormButton exercise={newExercise} workout={newWorkout}>
 						<PlusIcon className="size-5" />
 						Exercise
 					</ExerciseFormButton>
