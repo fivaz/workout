@@ -36,6 +36,8 @@ export function ExerciseFormButton({
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
+		console.log('workout', inWorkout);
+
 		if (inExercise.id) {
 			updateExercise(inExercise, inWorkout);
 		} else {

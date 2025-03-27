@@ -35,6 +35,17 @@ export function ExerciseFormWorkout({
 		}
 	}
 
+	function handleSetChange(index: number, e: ChangeEvent<HTMLInputElement>) {
+		const { name, value } = e.target;
+		const numValue = Number(value);
+		if (isNaN(numValue)) return; // Ignore invalid numbers
+
+		const updatedSets = workout.sets.map((set, i) =>
+			i === index ? { ...set, [name]: numValue } : set,
+		);
+		setWorkout({ ...workout, sets: updatedSets });
+	}
+
 	return (
 		<div className="flex flex-col gap-2 border border-gray-300 dark:border-gray-600 p-2 rounded-md">
 			<div className="flex gap-2 flex-2">
@@ -48,8 +59,18 @@ export function ExerciseFormWorkout({
 					{workout.sets.map((set, index) => (
 						<li key={index} className="flex gap-3 flex-2 items-center">
 							<GText className="w-15 px-1.5">{index + 1}</GText>
-							<GInput name="reps" type="number" defaultValue={set.reps} />
-							<GInput name="weight" type="number" defaultValue={set.weight} />
+							<GInput
+								name="reps"
+								type="number"
+								value={set.reps}
+								onChange={(e) => handleSetChange(index, e)}
+							/>
+							<GInput
+								name="weight"
+								type="number"
+								value={set.weight}
+								onChange={(e) => handleSetChange(index, e)}
+							/>
 							<GButton
 								className="w-14"
 								size="p-1.5"
