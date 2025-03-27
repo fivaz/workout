@@ -7,33 +7,25 @@ import {
 	getExercises,
 	updateExercise,
 } from '@/lib/exercise/exercise.repository';
+import type { ExerciseContextType } from '@/lib/exercise/exerciseContext';
+import type { Workout } from '@/lib/workout/workout.model';
+import { toast } from 'react-toastify';
 
-export function useCRUDExercises() {
+export function useCRUDExercises(): ExerciseContextType {
 	const { user } = useAuth();
 	const [exercises, setExercises] = useState<Exercise[]>([]);
-	const [loading, setLoading] = useState<boolean>(false);
-	const [error, setError] = useState<string | null>(null);
-	const [success, setSuccess] = useState<string | null>(null); // New success state
 
 	// Fetch exercises with real-time updates
 	useEffect(() => {
 		if (!user) {
 			setExercises([]);
-			setLoading(false);
 			return;
 		}
 
-		setLoading(true);
 		const unsubscribe = getExercises(
 			user.uid,
-			(exercisesData) => {
-				setExercises(exercisesData);
-				setLoading(false);
-			},
-			(err) => {
-				setError(err);
-				setLoading(false);
-			},
+			(exercisesData) => setExercises(exercisesData),
+			(error) => toast.error(error, { toastId: 'exercise-error' }),
 		);
 
 		return () => {
@@ -42,63 +34,63 @@ export function useCRUDExercises() {
 	}, [user]);
 
 	// CRUD operations with shared state
-	async function handleCreateExercise(exercise: Exercise) {
+	async function handleCreateExercise(exercise: Exercise, workout: Workout) {
 		if (!user) {
-			setError('User must be authenticated');
+			toast.error('User must be authenticated', { toastId: 'exercise-error' });
 			return;
 		}
 
-		setLoading(true);
 		try {
 			const newExercise = await createExercise(user.uid, exercise);
-			setSuccess(`Exercise "${exercise.name}" created successfully`);
+			toast.success(`Exercise "${exercise.name}" created successfully`, {
+				toastId: 'exercise-success',
+			});
 			return newExercise;
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Failed to create exercise');
-		} finally {
-			setLoading(false);
+			toast.error(err instanceof Error ? err.message : 'Failed to create exercise', {
+				toastId: 'exercise-error',
+			});
 		}
 	}
 
 	async function handleUpdateExercise(exercise: Exercise) {
 		if (!user) {
-			setError('User must be authenticated');
+			toast.error('User must be authenticated', { toastId: 'exercise-error' });
 			return;
 		}
 
-		setLoading(true);
 		try {
 			await updateExercise(user.uid, exercise);
-			setSuccess(`Exercise "${exercise.name}" updated successfully`);
+			toast.success(`Exercise "${exercise.name}" updated successfully`, {
+				toastId: 'exercise-success',
+			});
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Failed to update exercise');
-		} finally {
-			setLoading(false);
+			toast.error(err instanceof Error ? err.message : 'Failed to update exercise', {
+				toastId: 'exercise-error',
+			});
 		}
 	}
 
 	async function handleDeleteExercise(exerciseId: string) {
 		if (!user) {
-			setError('User must be authenticated');
+			toast.error('User must be authenticated', { toastId: 'exercise-error' });
 			return;
 		}
 
-		setLoading(true);
 		try {
 			await deleteExercise(user.uid, exerciseId);
-			setSuccess('Exercise deleted successfully');
+			toast.success(`Exercise deleted successfully`, {
+				toastId: 'exercise-success',
+			});
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Failed to delete exercise');
-		} finally {
-			setLoading(false);
+			toast.error(err instanceof Error ? err.message : 'Failed to delete exercise', {
+				toastId: 'exercise-error',
+			});
 		}
 	}
 
 	return {
 		exercises,
-		loading,
-		error,
-		success,
 		createExercise: handleCreateExercise,
 		updateExercise: handleUpdateExercise,
 		deleteExercise: handleDeleteExercise,

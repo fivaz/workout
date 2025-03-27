@@ -6,7 +6,7 @@ import type { JSX } from 'react';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import type { Workout } from '@/lib/workout/workout.model';
 
-export function ExerciseFormSets({
+export function ExerciseFormWorkout({
 	workout,
 	setWorkout,
 }: {
@@ -25,7 +25,7 @@ export function ExerciseFormSets({
 			setNewReps(undefined);
 			setNewWeight(undefined);
 		}
-	}, [workout, newReps, newWeight]);
+	}, [workout, newReps, newWeight, setWorkout]);
 
 	function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
 		console.log('handleInputChange');

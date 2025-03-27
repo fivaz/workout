@@ -1,21 +1,13 @@
 import GButton, { type GButtonProps } from '@/components/GButton';
-import {
-	type ChangeEvent,
-	type FormEvent,
-	type PropsWithChildren,
-	useEffect,
-	useState,
-} from 'react';
+import { type FormEvent, type PropsWithChildren, useEffect, useState } from 'react';
 import { DialogActions, DialogBody, DialogTitle, GDialog } from '@/components/GDialog';
 import GInput from '@/components/GInput';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import GText from '@/components/GText';
-import { XIcon } from 'lucide-react';
 import type { Workout } from '@/lib/workout/workout.model';
-import { ExerciseFormSets } from '@/lib/exercise/ExerciseFormSets';
+import { ExerciseFormWorkout } from '@/lib/exercise/ExerciseFormWorkout';
 
 export function ExerciseFormButton({
 	children,
@@ -28,21 +20,7 @@ export function ExerciseFormButton({
 	const [isOpen, setIsOpen] = useState(false);
 	const [inWorkout, setInWorkout] = useState<Workout>(workout);
 
-	const { createExercise, updateExercise, deleteExercise, loading, error, success } =
-		useExercises();
-
-	useEffect(() => {
-		if (error) {
-			toast.error(error, {
-				toastId: 'exercise-error',
-			});
-		} else if (success) {
-			toast.success(success, {
-				toastId: 'exercise-success',
-			});
-			setIsOpen(false);
-		}
-	}, [loading, error, success]);
+	const { createExercise, updateExercise, deleteExercise } = useExercises();
 
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -53,14 +31,16 @@ export function ExerciseFormButton({
 		};
 
 		if (newExercise.id) {
-			updateExercise(newExercise);
+			updateExercise(newExercise, inWorkout);
 		} else {
-			createExercise(newExercise);
+			createExercise(newExercise, inWorkout);
 		}
+		setIsOpen(false);
 	}
 
 	function handleDelete() {
 		deleteExercise(exercise.id);
+		setIsOpen(false);
 	}
 
 	return (
@@ -79,7 +59,7 @@ export function ExerciseFormButton({
 					<DialogTitle>{exercise.id ? 'Edit' : 'Create'} exercise</DialogTitle>
 					<DialogBody className="flex flex-col gap-3">
 						<GInput label="name" defaultValue={exercise.name} />
-						<ExerciseFormSets workout={inWorkout} setWorkout={setInWorkout} />
+						<ExerciseFormWorkout workout={inWorkout} setWorkout={setInWorkout} />
 					</DialogBody>
 					<DialogActions className="flex justify-between">
 						{exercise.id && (
