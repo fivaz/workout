@@ -8,9 +8,7 @@ import {
 	updateExercise,
 } from '@/lib/exercise/exercise.repository';
 import type { ExerciseContextType } from '@/lib/exercise/exerciseContext';
-import type { Workout } from '@/lib/workout/workout.model';
 import { toast } from 'react-toastify';
-import { createWorkout, updateWorkout } from '@/lib/workout/workout.repository';
 
 export function useCRUDExercises(): ExerciseContextType {
 	const { user } = useAuth();
@@ -35,15 +33,14 @@ export function useCRUDExercises(): ExerciseContextType {
 	}, [user]);
 
 	// CRUD operations with shared state
-	async function handleCreateExercise(exercise: Exercise, workout: Workout) {
+	async function handleCreateExercise(exercise: Exercise) {
 		if (!user) {
 			toast.error('User must be authenticated', { toastId: 'exercise-error' });
 			return;
 		}
 
 		try {
-			const newExerciseId = createExercise(user.uid, exercise);
-			void createWorkout(user.uid, newExerciseId, workout);
+			createExercise(user.uid, exercise);
 			toast.success(`Exercise "${exercise.name}" created successfully`, {
 				toastId: 'exercise-success',
 			});
@@ -55,7 +52,7 @@ export function useCRUDExercises(): ExerciseContextType {
 		}
 	}
 
-	function handleUpdateExercise(exercise: Exercise, workout: Workout) {
+	function handleUpdateExercise(exercise: Exercise) {
 		if (!user) {
 			toast.error('User must be authenticated', { toastId: 'exercise-error' });
 			return;
@@ -63,7 +60,6 @@ export function useCRUDExercises(): ExerciseContextType {
 
 		try {
 			updateExercise(user.uid, exercise);
-			updateWorkout(user.uid, exercise.id, workout);
 			toast.success(`Exercise "${exercise.name}" updated successfully`, {
 				toastId: 'exercise-success',
 			});

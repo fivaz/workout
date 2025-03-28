@@ -1,7 +1,7 @@
 import GText from '@/components/GText';
 import { useExercises } from '@/lib/exercise/exerciseContext';
-import { ExerciseRow } from '@/lib/exercise/ExerciseRow';
-import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
+import { ExerciseRow } from '@/routes/auth/Home/ExerciseRow/ExerciseRow';
+import { ExerciseFormButton } from '@/routes/auth/Home/ExerciseRow/ExerciseFormButton';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
 import { buildEmptyWorkout } from '@/lib/workout/workout.model';

@@ -12,7 +12,7 @@ import type { Exercise } from '@/lib/exercise/exercise.model';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import 'react-toastify/dist/ReactToastify.css';
 import type { Workout } from '@/lib/workout/workout.model';
-import { ExerciseFormWorkout } from '@/lib/exercise/ExerciseFormWorkout';
+import { ExerciseFormWorkout } from '@/routes/auth/Home/ExerciseRow/ExerciseFormWorkout';
 
 type ExerciseFormButtonProps = PropsWithChildren<
 	{ exercise: Exercise; workout: Workout } & GButtonProps
@@ -21,29 +21,22 @@ type ExerciseFormButtonProps = PropsWithChildren<
 export function ExerciseFormButton({
 	children,
 	exercise,
-	workout,
 	color,
 	className,
 	size,
 }: ExerciseFormButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
-	const [inWorkout, setInWorkout] = useState<Workout>(workout);
 	const [inExercise, setInExercise] = useState<Exercise>(exercise);
 
 	const { createExercise, updateExercise, deleteExercise } = useExercises();
 
-	useEffect(() => {
-		setInWorkout(workout);
-	}, [workout]);
-
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		console.log('workout', inWorkout);
 
 		if (inExercise.id) {
-			updateExercise(inExercise, inWorkout);
+			updateExercise(inExercise);
 		} else {
-			createExercise(inExercise, inWorkout);
+			createExercise(inExercise);
 		}
 		setIsOpen(false);
 	}
@@ -77,7 +70,6 @@ export function ExerciseFormButton({
 					<DialogTitle>{exercise.id ? 'Edit' : 'Create'} exercise</DialogTitle>
 					<DialogBody className="flex flex-col gap-3">
 						<GInput name="name" label="name" defaultValue={exercise.name} onChange={handleChange} />
-						<ExerciseFormWorkout workout={inWorkout} setWorkout={setInWorkout} />
 					</DialogBody>
 					<DialogActions className="flex justify-between">
 						{exercise.id && (

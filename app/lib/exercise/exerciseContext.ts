@@ -1,21 +1,20 @@
 // Custom hook to use the exercise context
 import { createContext, useContext } from 'react';
 import type { Exercise } from '@/lib/exercise/exercise.model';
-import type { Workout } from '@/lib/workout/workout.model';
 
 // Define the context type
 export interface ExerciseContextType {
 	exercises: Exercise[];
-	createExercise: (exercise: Exercise, workout: Workout) => void;
-	updateExercise: (exercise: Exercise, workout: Workout) => void;
+	createExercise: (exercise: Exercise) => void;
+	updateExercise: (exercise: Exercise) => void;
 	deleteExercise: (exerciseId: string) => void;
 }
 
 // Create the context
 export const ExerciseContext = createContext<ExerciseContextType>({
 	exercises: [],
-	createExercise: (exercise: Exercise, workout: Workout) => {},
-	updateExercise: (exercise: Exercise, workout: Workout) => {},
+	createExercise: (exercise: Exercise) => {},
+	updateExercise: (exercise: Exercise) => {},
 	deleteExercise: (exerciseId: string) => {},
 });
 
