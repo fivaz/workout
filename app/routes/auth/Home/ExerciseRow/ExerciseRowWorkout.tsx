@@ -7,7 +7,7 @@ import GInput from '@/components/GInput';
 import GText from '@/components/GText';
 import { buildEmptyWorkout, type Workout, type WorkoutSet } from '@/lib/workout/workout.model';
 import { useCallback, useEffect, useState } from 'react';
-import debounce from 'lodash.debounce';
+import { debounce } from 'lodash-es';
 
 interface ExerciseRowWorkoutProps {
 	exercise: Exercise;

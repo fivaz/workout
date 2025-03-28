@@ -4,13 +4,9 @@ import { DialogActions, DialogBody, DialogTitle, GDialog } from '@/components/GD
 import GInput from '@/components/GInput';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 import { useExercises } from '@/lib/exercise/exerciseContext';
-import 'react-toastify/dist/ReactToastify.css';
+import { cloneDeep } from 'lodash-es';
 
-type ExerciseFormButtonProps = PropsWithChildren<
-	{
-		exercise: Exercise;
-	} & GButtonProps
->;
+type ExerciseFormButtonProps = PropsWithChildren<{ exercise: Exercise } & GButtonProps>;
 
 export function ExerciseFormButton({
 	children,
@@ -22,24 +18,31 @@ export function ExerciseFormButton({
 	const [isOpen, setIsOpen] = useState(false);
 	const [inExercise, setInExercise] = useState<Exercise>(exercise);
 	const [imageFile, setImageFile] = useState<File | null>(null);
-	const [previewImage, setPreviewImage] = useState<string | null>(exercise.image || null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const { createExercise, updateExercise, deleteExercise } = useExercises();
+
+	function handleOpen() {
+		console.log(exercise);
+		setInExercise(cloneDeep(exercise));
+		setImageFile(null);
+		setIsOpen(true);
+	}
+
+	function handleClose() {
+		setIsOpen(false);
+	}
 
 	async function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
 		try {
 			if (inExercise.id) {
-				// Update existing exercise
 				void updateExercise(inExercise, imageFile);
 			} else {
-				// Create new exercise
 				void createExercise(inExercise, imageFile);
 			}
 			setIsOpen(false);
-			resetForm();
 		} catch (error) {
 			console.error('Error saving exercise:', error);
 			// You might want to add toast notifications here
@@ -48,9 +51,8 @@ export function ExerciseFormButton({
 
 	async function handleDelete() {
 		try {
-			await deleteExercise(inExercise);
+			void deleteExercise(inExercise);
 			setIsOpen(false);
-			resetForm();
 		} catch (error) {
 			console.error('Error deleting exercise:', error);
 		}
@@ -62,50 +64,19 @@ export function ExerciseFormButton({
 	}
 
 	function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
-		const file = e.target.files?.[0] || null;
-		setImageFile(file);
-
-		if (file) {
-			// Create preview
-			const reader = new FileReader();
-			reader.onload = (event) => {
-				setPreviewImage(event.target?.result as string);
-			};
-			reader.readAsDataURL(file);
-		} else {
-			// Reset to existing image if available
-			setPreviewImage(inExercise.image || null);
-		}
-	}
-
-	function resetForm() {
-		setInExercise(exercise);
-		setImageFile(null);
-		setPreviewImage(exercise.image || null);
-		if (fileInputRef.current) {
-			fileInputRef.current.value = '';
+		if (e.currentTarget.files) {
+			setImageFile(e.currentTarget.files?.[0]);
+			inExercise.image = URL.createObjectURL(e.currentTarget.files?.[0]);
 		}
 	}
 
 	return (
 		<>
-			<GButton
-				color={color}
-				className={className}
-				size={size}
-				type="button"
-				onClick={() => setIsOpen(true)}
-			>
+			<GButton color={color} className={className} size={size} type="button" onClick={handleOpen}>
 				{children}
 			</GButton>
 
-			<GDialog
-				open={isOpen}
-				onClose={() => {
-					setIsOpen(false);
-					resetForm();
-				}}
-			>
+			<GDialog open={isOpen} onClose={handleClose}>
 				<form onSubmit={handleSubmit}>
 					<DialogTitle>{inExercise.id ? 'Edit Exercise' : 'Create New Exercise'}</DialogTitle>
 
@@ -126,10 +97,10 @@ export function ExerciseFormButton({
 								accept="image/*"
 								onChange={handleImageChange}
 							/>
-							{previewImage && (
+							{inExercise.image && (
 								<div className="mt-2 flex justify-center">
 									<img
-										src={previewImage}
+										src={inExercise.image}
 										alt="Exercise preview"
 										className="max-h-40 max-w-full rounded object-contain"
 									/>

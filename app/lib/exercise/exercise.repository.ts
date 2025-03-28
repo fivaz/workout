@@ -4,7 +4,6 @@ import { db, storage } from '../firebase.client';
 import { DB, gFormatDate } from '@/lib/consts';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 
-// Path generators
 export const getExercisePath = (userId: string) => `${DB.USERS}/${userId}/${DB.EXERCISES}`;
 
 // Get real-time exercise updates
@@ -48,7 +47,7 @@ export async function createExercise(
 		createdAt: gFormatDate(new Date()),
 	};
 
-	await setDoc(newDocRef, newExercise);
+	void setDoc(newDocRef, newExercise);
 	return newExercise;
 }
 
@@ -71,22 +70,22 @@ export async function updateExercise(
 	}
 
 	const exerciseRef = doc(db, getExercisePath(userId), exercise.id);
-	await updateDoc(exerciseRef, {
+	void updateDoc(exerciseRef, {
 		...exercise,
 		image: imageUrl,
 	});
 }
 
 // Delete exercise and its associated image
-export async function deleteExercise(userId: string, exercise: Exercise): Promise<void> {
+export function deleteExercise(userId: string, exercise: Exercise): void {
 	const exerciseRef = doc(db, getExercisePath(userId), exercise.id);
 
 	// Delete associated image if it exists
 	if (exercise.image) {
-		await deleteImageByUrl(exercise.image);
+		void deleteImageByUrl(exercise.image);
 	}
 
-	await deleteDoc(exerciseRef);
+	void deleteDoc(exerciseRef);
 }
 
 // Storage helper functions
@@ -100,10 +99,10 @@ async function uploadExerciseImage(
 	return await getDownloadURL(storageRef);
 }
 
-async function deleteImageByUrl(imageUrl: string): Promise<void> {
+function deleteImageByUrl(imageUrl: string): void {
 	try {
 		const imageRef = ref(storage, extractPathFromStorageUrl(imageUrl));
-		await deleteObject(imageRef);
+		void deleteObject(imageRef);
 	} catch (error) {
 		console.warn('Failed to delete image:', error);
 	}

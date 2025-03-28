@@ -21,13 +21,11 @@ export function useCRUDExercises(): ExerciseContextType {
 			return;
 		}
 
-		const unsubscribe = getExercises(
+		return getExercises(
 			user.uid,
 			(exercisesData) => setExercises(exercisesData),
 			(error) => toast.error(error, { toastId: 'exercise-error' }),
 		);
-
-		return unsubscribe;
 	}, [user]);
 
 	// Create new exercise
