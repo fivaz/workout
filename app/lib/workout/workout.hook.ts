@@ -46,7 +46,6 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 
 		try {
 			void createWorkout(user.uid, exerciseId, workout);
-			setLatestWorkout(workout); // Update local state with the new workout
 			toast.success('Workout created successfully', {
 				toastId: 'exercise-success',
 			});
@@ -67,8 +66,11 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 		}
 
 		try {
-			void updateWorkout(user.uid, exerciseId, workout);
-			setLatestWorkout(workout); // Update local state with the modified workout
+			if (workout.id) {
+				void updateWorkout(user.uid, exerciseId, workout);
+			} else {
+				void createWorkout(user.uid, exerciseId, workout);
+			}
 			toast.success('Workout updated successfully', {
 				toastId: 'exercise-success',
 			});
@@ -90,7 +92,6 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 
 		try {
 			void deleteWorkout(user.uid, exerciseId, workoutId);
-			setLatestWorkout(buildEmptyWorkout()); // Reset to empty workout after deletion
 			toast.success('Workout deleted successfully', {
 				toastId: 'exercise-success',
 			});

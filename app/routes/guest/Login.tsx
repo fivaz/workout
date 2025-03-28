@@ -61,7 +61,7 @@ export default function Login() {
 
 						<GInput name="password" label="Password" type="password" required />
 
-						<GButton isLoading={isLoading} type="submit">
+						<GButton className="w-full" isLoading={isLoading} type="submit">
 							Sign in
 						</GButton>
 					</form>

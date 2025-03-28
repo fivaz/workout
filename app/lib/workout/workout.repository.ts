@@ -13,6 +13,7 @@ import {
 	updateDoc,
 	where,
 	limit,
+	setDoc,
 } from 'firebase/firestore';
 
 // Base path generator
@@ -27,8 +28,8 @@ export async function getLatestWorkout(
 	const workoutsRef = collection(db, getWorkoutsPath(userId, exerciseId));
 	const q = query(
 		workoutsRef,
-		where('date', '<=', currentDate),
-		orderBy('date', 'desc'),
+		where('createdAt', '<=', currentDate),
+		orderBy('createdAt', 'desc'),
 		limit(1), // Get only the most recent workout
 	);
 	const snapshot = await getDocs(q);
@@ -72,12 +73,15 @@ export function getWorkouts(
 
 export function createWorkout(userId: string, exerciseId: string, workout: Workout) {
 	const workoutsRef = collection(db, getWorkoutsPath(userId, exerciseId));
-	const { id, ...data } = workout;
+
+	const newDocRef = doc(workoutsRef);
 	const newWorkout = {
-		...data,
-		date: workout.date || gFormatDate(new Date()),
+		...workout,
+		id: newDocRef.id, // Include the ID in the document
+		createdAt: gFormatDate(new Date()),
 	};
-	void addDoc(workoutsRef, newWorkout);
+	void setDoc(newDocRef, newWorkout);
+	return newWorkout;
 }
 
 export function updateWorkout(userId: string, exerciseId: string, workout: Workout) {

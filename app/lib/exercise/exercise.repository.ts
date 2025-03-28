@@ -38,24 +38,23 @@ export function getExercises(
 	);
 }
 
-export function createExercise(userId: string, exercise: Exercise): string {
+export function createExercise(userId: string, exercise: Exercise): Exercise {
 	const exercisesRef = collection(db, getExercisePath(userId));
 
 	// Generate a new document reference with a unique ID
 	const newDocRef = doc(exercisesRef);
-	const newId = newDocRef.id;
 
 	// Prepare the exercise data with the generated ID
 	const newExercise = {
 		...exercise,
-		id: newId, // Include the ID in the document
+		id: newDocRef.id, // Include the ID in the document
 		createdAt: gFormatDate(new Date()),
 	};
 
 	// Write the document to Firestore with the pre-generated ID
 	void setDoc(newDocRef, newExercise);
 
-	return newId;
+	return newExercise;
 }
 
 export function updateExercise(userId: string, exercise: Exercise) {

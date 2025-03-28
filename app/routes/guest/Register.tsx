@@ -63,7 +63,7 @@ export default function Register() {
 
 						<GInput name="password" label="Password" type="password" required />
 
-						<GButton isLoading={isLoading} type="submit">
+						<GButton className="w-full" isLoading={isLoading} type="submit">
 							Sign up
 						</GButton>
 
@@ -77,8 +77,8 @@ export default function Register() {
 						</div>
 
 						<GButton
-							className="bg-white border border-gray-300"
-							color="none"
+							className="w-full"
+							color="white"
 							isLoading={isLoading}
 							type="button"
 							onClick={handleGoogleSignIn}

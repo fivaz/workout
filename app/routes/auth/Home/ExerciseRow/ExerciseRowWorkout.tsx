@@ -5,7 +5,9 @@ import GButton from '@/components/GButton';
 import { PlusIcon, XIcon } from 'lucide-react';
 import GInput from '@/components/GInput';
 import GText from '@/components/GText';
-import type { WorkoutSet } from '@/lib/workout/workout.model';
+import { buildEmptyWorkout, type Workout, type WorkoutSet } from '@/lib/workout/workout.model';
+import { useCallback, useEffect, useState } from 'react';
+import debounce from 'lodash.debounce';
 
 interface ExerciseRowWorkoutProps {
 	exercise: Exercise;
@@ -17,12 +19,21 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 		gFormatDate(new Date()),
 	);
 
+	// Memoize the debounced update function
+	const debouncedUpdateWorkout = useCallback(
+		(workout: Workout) => {
+			const debouncedFn = debounce(() => updateWorkout(workout), 1000);
+			debouncedFn();
+		},
+		[updateWorkout],
+	);
+
 	function handleChange(index: number, field: keyof WorkoutSet, value: string) {
 		setLatestWorkout((prevWorkout) => {
 			const newSets = [...prevWorkout.sets];
 			newSets[index] = { ...newSets[index], [field]: value };
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			// updateWorkout(updatedWorkout); // Persist changes to Firestore
+			debouncedUpdateWorkout(updatedWorkout);
 			return updatedWorkout;
 		});
 	}
@@ -32,22 +43,22 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 			const newSets = [...prevWorkout.sets];
 			newSets.splice(index, 1);
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			// updateWorkout(updatedWorkout); // Persist changes to Firestore
+			debouncedUpdateWorkout(updatedWorkout); // Persist changes to Firestore
 			return updatedWorkout;
 		});
 	}
 
 	function handleAddNewSet(): void {
 		const newSet: WorkoutSet = {
-			reps: 10,
-			weight: 10,
+			reps: '',
+			weight: '',
 			time: '',
 		};
 
 		setLatestWorkout((prevWorkout) => {
 			const newSets = [...prevWorkout.sets, newSet];
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			// updateWorkout(updatedWorkout); // Persist changes to Firestore
+			debouncedUpdateWorkout(updatedWorkout); // Persist changes to Firestore
 			return updatedWorkout;
 		});
 	}

@@ -10,7 +10,6 @@ export const SERVER_ROUTES = {
 export const ROUTES = {
 	LOGIN: '/login',
 	REGISTER: '/register',
-	LOGOUT: '/logout',
 	HOME: '/',
 };
 

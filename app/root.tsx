@@ -56,7 +56,9 @@ export default function App() {
 			</Transition>
 
 			<Outlet />
-			<DarkMode />
+			<div className="absolute bottom-0">
+				<DarkMode />
+			</div>
 		</>
 	);
 }

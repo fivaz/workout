@@ -1,7 +1,7 @@
 export type Workout = {
 	id: string;
 	sets: WorkoutSet[];
-	date: string;
+	createdAt: string;
 };
 
 export type WorkoutSet = {
@@ -13,22 +13,22 @@ export type WorkoutSet = {
 export function buildEmptyWorkout(): Workout {
 	return {
 		id: '',
-		date: '',
+		createdAt: '',
 		sets: [
 			{
 				time: '',
-				reps: 10,
-				weight: 10,
+				reps: '',
+				weight: '',
 			},
 			{
 				time: '',
-				reps: 10,
-				weight: 15,
+				reps: '',
+				weight: '',
 			},
 			{
 				time: '',
-				reps: 10,
-				weight: 20,
+				reps: '',
+				weight: '',
 			},
 		],
 	};
