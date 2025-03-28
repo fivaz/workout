@@ -1,14 +1,14 @@
-import { useExercises } from '@/lib/exercise/exerciseContext';
-import GText from '@/components/GText';
-import { ExerciseFormButton } from '@/routes/auth/Home/ExerciseRow/ExerciseFormButton';
-import { PlusIcon } from 'lucide-react';
-import { ExerciseRow } from '@/routes/auth/Home/ExerciseRow/ExerciseRow';
-import { ProgramRow } from '@/routes/auth/Programs/ProgramRow';
-import GButton from '@/components/GButton';
 import { usePrograms } from '@/lib/program/programContext';
+import GText from '@/components/GText';
+import { PlusIcon } from 'lucide-react';
+import { ProgramRow } from '@/routes/auth/Programs/ProgramRow/ProgramRow';
+import { ProgramFormButton } from '@/routes/auth/Programs/ProgramRow/ProgramFormButton';
+import { buildEmptyProgram } from '@/lib/program/program.model';
 
 export default function Programs() {
 	const { programs } = usePrograms();
+
+	const newProgram = buildEmptyProgram();
 
 	return (
 		<div className="w-full p-3 flex flex-col gap-3 rounded-md">
@@ -16,10 +16,10 @@ export default function Programs() {
 				<GText tag="h1" className="text-lg">
 					Programs
 				</GText>
-				<GButton>
+				<ProgramFormButton program={newProgram}>
 					<PlusIcon className="size-5" />
 					Program
-				</GButton>
+				</ProgramFormButton>
 			</div>
 
 			<ul className="flex-1 flex flex-col gap-3">

@@ -4,8 +4,8 @@ export type Exercise = {
 	id: string;
 	name: string;
 	image: string;
-	createdAt?: string;
-	muscle: Muscle[];
+	createdAt: string;
+	muscles: Muscle[];
 };
 
 export function buildEmptyExercise(): Exercise {
@@ -14,6 +14,6 @@ export function buildEmptyExercise(): Exercise {
 		image: '',
 		name: '',
 		createdAt: '',
-		muscle: [],
+		muscles: [],
 	};
 }

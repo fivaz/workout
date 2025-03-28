@@ -1,7 +1,6 @@
 import GText from '@/components/GText';
-import { ExerciseFormButton } from '@/routes/auth/Home/ExerciseRow/ExerciseFormButton';
+import { ProgramFormButton } from '@/routes/auth/Programs/ProgramRow/ProgramFormButton';
 import { EllipsisVerticalIcon } from 'lucide-react';
-import { ExerciseRowWorkout } from '@/routes/auth/Home/ExerciseRow/ExerciseRowWorkout';
 import type { Program } from '@/lib/program/program.model';
 
 export function ProgramRow({ program }: { program: Program }) {
@@ -12,9 +11,9 @@ export function ProgramRow({ program }: { program: Program }) {
 			<div className="flex flex-col gap-3 flex-1">
 				<div className="flex gap-2">
 					<GText className="flex-1">{program.name}</GText>
-					{/*<ExerciseFormButton exercise={exercise} color="white" size="p-1">*/}
-					{/*    <EllipsisVerticalIcon className="size-4" />*/}
-					{/*</ExerciseFormButton>*/}
+					<ProgramFormButton program={program} color="white" size="p-1">
+						<EllipsisVerticalIcon className="size-4" />
+					</ProgramFormButton>
 				</div>
 			</div>
 		</li>
