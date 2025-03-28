@@ -7,5 +7,9 @@ export default [
 		route('register', 'routes/guest/Register.tsx'),
 	]),
 
-	layout('routes/auth/AuthLayout.tsx', [index('routes/auth/Home/Home.tsx')]),
+	layout('routes/auth/AuthLayout.tsx', [
+		index('routes/auth/Home/Home.tsx'),
+		route('programs', 'routes/auth/Programs.tsx'),
+		route('stats', 'routes/auth/Stats.tsx'),
+	]),
 ] satisfies RouteConfig;

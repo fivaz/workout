@@ -11,7 +11,7 @@ export default function Home() {
 	const newExercise = buildEmptyExercise();
 
 	return (
-		<div className="w-full min-h-screen p-3 flex flex-col gap-3 rounded-md">
+		<div className="w-full p-3 flex flex-col gap-3 rounded-md">
 			<div className="flex gap-2 justify-between items-center">
 				<GText tag="h1" className="text-lg">
 					Exercises
