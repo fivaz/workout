@@ -1,20 +1,13 @@
-import {
-	addDoc,
-	collection,
-	deleteDoc,
-	doc,
-	onSnapshot,
-	setDoc,
-	updateDoc,
-} from 'firebase/firestore';
-import { db } from '../firebase.client';
+import { collection, deleteDoc, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { db, storage } from '../firebase.client';
 import { DB, gFormatDate } from '@/lib/consts';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 
-// Base path generator
+// Path generators
 export const getExercisePath = (userId: string) => `${DB.USERS}/${userId}/${DB.EXERCISES}`;
 
-// CRUD Functions (isolated from hooks)
+// Get real-time exercise updates
 export function getExercises(
 	userId: string,
 	callback: (exercises: Exercise[]) => void,
@@ -24,45 +17,100 @@ export function getExercises(
 	return onSnapshot(
 		exercisesRef,
 		(snapshot) => {
-			const exercisesData = snapshot.docs.map(function (doc) {
-				return {
-					id: doc.id,
-					...doc.data(),
-				} as Exercise;
-			});
+			const exercisesData = snapshot.docs.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			})) as Exercise[];
 			callback(exercisesData);
 		},
-		(err) => {
-			onError(err.message);
-		},
+		(err) => onError(err.message),
 	);
 }
 
-export function createExercise(userId: string, exercise: Exercise): Exercise {
+// Create new exercise with optional image
+export async function createExercise(
+	userId: string,
+	exercise: Omit<Exercise, 'id'>,
+	imageFile: File | null,
+): Promise<Exercise> {
 	const exercisesRef = collection(db, getExercisePath(userId));
-
-	// Generate a new document reference with a unique ID
 	const newDocRef = doc(exercisesRef);
 
-	// Prepare the exercise data with the generated ID
-	const newExercise = {
+	let imageUrl = '';
+	if (imageFile) {
+		imageUrl = await uploadExerciseImage(userId, newDocRef.id, imageFile);
+	}
+
+	const newExercise: Exercise = {
 		...exercise,
-		id: newDocRef.id, // Include the ID in the document
+		id: newDocRef.id,
+		image: imageUrl,
 		createdAt: gFormatDate(new Date()),
 	};
 
-	// Write the document to Firestore with the pre-generated ID
-	void setDoc(newDocRef, newExercise);
-
+	await setDoc(newDocRef, newExercise);
 	return newExercise;
 }
 
-export function updateExercise(userId: string, exercise: Exercise) {
+// Update existing exercise with optional new image
+export async function updateExercise(
+	userId: string,
+	exercise: Exercise,
+	imageFile: File | null,
+): Promise<void> {
+	let imageUrl = exercise.image;
+
+	if (imageFile) {
+		// Upload new image
+		imageUrl = await uploadExerciseImage(userId, exercise.id, imageFile);
+
+		// Delete old image if it existed
+		if (exercise.image) {
+			await deleteImageByUrl(exercise.image);
+		}
+	}
+
 	const exerciseRef = doc(db, getExercisePath(userId), exercise.id);
-	void updateDoc(exerciseRef, exercise);
+	await updateDoc(exerciseRef, {
+		...exercise,
+		image: imageUrl,
+	});
 }
 
-export function deleteExercise(userId: string, exerciseId: string) {
-	const exerciseRef = doc(db, getExercisePath(userId), exerciseId);
-	void deleteDoc(exerciseRef);
+// Delete exercise and its associated image
+export async function deleteExercise(userId: string, exercise: Exercise): Promise<void> {
+	const exerciseRef = doc(db, getExercisePath(userId), exercise.id);
+
+	// Delete associated image if it exists
+	if (exercise.image) {
+		await deleteImageByUrl(exercise.image);
+	}
+
+	await deleteDoc(exerciseRef);
+}
+
+// Storage helper functions
+async function uploadExerciseImage(
+	userId: string,
+	exerciseId: string,
+	file: File,
+): Promise<string> {
+	const storageRef = ref(storage, `${getExercisePath(userId)}/${exerciseId}`);
+	await uploadBytes(storageRef, file);
+	return await getDownloadURL(storageRef);
+}
+
+async function deleteImageByUrl(imageUrl: string): Promise<void> {
+	try {
+		const imageRef = ref(storage, extractPathFromStorageUrl(imageUrl));
+		await deleteObject(imageRef);
+	} catch (error) {
+		console.warn('Failed to delete image:', error);
+	}
+}
+
+function extractPathFromStorageUrl(url: string): string {
+	const matches = url.match(/o\/(.+?)\?/);
+	if (!matches?.[1]) throw new Error('Invalid storage URL format');
+	return decodeURIComponent(matches[1]);
 }

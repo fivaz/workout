@@ -5,17 +5,17 @@ import type { Exercise } from '@/lib/exercise/exercise.model';
 // Define the context type
 export interface ExerciseContextType {
 	exercises: Exercise[];
-	createExercise: (exercise: Exercise) => void;
-	updateExercise: (exercise: Exercise) => void;
-	deleteExercise: (exerciseId: string) => void;
+	createExercise: (exercise: Exercise, file: File | null) => void;
+	updateExercise: (exercise: Exercise, file: File | null) => void;
+	deleteExercise: (exercise: Exercise) => void;
 }
 
 // Create the context
 export const ExerciseContext = createContext<ExerciseContextType>({
 	exercises: [],
-	createExercise: (exercise: Exercise) => {},
-	updateExercise: (exercise: Exercise) => {},
-	deleteExercise: (exerciseId: string) => {},
+	createExercise: (exercise: Exercise, file: File | null) => {},
+	updateExercise: (exercise: Exercise, file: File | null) => {},
+	deleteExercise: (exercise: Exercise) => {},
 });
 
 export function useExercises() {
