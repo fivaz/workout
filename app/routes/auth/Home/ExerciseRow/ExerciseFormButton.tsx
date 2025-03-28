@@ -23,7 +23,6 @@ export function ExerciseFormButton({
 	const { createExercise, updateExercise, deleteExercise } = useExercises();
 
 	function handleOpen() {
-		console.log(exercise);
 		setInExercise(cloneDeep(exercise));
 		setImageFile(null);
 		setIsOpen(true);
@@ -89,24 +88,23 @@ export function ExerciseFormButton({
 							required
 						/>
 
-						<div className="space-y-2">
-							<input
-								ref={fileInputRef}
-								name="exerciseImage"
-								type="file"
-								accept="image/*"
-								onChange={handleImageChange}
-							/>
-							{inExercise.image && (
-								<div className="mt-2 flex justify-center">
-									<img
-										src={inExercise.image}
-										alt="Exercise preview"
-										className="max-h-40 max-w-full rounded object-contain"
-									/>
-								</div>
-							)}
-						</div>
+						<GInput
+							ref={fileInputRef}
+							name="image"
+							label="image"
+							type="file"
+							accept="image/*"
+							onChange={handleImageChange}
+						/>
+						{inExercise.image && (
+							<div className="mt-2 flex justify-center">
+								<img
+									src={inExercise.image}
+									alt="Exercise preview"
+									className="max-h-40 max-w-full rounded object-contain"
+								/>
+							</div>
+						)}
 					</DialogBody>
 
 					<DialogActions className="flex justify-between">
