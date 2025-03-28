@@ -1,22 +1,12 @@
 import GButton, { type GButtonProps } from '@/components/GButton';
-import {
-	type ChangeEvent,
-	type FormEvent,
-	type PropsWithChildren,
-	useEffect,
-	useState,
-} from 'react';
+import { type ChangeEvent, type FormEvent, type PropsWithChildren, useState } from 'react';
 import { DialogActions, DialogBody, DialogTitle, GDialog } from '@/components/GDialog';
 import GInput from '@/components/GInput';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import 'react-toastify/dist/ReactToastify.css';
-import type { Workout } from '@/lib/workout/workout.model';
-import { ExerciseFormWorkout } from '@/routes/auth/Home/ExerciseRow/ExerciseFormWorkout';
 
-type ExerciseFormButtonProps = PropsWithChildren<
-	{ exercise: Exercise; workout: Workout } & GButtonProps
->;
+type ExerciseFormButtonProps = PropsWithChildren<{ exercise: Exercise } & GButtonProps>;
 
 export function ExerciseFormButton({
 	children,

@@ -4,16 +4,11 @@ import { ExerciseRow } from '@/routes/auth/Home/ExerciseRow/ExerciseRow';
 import { ExerciseFormButton } from '@/routes/auth/Home/ExerciseRow/ExerciseFormButton';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
-import { buildEmptyWorkout } from '@/lib/workout/workout.model';
-import { gFormatDate } from '@/lib/consts';
 
 export default function Home() {
 	const { exercises } = useExercises();
 
 	const newExercise = buildEmptyExercise();
-	const newWorkout = buildEmptyWorkout();
-
-	const currentDate = gFormatDate(new Date());
 
 	return (
 		<div className="min-h-screen p-3 flex flex-col gap-3 rounded-md">
@@ -21,7 +16,7 @@ export default function Home() {
 				<GText tag="h1" className="text-lg">
 					Exercises
 				</GText>
-				<ExerciseFormButton exercise={newExercise} workout={newWorkout}>
+				<ExerciseFormButton exercise={newExercise}>
 					<PlusIcon className="size-5" />
 					Exercise
 				</ExerciseFormButton>
@@ -29,7 +24,7 @@ export default function Home() {
 
 			<ul className="flex flex-col gap-3">
 				{exercises.map((exercise) => (
-					<ExerciseRow key={exercise.id} exercise={exercise} currentDate={currentDate} />
+					<ExerciseRow key={exercise.id} exercise={exercise} />
 				))}
 			</ul>
 		</div>
