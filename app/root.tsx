@@ -51,12 +51,12 @@ export default function App() {
 
 	return (
 		<>
-			<DarkMode />
 			<Transition show={isNavigating}>
-				<LoaderCircleIcon className="transition duration-300 ease-in data-[closed]:opacity-0 absolute top-0 right-0 size-9 animate-spin" />
+				<LoaderCircleIcon className="text-blue-500 transition duration-300 ease-in data-[closed]:opacity-0 absolute top-0 right-0 size-9 animate-spin" />
 			</Transition>
 
 			<Outlet />
+			<DarkMode />
 		</>
 	);
 }
