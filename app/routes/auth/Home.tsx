@@ -28,7 +28,7 @@ export default function Home() {
 					</ExerciseFormButton>
 				</div>
 
-				<ul className="flex flex-col gap-3 p-2 rounded-md border border-gray-200 dark:border-gray-500 divide-y divide-gray-200 dark:divide-gray-500">
+				<ul className="flex flex-col gap-3">
 					{exercises.map((exercise) => (
 						<ExerciseRow key={exercise.id} exercise={exercise} currentDate={currentDate} />
 					))}

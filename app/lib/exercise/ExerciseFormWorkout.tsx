@@ -13,26 +13,22 @@ export function ExerciseFormWorkout({
 	workout: Workout;
 	setWorkout: Dispatch<SetStateAction<Workout>>;
 }): JSX.Element {
+	const [newReps, setNewReps] = useState<number | ''>('');
+	const [newWeight, setNewWeight] = useState<number | ''>('');
+
+	// Add a new set when both reps and weight are updated
+	useEffect(() => {
+		if (newReps !== '' && newWeight !== '' && newReps > 0 && newWeight > 0) {
+			const updatedSets = [...workout.sets, { reps: newReps, weight: newWeight }];
+			setWorkout((prev) => ({ ...prev, sets: updatedSets }));
+			setNewReps(''); // Reset inputs
+			setNewWeight('');
+		}
+	}, [newReps, newWeight, workout.sets, setWorkout]);
+
 	function handleRemoveSet(indexToRemove: number) {
 		const updatedSets = workout.sets.filter((_, index) => index !== indexToRemove);
 		setWorkout({ ...workout, sets: updatedSets });
-	}
-
-	function handleAddSet(reps: number, weight: number) {
-		const updatedSets = [...workout.sets, { reps, weight }];
-		setWorkout((workout) => ({ ...workout, sets: updatedSets }));
-	}
-
-	function handleNewSet(e: ChangeEvent<HTMLFormElement>) {
-		const formData = new FormData(e.currentTarget);
-
-		const reps = Number(formData.get('reps'));
-		const weight = Number(formData.get('weight'));
-
-		if (reps && weight) {
-			handleAddSet(reps, weight);
-			e.currentTarget.reset();
-		}
 	}
 
 	function handleSetChange(index: number, e: ChangeEvent<HTMLInputElement>) {
@@ -85,10 +81,22 @@ export function ExerciseFormWorkout({
 				</ul>
 			)}
 
-			<form className="flex gap-2" onChange={handleNewSet}>
-				<GInput name="reps" type="number" placeholder="Reps" />
-				<GInput name="weight" type="number" placeholder="Weight" />
-			</form>
+			<div className="flex gap-2">
+				<GInput
+					name="reps"
+					type="number"
+					placeholder="Reps"
+					value={newReps}
+					onChange={(e) => setNewReps(Number(e.target.value) || '')}
+				/>
+				<GInput
+					name="weight"
+					type="number"
+					placeholder="Weight"
+					value={newWeight}
+					onChange={(e) => setNewWeight(Number(e.target.value) || '')}
+				/>
+			</div>
 		</div>
 	);
 }
