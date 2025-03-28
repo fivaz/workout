@@ -11,7 +11,7 @@ export default function Home() {
 	const newExercise = buildEmptyExercise();
 
 	return (
-		<div className="min-h-screen p-3 flex flex-col gap-3 rounded-md">
+		<div className="w-full min-h-screen p-3 flex flex-col gap-3 rounded-md">
 			<div className="flex gap-2 justify-between items-center">
 				<GText tag="h1" className="text-lg">
 					Exercises
@@ -22,7 +22,7 @@ export default function Home() {
 				</ExerciseFormButton>
 			</div>
 
-			<ul className="flex flex-col gap-3">
+			<ul className="flex-1 flex flex-col gap-3">
 				{exercises.map((exercise) => (
 					<ExerciseRow key={exercise.id} exercise={exercise} />
 				))}

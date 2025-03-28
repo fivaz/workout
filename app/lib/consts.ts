@@ -17,7 +17,7 @@ export const ROUTES = {
 export const DB = {
 	USERS: 'users',
 	EXERCISES: 'exercises',
-	SETS: 'sets',
+	WORKOUTS: 'workouts',
 };
 
 export const DATE = 'yyyy-MM-dd';
