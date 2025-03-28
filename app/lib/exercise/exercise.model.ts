@@ -1,8 +1,11 @@
+import type { Muscle } from '@/lib/utils';
+
 export type Exercise = {
 	id: string;
 	name: string;
 	image: string;
 	createdAt?: string;
+	muscle: Muscle[];
 };
 
 export function buildEmptyExercise(): Exercise {
@@ -11,5 +14,6 @@ export function buildEmptyExercise(): Exercise {
 		image: '',
 		name: '',
 		createdAt: '',
+		muscle: [],
 	};
 }

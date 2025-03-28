@@ -62,11 +62,6 @@ export async function updateExercise(
 	if (imageFile) {
 		// Upload new image
 		imageUrl = await uploadExerciseImage(userId, exercise.id, imageFile);
-
-		// Delete old image if it existed
-		if (exercise.image) {
-			await deleteImageByUrl(exercise.image);
-		}
 	}
 
 	const exerciseRef = doc(db, getExercisePath(userId), exercise.id);

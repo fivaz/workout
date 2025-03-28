@@ -66,14 +66,14 @@ export function useCRUDExercises(): ExerciseContextType {
 	}
 
 	// Delete exercise
-	async function handleDeleteExercise(exercise: Exercise): Promise<void> {
+	function handleDeleteExercise(exercise: Exercise): void {
 		if (!user) {
 			toast.error('User must be authenticated');
 			return;
 		}
 
 		try {
-			await deleteExercise(user.uid, exercise);
+			void deleteExercise(user.uid, exercise);
 			toast.success(`"${exercise.name}" deleted successfully`);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Failed to delete exercise';

@@ -9,7 +9,7 @@ export default [
 
 	layout('routes/auth/AuthLayout.tsx', [
 		index('routes/auth/Home/Home.tsx'),
-		route('programs', 'routes/auth/Programs.tsx'),
+		route('programs', 'routes/auth/Programs/Programs.tsx'),
 		route('stats', 'routes/auth/Stats.tsx'),
 	]),
 ] satisfies RouteConfig;

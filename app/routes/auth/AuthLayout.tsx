@@ -4,6 +4,7 @@ import { ExerciseProvider } from '@/lib/exercise/ExerciseProvider';
 import { ToastContainer } from 'react-toastify';
 import { ClipboardListIcon, TimerIcon, TrophyIcon } from 'lucide-react';
 import clsx from 'clsx';
+import { ProgramProvider } from '@/lib/program/ProgramProvider';
 
 export default function AuthLayout() {
 	return (
@@ -21,9 +22,11 @@ export default function AuthLayout() {
 					pauseOnHover
 				/>
 				<AuthProvider>
-					<ExerciseProvider>
-						<Outlet />
-					</ExerciseProvider>
+					<ProgramProvider>
+						<ExerciseProvider>
+							<Outlet />
+						</ExerciseProvider>
+					</ProgramProvider>
 				</AuthProvider>
 			</main>
 			<footer className="flex justify-around items-center p-3 border-t">
