@@ -1,16 +1,11 @@
 import { format, formatDate, parse } from 'date-fns';
 
-export const SERVER_ROUTES = {
-	LOGIN: '/server/login',
-	REGISTER: '/server/register',
-	LOGOUT: '/server/logout',
-	HOME: '/server/',
-};
-
 export const ROUTES = {
 	LOGIN: '/login',
 	REGISTER: '/register',
 	HOME: '/',
+	PROGRAMS: '/programs',
+	STATS: '/stats',
 };
 
 export const DB = {

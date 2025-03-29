@@ -2,7 +2,7 @@ import { usePrograms } from '@/lib/program/programContext';
 import GText from '@/components/GText';
 import { PlusIcon } from 'lucide-react';
 import { ProgramRow } from '@/routes/auth/Programs/ProgramRow/ProgramRow';
-import { ProgramFormButton } from '@/routes/auth/Programs/ProgramRow/ProgramFormButton';
+import { ProgramFormButton } from '@/routes/auth/Programs/ProgramFormButton';
 import { buildEmptyProgram } from '@/lib/program/program.model';
 
 export default function Programs() {

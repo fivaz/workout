@@ -1,14 +1,14 @@
 import GText from '@/components/GText';
 import type { Exercise } from '@/lib/exercise/exercise.model';
-import { ExerciseFormButton } from '@/routes/auth/Home/ExerciseRow/ExerciseFormButton';
+import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
 import { EllipsisVerticalIcon } from 'lucide-react';
-import { ExerciseRowWorkout } from '@/routes/auth/Home/ExerciseRow/ExerciseRowWorkout';
+import { ExerciseRowWorkout } from '@/routes/auth/Train/TrainExerciseRow/ExerciseRowWorkout';
 
 interface ExerciseRowProps {
 	exercise: Exercise;
 }
 
-export function ExerciseRow({ exercise }: ExerciseRowProps) {
+export function TrainExerciseRow({ exercise }: ExerciseRowProps) {
 	return (
 		<li className="w-full flex gap-2 hover-group hover:bg-gray-300 dark:hover:bg-gray-900 p-2 border border-gray-200 dark:border-gray-500 rounded-md bg-gray-100 dark:bg-gray-900">
 			<div className="shrink-0 size-14 bg-green-500 rounded"></div>

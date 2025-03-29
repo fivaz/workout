@@ -1,11 +1,11 @@
 import GText from '@/components/GText';
 import { useExercises } from '@/lib/exercise/exerciseContext';
-import { ExerciseRow } from '@/routes/auth/Home/ExerciseRow/ExerciseRow';
-import { ExerciseFormButton } from '@/routes/auth/Home/ExerciseRow/ExerciseFormButton';
+import { TrainExerciseRow } from '@/routes/auth/Train/TrainExerciseRow/TrainExerciseRow';
+import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
 
-export default function Home() {
+export default function Train() {
 	const { exercises } = useExercises();
 
 	const newExercise = buildEmptyExercise();
@@ -24,7 +24,7 @@ export default function Home() {
 
 			<ul className="flex-1 flex flex-col gap-3">
 				{exercises.map((exercise) => (
-					<ExerciseRow key={exercise.id} exercise={exercise} />
+					<TrainExerciseRow key={exercise.id} exercise={exercise} />
 				))}
 			</ul>
 		</div>
