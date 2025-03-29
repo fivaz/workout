@@ -13,7 +13,7 @@ export default function AuthLayout() {
 			<main className="flex-1">
 				<ToastContainer
 					position="top-right"
-					autoClose={5000}
+					autoClose={1000}
 					hideProgressBar={false}
 					newestOnTop={false}
 					closeOnClick
@@ -30,16 +30,16 @@ export default function AuthLayout() {
 					</ProgramProvider>
 				</AuthProvider>
 			</main>
-			<footer className="flex justify-around items-center p-3 border-t  dark:text-gray-300 text-gray-800 dark:bg-gray-900 bg-gray-100 border-gray-300 dark:border-gray-800">
-				<NavLink to={ROUTES.HOME} className={clsx('text-sm flex flex-col items-center')}>
-					<TimerIcon className="size-5" />
-					Train
-				</NavLink>
-				<NavLink to={ROUTES.PROGRAMS} className={clsx('text-sm flex flex-col items-center')}>
+			<footer className="flex items-center p-3 border-t  dark:text-gray-300 text-gray-800 dark:bg-gray-900 bg-gray-100 border-gray-300 dark:border-gray-800">
+				<NavLink to={ROUTES.PROGRAMS} className={clsx('text-sm flex flex-col items-center flex-1')}>
 					<ClipboardListIcon className="size-5" />
 					Programs
 				</NavLink>
-				<NavLink to={ROUTES.STATS} className={clsx('text-sm flex flex-col items-center')}>
+				<NavLink to={ROUTES.HOME} className={clsx('text-sm flex flex-col items-center flex-1')}>
+					<TimerIcon className="size-5" />
+					Train
+				</NavLink>
+				<NavLink to={ROUTES.STATS} className={clsx('text-sm flex flex-col items-center flex-1')}>
 					<TrophyIcon className="size-5" />
 					Stats
 				</NavLink>
