@@ -7,7 +7,7 @@ import { buildEmptyProgram, type Program } from '@/lib/program/program.model';
 import { NavLink, useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
-import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
+import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFormButton';
 import { TrainExerciseRow } from '@/routes/auth/Train/TrainExerciseRow/TrainExerciseRow';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { ProgramExerciseRow } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ProgramExerciseRow';

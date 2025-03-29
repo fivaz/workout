@@ -1,6 +1,6 @@
 import GText from '@/components/GText';
 import type { Exercise } from '@/lib/exercise/exercise.model';
-import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
+import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFormButton';
 import { EllipsisVerticalIcon } from 'lucide-react';
 import { ExerciseRowWorkout } from '@/routes/auth/Train/TrainExerciseRow/ExerciseRowWorkout';
 
