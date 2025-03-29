@@ -1,16 +1,18 @@
 import { usePrograms } from '@/lib/program/programContext';
 import GText from '@/components/GText';
-import { PlusIcon } from 'lucide-react';
+import { DumbbellIcon, LandPlotIcon, PlusIcon } from 'lucide-react';
 import { ProgramRow } from '@/routes/auth/Programs/ProgramRow/ProgramRow';
 import { ProgramFormButton } from '@/routes/auth/Programs/ProgramFormButton';
 import { buildEmptyProgram, type Program } from '@/lib/program/program.model';
-import { useParams } from 'react-router';
+import { NavLink, useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
 import { TrainExerciseRow } from '@/routes/auth/Train/TrainExerciseRow/TrainExerciseRow';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { ProgramExerciseRow } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ProgramExerciseRow';
+import { ROUTES } from '@/lib/consts';
+import GButton from '@/components/GButton';
 
 export default function ProgramPage() {
 	const { programId } = useParams();
@@ -32,9 +34,14 @@ export default function ProgramPage() {
 						<GText tag="h1" className="text-lg capitalize">
 							{program.name}
 						</GText>
+						<NavLink to={`${ROUTES.HOME}?selectedProgramId=${program.id}`}>
+							<GButton>
+								<DumbbellIcon />
+								Use Program
+							</GButton>
+						</NavLink>
 						<ExerciseFormButton exercise={newExercise}>
 							<PlusIcon className="size-5" />
-							Exercise
 						</ExerciseFormButton>
 					</div>
 

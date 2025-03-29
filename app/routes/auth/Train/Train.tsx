@@ -4,29 +4,48 @@ import { TrainExerciseRow } from '@/routes/auth/Train/TrainExerciseRow/TrainExer
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
+import { usePrograms } from '@/lib/program/programContext';
+import { useAuth } from '@/lib/auth/authContext';
+import { useSearchParams } from 'react-router';
 
 export default function Train() {
+	const [searchParams] = useSearchParams();
 	const { exercises } = useExercises();
+	const { programs } = usePrograms();
+
+	const selectedProgram = programs.find(
+		(program) => program.id === searchParams.get('selectedProgramId'),
+	);
 
 	const newExercise = buildEmptyExercise();
 
 	return (
-		<div className="w-full p-3 flex flex-col gap-3 rounded-md">
-			<div className="flex gap-2 justify-between items-center">
-				<GText tag="h1" className="text-lg">
-					Exercises
-				</GText>
-				<ExerciseFormButton exercise={newExercise}>
-					<PlusIcon className="size-5" />
-					Exercise
-				</ExerciseFormButton>
-			</div>
+		<>
+			{selectedProgram ? (
+				<div className="w-full p-3 flex flex-col gap-3 rounded-md">
+					<div className="flex gap-2 justify-between items-center">
+						<GText tag="h1" className="text-lg">
+							{selectedProgram.name}
+						</GText>
+						<ExerciseFormButton exercise={newExercise}>
+							<PlusIcon className="size-5" />
+							Exercise
+						</ExerciseFormButton>
+					</div>
 
-			<ul className="flex-1 flex flex-col gap-3">
-				{exercises.map((exercise) => (
-					<TrainExerciseRow key={exercise.id} exercise={exercise} />
-				))}
-			</ul>
-		</div>
+					<ul className="flex-1 flex flex-col gap-3">
+						{exercises.map((exercise) => (
+							<TrainExerciseRow key={exercise.id} exercise={exercise} />
+						))}
+					</ul>
+				</div>
+			) : (
+				<div>
+					<GText tag="h1" className="text-lg">
+						No Program selected
+					</GText>
+				</div>
+			)}
+		</>
 	);
 }
