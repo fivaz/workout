@@ -5,7 +5,6 @@ import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
 import { usePrograms } from '@/lib/program/programContext';
-import { useAuth } from '@/lib/auth/authContext';
 import { useSearchParams } from 'react-router';
 
 export default function Train() {

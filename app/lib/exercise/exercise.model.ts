@@ -6,6 +6,7 @@ export type Exercise = {
 	image: string;
 	createdAt: string;
 	muscles: Muscle[];
+	programsIds: string[];
 };
 
 export function buildEmptyExercise(): Exercise {
@@ -15,5 +16,6 @@ export function buildEmptyExercise(): Exercise {
 		name: '',
 		createdAt: '',
 		muscles: [],
+		programsIds: [],
 	};
 }

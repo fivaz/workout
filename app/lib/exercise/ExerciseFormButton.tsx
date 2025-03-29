@@ -5,6 +5,7 @@ import GInput from '@/components/GInput';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { cloneDeep } from 'lodash-es';
+import SelectPrograms from '@/components/SelectPrograms';
 
 type ExerciseFormButtonProps = PropsWithChildren<{ exercise: Exercise } & GButtonProps>;
 
@@ -69,6 +70,10 @@ export function ExerciseFormButton({
 		}
 	}
 
+	function handleProgramsChange(programsIds: string[]) {
+		setInExercise((prev) => ({ ...prev, programsIds }));
+	}
+
 	return (
 		<>
 			<GButton color={color} className={className} size={size} type="button" onClick={handleOpen}>
@@ -77,7 +82,10 @@ export function ExerciseFormButton({
 
 			<GDialog open={isOpen} onClose={handleClose}>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle>{inExercise.id ? 'Edit Exercise' : 'Create New Exercise'}</DialogTitle>
+					<DialogTitle>
+						{inExercise.id ? 'Edit Exercise' : 'Create New Exercise'}
+						{inExercise.programsIds}
+					</DialogTitle>
 
 					<DialogBody className="flex flex-col gap-4">
 						<GInput
@@ -86,6 +94,11 @@ export function ExerciseFormButton({
 							value={inExercise.name}
 							onChange={handleChange}
 							required
+						/>
+
+						<SelectPrograms
+							setProgramsIds={handleProgramsChange}
+							programsIds={inExercise.programsIds}
 						/>
 
 						<GInput
