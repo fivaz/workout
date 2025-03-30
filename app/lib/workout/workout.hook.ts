@@ -4,7 +4,7 @@ import { buildEmptyWorkout, type Workout } from '@/lib/workout/workout.model';
 import {
 	createWorkout,
 	deleteWorkout,
-	getLatestWorkout,
+	getWorkout,
 	updateWorkout,
 } from '@/lib/workout/workout.repository'; // Updated import path
 import { toast } from 'react-toastify';
@@ -15,14 +15,14 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 
 	// Fetch the latest workout
 	useEffect(() => {
-		async function fetchLatestWorkout() {
+		async function fetchWorkout() {
 			if (!user || !exerciseId) {
 				setLatestWorkout(buildEmptyWorkout());
 				return;
 			}
 
 			try {
-				const workout = await getLatestWorkout(user.uid, exerciseId, currentDate);
+				const workout = await getWorkout(user.uid, exerciseId, currentDate);
 				setLatestWorkout(workout);
 			} catch (err) {
 				toast.error(err instanceof Error ? err.message : 'Failed to fetch latest workout', {
@@ -32,7 +32,7 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 			}
 		}
 
-		void fetchLatestWorkout();
+		void fetchWorkout();
 	}, [user, exerciseId, currentDate]);
 
 	// CRUD operations with shared state

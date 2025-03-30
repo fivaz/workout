@@ -45,6 +45,32 @@ export async function getLatestWorkout(
 	} as Workout;
 }
 
+// New function to get workout for specific date
+export async function getWorkout(
+	userId: string,
+	exerciseId: string,
+	targetDate: string,
+): Promise<Workout> {
+	// Try to get the workout for the specific date
+	const workoutsRef = collection(db, getWorkoutsPath(userId, exerciseId));
+	const exactDateQuery = query(workoutsRef, where('createdAt', '==', targetDate), limit(1));
+
+	const snapshot = await getDocs(exactDateQuery);
+
+	// If workout exists for the target date, return it
+	if (!snapshot.empty) {
+		const doc = snapshot.docs[0];
+		return {
+			id: doc.id,
+			...doc.data(),
+		} as Workout;
+	}
+
+	// If no workout exists, get the latest workout and build a new one
+	const latestWorkout = await getLatestWorkout(userId, exerciseId, targetDate);
+	return buildEmptyWorkout(latestWorkout);
+}
+
 // CRUD Functions
 export function getWorkouts(
 	userId: string,

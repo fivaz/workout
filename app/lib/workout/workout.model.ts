@@ -10,7 +10,19 @@ export type WorkoutSet = {
 	time: string;
 };
 
-export function buildEmptyWorkout(): Workout {
+export function buildEmptyWorkout(latestWorkout?: Workout): Workout {
+	if (latestWorkout) {
+		return {
+			id: '',
+			createdAt: '',
+			sets: latestWorkout.sets.map((set) => ({
+				reps: set.reps,
+				weight: set.weight,
+				time: '',
+			})),
+		};
+	}
+
 	return {
 		id: '',
 		createdAt: '',
