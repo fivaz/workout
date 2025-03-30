@@ -20,6 +20,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 			setUser(
 				user
 					? {
+							photoURL: user.photoURL,
 							displayName: user.displayName,
 							email: user.email,
 							uid: user.uid,

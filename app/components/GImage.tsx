@@ -1,19 +1,21 @@
 import type { ImgHTMLAttributes } from 'react';
+import clsx from 'clsx';
 
-interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
-	src: string; // Required prop for the image URL
-}
+type ImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
+	src?: string | null;
+	size?: string;
+};
 
-export default function GImage({ src, ...props }: ImageProps) {
+export default function GImage({ src, size = 'size-14', ...props }: ImageProps) {
 	// Check if src is empty, null, or undefined
-	const baseClass = 'shrink-0 size-14 rounded bg-linear-to-r/srgb from-indigo-500 to-teal-400';
+	const baseClass = 'shrink-0 rounded bg-linear-to-r/srgb from-indigo-500 to-teal-400';
 
 	if (!src || src.trim() === '') {
-		return <div className={baseClass} aria-label={props.alt || 'image placeholder'} />;
+		return <div className={clsx(baseClass, size)} aria-label={props.alt || 'image placeholder'} />;
 	}
 
 	return (
-		<div className={baseClass}>
+		<div className={clsx(baseClass, size)}>
 			<img
 				loading="lazy"
 				src={src}

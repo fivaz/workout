@@ -1,7 +1,7 @@
 import { NavLink, useSearchParams } from 'react-router';
 import { ROUTES } from '@/lib/consts';
 import clsx from 'clsx';
-import { ClipboardListIcon, TimerIcon, TrophyIcon } from 'lucide-react';
+import { ClipboardListIcon, CogIcon, TimerIcon, TrophyIcon } from 'lucide-react';
 
 export default function Footer() {
 	const [searchParams] = useSearchParams();
@@ -27,6 +27,13 @@ export default function Footer() {
 			>
 				<TrophyIcon className="size-5" />
 				Stats
+			</NavLink>
+			<NavLink
+				to={`${ROUTES.SETTINGS}?${searchParams.toString()}`}
+				className={clsx('text-sm flex flex-col items-center flex-1')}
+			>
+				<CogIcon className="size-5" />
+				Settings
 			</NavLink>
 		</footer>
 	);

@@ -1,4 +1,4 @@
-import { format, formatDate, parse } from 'date-fns';
+import { format, parse } from 'date-fns';
 
 export const ROUTES = {
 	LOGIN: '/login',
@@ -6,6 +6,7 @@ export const ROUTES = {
 	HOME: '/',
 	PROGRAMS: '/programs',
 	STATS: '/stats',
+	SETTINGS: '/settings',
 };
 
 export const DB = {
