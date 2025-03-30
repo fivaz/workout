@@ -71,9 +71,9 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 			} else {
 				void createWorkout(user.uid, exerciseId, workout);
 			}
-			toast.success('Workout updated successfully', {
-				toastId: 'exercise-success',
-			});
+			// toast.success('Workout updated successfully', {
+			// 	toastId: 'exercise-success',
+			// });
 		} catch (err) {
 			toast.error(err instanceof Error ? err.message : 'Failed to update workout', {
 				toastId: 'exercise-error',
