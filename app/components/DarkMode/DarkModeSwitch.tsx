@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { Switch } from '@headlessui/react';
+import { getDarkMode } from '@/components/DarkMode/darkMode.hook';
 
 export default function DarkModeSwitch() {
-	const [isDark, setIsDark] = useState(true);
+	const [isDark, setIsDark] = useState(getDarkMode());
 
 	useEffect(() => {
 		// When isDark changes
