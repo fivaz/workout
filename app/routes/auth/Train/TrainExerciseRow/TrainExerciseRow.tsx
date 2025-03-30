@@ -16,7 +16,7 @@ export function TrainExerciseRow({ exercise }: ExerciseRowProps) {
 
 			<div className="flex flex-col gap-3 flex-1">
 				<div className="flex gap-2">
-					<GText className="flex-1">{exercise.name}</GText>
+					<GText className="flex-1 text-sm">{exercise.name}</GText>
 					<ExerciseFormButton exercise={exercise} color="white" size="p-1">
 						<EllipsisVerticalIcon className="size-4" />
 					</ExerciseFormButton>

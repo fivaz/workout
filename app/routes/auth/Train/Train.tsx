@@ -26,10 +26,7 @@ export default function Train() {
 		exercises;
 
 	return (
-		<div className="flex flex-col gap-3">
-			<GText tag="h1" className="text-lg">
-				Train
-			</GText>
+		<>
 			{selectedProgram ? (
 				<div className="flex flex-col gap-3 rounded-md">
 					<div className="flex gap-2 justify-between items-center">
@@ -53,8 +50,13 @@ export default function Train() {
 					)}
 				</div>
 			) : (
-				<NoProgramSelected />
+				<div className="flex flex-col gap-3">
+					<GText tag="h1" className="text-lg">
+						Train
+					</GText>
+					<NoProgramSelected />
+				</div>
 			)}
-		</div>
+		</>
 	);
 }
