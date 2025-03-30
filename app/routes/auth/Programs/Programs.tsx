@@ -4,6 +4,7 @@ import { PlusIcon } from 'lucide-react';
 import { ProgramRow } from '@/routes/auth/Programs/ProgramRow/ProgramRow';
 import { ProgramFormButton } from '@/routes/auth/Programs/ProgramFormButton';
 import { buildEmptyProgram } from '@/lib/program/program.model';
+import EmptyStateProgram from '@/routes/auth/Programs/ProgramRow/ProgramPage/EmptyStateProgram';
 
 export default function Programs() {
 	const { programs } = usePrograms();
@@ -22,11 +23,15 @@ export default function Programs() {
 				</ProgramFormButton>
 			</div>
 
-			<ul className="flex-1 flex flex-col gap-3">
-				{programs.map((program) => (
-					<ProgramRow key={program.id} program={program} />
-				))}
-			</ul>
+			{programs.length ? (
+				<ul className="flex-1 flex flex-col gap-3">
+					{programs.map((program) => (
+						<ProgramRow key={program.id} program={program} />
+					))}
+				</ul>
+			) : (
+				<EmptyStateProgram />
+			)}
 		</div>
 	);
 }
