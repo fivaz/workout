@@ -8,6 +8,9 @@ import { useExercises } from '@/lib/exercise/exerciseContext';
 import { ProgramExerciseRow } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ProgramExerciseRow';
 import { ROUTES } from '@/lib/consts';
 import GButton from '@/components/GButton';
+import DropProgramHere from '@/routes/auth/Programs/ProgramRow/ProgramPage/DropProgramHere';
+import NoExercises from '@/routes/auth/Programs/ProgramRow/ProgramPage/NoExercises';
+import ProgramNotFound from '@/routes/auth/Programs/ProgramRow/ProgramPage/ProgramNotFound';
 
 export default function ProgramPage() {
 	const { programId } = useParams();
@@ -40,28 +43,45 @@ export default function ProgramPage() {
 	return (
 		<>
 			{program ? (
-				<div className="w-full p-3 flex flex-col gap-3 rounded-md relative flex-1">
+				<div className="w-full flex flex-col gap-3 rounded-md relative flex-1">
 					<div className="flex gap-2 justify-between items-center">
 						<GText tag="h1" className="text-lg capitalize">
 							{program.name}
 						</GText>
 						<ExerciseFormButton exercise={newExercise}>
 							<PlusIcon className="size-5" />
+							Program
 						</ExerciseFormButton>
 					</div>
 
-					<GText>Existing exercises</GText>
-					<ul className="flex flex-col gap-3">
-						{programExercises.map((exercise) => (
-							<ProgramExerciseRow key={exercise.id} exercise={exercise} />
-						))}
-					</ul>
-					<GText>Others</GText>
-					<ul className="flex flex-col gap-3 pb-10">
-						{muscleExercises.map((exercise) => (
-							<ProgramExerciseRow key={exercise.id} exercise={exercise} />
-						))}
-					</ul>
+					{programExercises.length || muscleExercises.length ? (
+						<>
+							<GText tag="h2" className="text-sm">
+								Existing exercises
+							</GText>
+							<ul className="flex flex-col gap-3">
+								{programExercises.map((exercise) => (
+									<ProgramExerciseRow key={exercise.id} exercise={exercise} />
+								))}
+								<li>
+									<DropProgramHere />
+								</li>
+							</ul>
+							<GText tag="h2" className="text-sm">
+								Others
+							</GText>
+							<ul className="flex flex-col gap-3 pb-10">
+								{muscleExercises.map((exercise) => (
+									<ProgramExerciseRow key={exercise.id} exercise={exercise} />
+								))}
+								<li>
+									<DropProgramHere />
+								</li>
+							</ul>
+						</>
+					) : (
+						<NoExercises />
+					)}
 					<NavLink
 						to={`${ROUTES.HOME}?selectedProgramId=${program.id}`}
 						className="absolute left-1/2 bottom-0 z-10 mb-3 -translate-x-1/2"
@@ -73,7 +93,7 @@ export default function ProgramPage() {
 					</NavLink>
 				</div>
 			) : (
-				<div>No Program exist</div>
+				<ProgramNotFound />
 			)}
 		</>
 	);

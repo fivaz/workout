@@ -26,8 +26,8 @@ export default function Stats() {
 	};
 
 	return (
-		<div className="">
-			<GText tag="h1" className="text-2xl">
+		<div className="flex flex-col">
+			<GText tag="h1" className="text-lg">
 				Settings
 			</GText>
 			<ul role="list" className="divide-y divide-gray-200">

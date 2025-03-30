@@ -7,6 +7,7 @@ import { PlusIcon } from 'lucide-react';
 import { usePrograms } from '@/lib/program/programContext';
 import { useSearchParams } from 'react-router';
 import NoProgramSelected from '@/routes/auth/Train/NoProgramSelected';
+import NoProgramExercises from '@/routes/auth/Programs/NoProgramExercises';
 
 export default function Train() {
 	const [searchParams] = useSearchParams();
@@ -25,9 +26,12 @@ export default function Train() {
 		exercises;
 
 	return (
-		<>
+		<div className="flex flex-col gap-3">
+			<GText tag="h1" className="text-lg">
+				Train
+			</GText>
 			{selectedProgram ? (
-				<div className="w-full p-3 flex flex-col gap-3 rounded-md">
+				<div className="flex flex-col gap-3 rounded-md">
 					<div className="flex gap-2 justify-between items-center">
 						<GText tag="h1" className="text-lg">
 							{selectedProgram.name}
@@ -38,15 +42,19 @@ export default function Train() {
 						</ExerciseFormButton>
 					</div>
 
-					<ul className="flex-1 flex flex-col gap-3">
-						{programExercises.map((exercise) => (
-							<TrainExerciseRow key={exercise.id} exercise={exercise} />
-						))}
-					</ul>
+					{programExercises.length ? (
+						<ul className="flex-1 flex flex-col gap-3">
+							{programExercises.map((exercise) => (
+								<TrainExerciseRow key={exercise.id} exercise={exercise} />
+							))}
+						</ul>
+					) : (
+						<NoProgramExercises />
+					)}
 				</div>
 			) : (
 				<NoProgramSelected />
 			)}
-		</>
+		</div>
 	);
 }

@@ -3,8 +3,10 @@ import NoStats from '@/routes/auth/Stats/NoStats';
 
 export default function Stats() {
 	return (
-		<div className="flex flex-col gap-2">
-			<GText>Stats</GText>
+		<div className="flex flex-col gap-3">
+			<GText tag="h1" className="text-lg">
+				Stats
+			</GText>
 			<NoStats />
 		</div>
 	);
