@@ -7,6 +7,7 @@ import GInput from '@/components/GInput';
 import GButton from '@/components/GButton';
 import GoogleIcon from '@/routes/guest/GoogleIcon';
 import { ROUTES } from '@/lib/consts';
+import Logo from '@/components/Logo';
 
 export default function Register() {
 	const [error, setError] = useState<string>('');
@@ -41,11 +42,7 @@ export default function Register() {
 		<>
 			<div className="flex gap-5 min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
-					<img
-						alt="Your Company"
-						src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=blue&shade=600"
-						className="mx-auto h-10 w-auto"
-					/>
+					<Logo className="mx-auto h-10 w-auto" />
 					<GText className="mt-10 text-center text-2xl/9 font-bold tracking-tight" tag="h2">
 						Create your account
 					</GText>

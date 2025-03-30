@@ -7,6 +7,7 @@ import { type FormEvent, useState } from 'react';
 import GAlert from '@/components/GAlert';
 import { ROUTES } from '@/lib/consts';
 import { getErrorMessage, googleSignIn, login } from '@/routes/guest/service';
+import Logo from '@/components/Logo';
 
 export default function Login() {
 	const [error, setError] = useState<string>('');
@@ -41,11 +42,7 @@ export default function Login() {
 		<>
 			<div className="flex gap-5 min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
-					<img
-						alt="Your Company"
-						src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=blue&shade=600"
-						className="mx-auto h-10 w-auto"
-					/>
+					<Logo className="mx-auto h-10 w-auto" />
 					<GText className="mt-10 text-center text-2xl/9 font-bold tracking-tight" tag="h2">
 						Sign in to your account
 					</GText>

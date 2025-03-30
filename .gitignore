@@ -6,3 +6,4 @@
 /build/
 app/lib/firebase-adminsdk.json
 .env
+.vercel
