@@ -1,11 +1,9 @@
-import type { Muscle } from '@/lib/utils';
-
 export type Exercise = {
 	id: string;
 	name: string;
 	image: string;
 	createdAt: string;
-	muscles: Muscle[];
+	muscles: string[];
 	programsIds: string[];
 };
 

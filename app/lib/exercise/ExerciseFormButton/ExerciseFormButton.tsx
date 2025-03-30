@@ -6,6 +6,7 @@ import type { Exercise } from '@/lib/exercise/exercise.model';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { cloneDeep } from 'lodash-es';
 import SelectPrograms from '@/lib/exercise/ExerciseFormButton/SelectPrograms';
+import SelectMuscles from '@/lib/exercise/ExerciseFormButton/SelectMuscles';
 
 type ExerciseFormButtonProps = PropsWithChildren<{ exercise: Exercise } & GButtonProps>;
 
@@ -74,6 +75,10 @@ export function ExerciseFormButton({
 		setInExercise((prev) => ({ ...prev, programsIds }));
 	}
 
+	function handleMusclesChange(muscles: string[]) {
+		setInExercise((prev) => ({ ...prev, muscles }));
+	}
+
 	return (
 		<>
 			<GButton color={color} className={className} size={size} type="button" onClick={handleOpen}>
@@ -92,6 +97,8 @@ export function ExerciseFormButton({
 							onChange={handleChange}
 							required
 						/>
+
+						<SelectMuscles setMuscles={handleMusclesChange} muscles={inExercise.muscles} />
 
 						<SelectPrograms
 							setProgramsIds={handleProgramsChange}
