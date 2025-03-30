@@ -16,7 +16,12 @@ export default function Train() {
 		(program) => program.id === searchParams.get('selectedProgramId'),
 	);
 
-	const newExercise = buildEmptyExercise();
+	const newExercise = buildEmptyExercise(selectedProgram);
+
+	const programExercises =
+		(selectedProgram &&
+			exercises.filter((exercise) => exercise.programsIds.includes(selectedProgram.id))) ||
+		exercises;
 
 	return (
 		<>
@@ -33,7 +38,7 @@ export default function Train() {
 					</div>
 
 					<ul className="flex-1 flex flex-col gap-3">
-						{exercises.map((exercise) => (
+						{programExercises.map((exercise) => (
 							<TrainExerciseRow key={exercise.id} exercise={exercise} />
 						))}
 					</ul>

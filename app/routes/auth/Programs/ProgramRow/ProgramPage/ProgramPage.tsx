@@ -24,7 +24,7 @@ export default function ProgramPage() {
 
 	const programExercises = exercises.find((exercises) => exercises.id === programId);
 
-	const newExercise = buildEmptyExercise();
+	const newExercise = buildEmptyExercise(program);
 
 	return (
 		<>

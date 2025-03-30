@@ -1,3 +1,5 @@
+import type { Program } from '../program/program.model';
+
 export type Exercise = {
 	id: string;
 	name: string;
@@ -7,13 +9,13 @@ export type Exercise = {
 	programsIds: string[];
 };
 
-export function buildEmptyExercise(): Exercise {
+export function buildEmptyExercise(program?: Program): Exercise {
 	return {
 		id: '',
 		image: '',
 		name: '',
 		createdAt: '',
-		muscles: [],
-		programsIds: [],
+		muscles: program?.muscles || [],
+		programsIds: program ? [program.id] : [],
 	};
 }
