@@ -7,6 +7,7 @@ import { usePrograms } from '@/lib/program/programContext';
 import { cloneDeep } from 'lodash-es';
 import SelectPrograms from '@/lib/exercise/ExerciseFormButton/SelectPrograms';
 import SelectMuscles from '@/lib/exercise/ExerciseFormButton/SelectMuscles';
+import { XIcon } from 'lucide-react';
 
 type ProgramFormButtonProps = PropsWithChildren<{ program: Program } & GButtonProps>;
 
@@ -74,6 +75,15 @@ export function ProgramFormButton({
 			<GDialog open={isOpen} onClose={handleClose}>
 				<form onSubmit={handleSubmit}>
 					<DialogTitle>{inProgram.id ? 'Edit Program' : 'Create New Program'}</DialogTitle>
+
+					<GButton
+						type="button"
+						color="white"
+						size="p-1 absolute top-0 right-0 mt-5 mr-5"
+						onClick={handleClose}
+					>
+						<XIcon className="size-5" />
+					</GButton>
 
 					<DialogBody className="flex flex-col gap-4">
 						<GInput

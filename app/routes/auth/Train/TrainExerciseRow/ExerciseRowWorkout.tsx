@@ -85,7 +85,7 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 					}}
 					key={set.time || index}
 				>
-					<GText>{index}</GText>
+					<GText>{index + 1}</GText>
 					<GInput
 						className="w-full h-9"
 						type="number"
