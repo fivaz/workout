@@ -3,6 +3,7 @@ import type { Exercise } from '@/lib/exercise/exercise.model';
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFormButton';
 import { EllipsisVerticalIcon } from 'lucide-react';
 import { ExerciseRowWorkout } from '@/routes/auth/Train/TrainExerciseRow/ExerciseRowWorkout';
+import GImage from '@/components/GImage';
 
 interface ExerciseRowProps {
 	exercise: Exercise;
@@ -11,7 +12,7 @@ interface ExerciseRowProps {
 export function TrainExerciseRow({ exercise }: ExerciseRowProps) {
 	return (
 		<li className="w-full flex gap-2 hover-group hover:bg-gray-300 dark:hover:bg-gray-900 p-2 border border-gray-200 dark:border-gray-500 rounded-md bg-gray-100 dark:bg-gray-900">
-			<div className="shrink-0 size-14 bg-green-500 rounded"></div>
+			<GImage alt="exercise" src={exercise.image} />
 
 			<div className="flex flex-col gap-3 flex-1">
 				<div className="flex gap-2">
