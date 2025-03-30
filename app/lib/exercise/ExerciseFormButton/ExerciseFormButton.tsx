@@ -8,6 +8,7 @@ import { cloneDeep } from 'lodash-es';
 import SelectPrograms from '@/lib/exercise/ExerciseFormButton/SelectPrograms';
 import SelectMuscles from '@/lib/exercise/ExerciseFormButton/SelectMuscles';
 import { XIcon } from 'lucide-react';
+import { usePrompt } from '@/lib/prompt/prompt-context';
 
 type ExerciseFormButtonProps = PropsWithChildren<{ exercise: Exercise } & GButtonProps>;
 
@@ -22,6 +23,7 @@ export function ExerciseFormButton({
 	const [inExercise, setInExercise] = useState<Exercise>(exercise);
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const { createPrompt } = usePrompt();
 
 	const { createExercise, updateExercise, deleteExercise } = useExercises();
 
@@ -53,8 +55,15 @@ export function ExerciseFormButton({
 
 	async function handleDelete() {
 		try {
-			void deleteExercise(inExercise);
-			setIsOpen(false);
+			if (
+				await createPrompt({
+					title: 'Delete Exercise',
+					message: 'Are you sure you want to delete this exercise?',
+				})
+			) {
+				void deleteExercise(inExercise);
+				setIsOpen(false);
+			}
 		} catch (error) {
 			console.error('Error deleting exercise:', error);
 		}

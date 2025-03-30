@@ -84,7 +84,7 @@ export default function ProgramPage() {
 					)}
 					<NavLink
 						to={`${ROUTES.HOME}?selectedProgramId=${program.id}`}
-						className="absolute left-1/2 bottom-0 z-10 mb-3 -translate-x-1/2"
+						className="absolute left-1/2 bottom-0 mb-3 -translate-x-1/2"
 					>
 						<GButton>
 							<DumbbellIcon />
