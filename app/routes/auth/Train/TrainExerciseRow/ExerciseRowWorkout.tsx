@@ -87,19 +87,19 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 				>
 					<GText>{index}</GText>
 					<GInput
-						className="w-full"
+						className="w-full h-9"
 						type="number"
 						value={set.reps}
 						onChange={(e) => handleChange(index, 'reps', e.target.value)}
 					/>
 					<GInput
-						className="w-full"
+						className="w-full h-9"
 						type="number"
 						value={set.weight}
 						onChange={(e) => handleChange(index, 'weight', e.target.value)}
 					/>
 					<GInput
-						className="w-full"
+						className="w-full h-9"
 						type="time"
 						value={set.time}
 						onChange={(e) => handleChange(index, 'time', e.target.value)}
