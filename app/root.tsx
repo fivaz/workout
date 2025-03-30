@@ -6,13 +6,10 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from 'react-router';
-import { useNavigation } from 'react-router';
 
 import type { Route } from './+types/root';
 import './app.css';
-import DarkMode from '@/components/DarkMode';
-import { LoaderCircle, LoaderCircleIcon } from 'lucide-react';
-import { Transition } from '@headlessui/react';
+import { useDarkMode } from '@/components/DarkMode/darkMode.hook';
 
 export const links: Route.LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -46,21 +43,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-	const navigation = useNavigation();
-	const isNavigating = Boolean(navigation.location);
-
-	return (
-		<>
-			<Transition show={isNavigating}>
-				<LoaderCircleIcon className="text-blue-500 transition duration-300 ease-in data-[closed]:opacity-0 absolute top-0 right-0 size-9 animate-spin" />
-			</Transition>
-
-			<Outlet />
-			<div className="absolute bottom-0">
-				<DarkMode />
-			</div>
-		</>
-	);
+	useDarkMode();
+	return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

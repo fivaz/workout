@@ -2,22 +2,8 @@ import { useState, useEffect } from 'react';
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { Switch } from '@headlessui/react';
 
-export default function DarkMode() {
+export default function DarkModeSwitch() {
 	const [isDark, setIsDark] = useState(true);
-
-	function getDarkMode(): boolean {
-		return (
-			localStorage.theme !== 'light' ||
-			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-		);
-	}
-
-	useEffect(() => {
-		// On mount
-		const darkMode = getDarkMode();
-		setIsDark(darkMode);
-		document.documentElement.classList.toggle('dark', darkMode);
-	}, []);
 
 	useEffect(() => {
 		// When isDark changes

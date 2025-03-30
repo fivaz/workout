@@ -9,8 +9,7 @@ import {
 	Label,
 } from '@headlessui/react';
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react';
-import { type JSX, useEffect } from 'react';
-import { useState } from 'react';
+import { type JSX, useState } from 'react';
 import Badge from '@/lib/exercise/ExerciseFormButton/Badge';
 
 export default function SelectPrograms({
