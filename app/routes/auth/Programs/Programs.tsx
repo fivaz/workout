@@ -4,7 +4,7 @@ import { PlusIcon } from 'lucide-react';
 import { ProgramRow } from '@/routes/auth/Programs/ProgramRow/ProgramRow';
 import { ProgramFormButton } from '@/routes/auth/Programs/ProgramFormButton';
 import { buildEmptyProgram } from '@/lib/program/program.model';
-import EmptyStateProgram from '@/routes/auth/Programs/ProgramRow/ProgramPage/EmptyStateProgram';
+import NoPrograms from '@/routes/auth/Programs/NoPrograms';
 
 export default function Programs() {
 	const { programs } = usePrograms();
@@ -12,7 +12,7 @@ export default function Programs() {
 	const newProgram = buildEmptyProgram();
 
 	return (
-		<div className="w-full p-3 flex flex-col gap-3 rounded-md">
+		<div className="w-full flex flex-col gap-3 rounded-md">
 			<div className="flex gap-2 justify-between items-center">
 				<GText tag="h1" className="text-lg">
 					Programs
@@ -30,7 +30,7 @@ export default function Programs() {
 					))}
 				</ul>
 			) : (
-				<EmptyStateProgram />
+				<NoPrograms />
 			)}
 		</div>
 	);

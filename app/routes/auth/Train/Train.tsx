@@ -6,6 +6,7 @@ import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
 import { usePrograms } from '@/lib/program/programContext';
 import { useSearchParams } from 'react-router';
+import NoProgramSelected from '@/routes/auth/Train/NoProgramSelected';
 
 export default function Train() {
 	const [searchParams] = useSearchParams();
@@ -44,11 +45,7 @@ export default function Train() {
 					</ul>
 				</div>
 			) : (
-				<div>
-					<GText tag="h1" className="text-lg">
-						No Program selected
-					</GText>
-				</div>
+				<NoProgramSelected />
 			)}
 		</>
 	);

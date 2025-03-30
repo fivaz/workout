@@ -8,7 +8,7 @@ import Footer from '@/routes/auth/Footer';
 export default function AuthLayout() {
 	return (
 		<div className="flex flex-col min-h-screen">
-			<main className="flex-1 overflow-y-auto pb-[65px] h-full flex flex-col px-4 md:max-w-[700px] md:mx-auto w-full">
+			<main className="flex-1 overflow-y-auto pb-[65px] h-full flex flex-col p-4 md:max-w-[700px] md:mx-auto w-full">
 				<ToastContainer
 					position="top-right"
 					autoClose={1000}
