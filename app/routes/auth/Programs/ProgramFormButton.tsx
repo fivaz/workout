@@ -5,6 +5,8 @@ import GInput from '@/components/GInput';
 import type { Program } from '@/lib/program/program.model';
 import { usePrograms } from '@/lib/program/programContext';
 import { cloneDeep } from 'lodash-es';
+import SelectPrograms from '@/lib/exercise/ExerciseFormButton/SelectPrograms';
+import SelectMuscles from '@/lib/exercise/ExerciseFormButton/SelectMuscles';
 
 type ProgramFormButtonProps = PropsWithChildren<{ program: Program } & GButtonProps>;
 
@@ -59,6 +61,10 @@ export function ProgramFormButton({
 		setInProgram((prev) => ({ ...prev, [name]: value }));
 	}
 
+	function handleMusclesChange(muscles: string[]) {
+		setInProgram((prev) => ({ ...prev, muscles }));
+	}
+
 	return (
 		<>
 			<GButton color={color} className={className} size={size} type="button" onClick={handleOpen}>
@@ -77,6 +83,8 @@ export function ProgramFormButton({
 							onChange={handleChange}
 							required
 						/>
+
+						<SelectMuscles muscles={inProgram.muscles} setMuscles={handleMusclesChange} />
 					</DialogBody>
 
 					<DialogActions className="flex justify-between">
