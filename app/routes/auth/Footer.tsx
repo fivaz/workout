@@ -6,7 +6,7 @@ import { ClipboardListIcon, CogIcon, TimerIcon, TrophyIcon } from 'lucide-react'
 export default function Footer() {
 	const [searchParams] = useSearchParams();
 	return (
-		<footer className="fixed bottom-0 left-0 right-0 flex items-center p-3 border-t dark:text-gray-300 text-gray-800 dark:bg-gray-900 bg-gray-100 border-gray-300 dark:border-gray-800">
+		<footer className="fixed bottom-0 left-0 right-0 flex items-center p-3 border dark:text-gray-300 text-gray-800 dark:bg-gray-900 bg-gray-100 border-gray-300 dark:border-gray-800 md:max-w-[700px] md:mx-auto">
 			<NavLink
 				to={`${ROUTES.PROGRAMS}?${searchParams.toString()}`}
 				className={clsx('text-sm flex flex-col items-center flex-1')}
