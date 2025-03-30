@@ -40,34 +40,37 @@ export default function ProgramPage() {
 	return (
 		<>
 			{program ? (
-				<div className="w-full p-3 flex flex-col gap-3 rounded-md">
+				<div className="w-full p-3 flex flex-col gap-3 rounded-md relative flex-1">
 					<div className="flex gap-2 justify-between items-center">
 						<GText tag="h1" className="text-lg capitalize">
 							{program.name}
 						</GText>
-						<NavLink to={`${ROUTES.HOME}?selectedProgramId=${program.id}`}>
-							<GButton>
-								<DumbbellIcon />
-								Use Program
-							</GButton>
-						</NavLink>
 						<ExerciseFormButton exercise={newExercise}>
 							<PlusIcon className="size-5" />
 						</ExerciseFormButton>
 					</div>
 
-					<GText>existing exercises</GText>
-					<ul className="flex-1 flex flex-col gap-3">
+					<GText>Existing exercises</GText>
+					<ul className="flex flex-col gap-3">
 						{programExercises.map((exercise) => (
 							<ProgramExerciseRow key={exercise.id} exercise={exercise} />
 						))}
 					</ul>
-					<GText>others</GText>
-					<ul className="flex-1 flex flex-col gap-3">
+					<GText>Others</GText>
+					<ul className="flex flex-col gap-3 pb-10">
 						{muscleExercises.map((exercise) => (
 							<ProgramExerciseRow key={exercise.id} exercise={exercise} />
 						))}
 					</ul>
+					<NavLink
+						to={`${ROUTES.HOME}?selectedProgramId=${program.id}`}
+						className="absolute left-1/2 bottom-0 z-10 mb-3 -translate-x-1/2"
+					>
+						<GButton>
+							<DumbbellIcon />
+							Use Program
+						</GButton>
+					</NavLink>
 				</div>
 			) : (
 				<div>No Program exist</div>
