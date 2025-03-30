@@ -3,10 +3,27 @@ import GText from '@/components/GText';
 import GButton from '@/components/GButton';
 import { useAuth } from '@/lib/auth/authContext';
 import GImage from '@/components/GImage';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase.client';
+import { toast } from 'react-toastify';
+import { ROUTES } from '@/lib/consts';
+import { useNavigate } from 'react-router';
 
 export default function Stats() {
 	const commitHash = `${import.meta.env.VITE_COMMIT_HASH}`;
 	const { user } = useAuth();
+	const navigate = useNavigate();
+
+	const handleLogout = async () => {
+		try {
+			await signOut(auth);
+			navigate(ROUTES.LOGIN);
+		} catch (error) {
+			const message = error instanceof Error ? error.message : 'Failed to logout';
+			toast.error(message);
+			console.error(message);
+		}
+	};
 
 	return (
 		<div className="">
@@ -27,10 +44,12 @@ export default function Stats() {
 						<GImage src={user?.photoURL} size="size-12" />
 						<div>
 							<GText className="font-semibold">{user?.displayName}</GText>
-							<GText className="runcate text-xs/5 text-gray-500">{user?.email}</GText>
+							<GText className="truncate text-xs/5 text-gray-500">{user?.email}</GText>
 						</div>
 					</div>
-					<GButton color="white">logout</GButton>
+					<GButton color="white" onClick={handleLogout}>
+						logout
+					</GButton>
 				</li>
 			</ul>
 		</div>
