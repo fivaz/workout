@@ -41,13 +41,10 @@ export function Prompt({
 				<DialogTitle>{title}</DialogTitle>
 				<DialogBody>
 					<div className="flex items-center gap-4">
-						<div className="flex size-12 items-center justify-center rounded-full bg-red-100">
-							<AlertTriangleIcon className="size-5 text-red-600" />
+						<div className="shrink-0 flex size-12 items-center justify-center rounded-full bg-red-100">
+							<AlertTriangleIcon className="size-6 text-red-600" />
 						</div>
-						<div>
-							<h3 className="text-lg font-semibold">{}</h3>
-							{message && <p className="text-sm text-gray-500">{message}</p>}
-						</div>
+						<div>{message && <p className="text-sm text-gray-500">{message}</p>}</div>
 					</div>
 				</DialogBody>
 				<DialogActions>

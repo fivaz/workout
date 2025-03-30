@@ -50,7 +50,7 @@ export default function ProgramPage() {
 						</GText>
 						<ExerciseFormButton exercise={newExercise}>
 							<PlusIcon className="size-5" />
-							Program
+							Exercise
 						</ExerciseFormButton>
 					</div>
 

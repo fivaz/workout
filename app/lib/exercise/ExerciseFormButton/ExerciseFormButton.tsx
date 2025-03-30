@@ -57,7 +57,7 @@ export function ExerciseFormButton({
 		try {
 			if (
 				await createPrompt({
-					title: 'Delete Exercise',
+					title: 'Delete exercise',
 					message: 'Are you sure you want to delete this exercise?',
 				})
 			) {

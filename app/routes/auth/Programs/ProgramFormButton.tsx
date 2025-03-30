@@ -8,6 +8,7 @@ import { cloneDeep } from 'lodash-es';
 import SelectPrograms from '@/lib/exercise/ExerciseFormButton/SelectPrograms';
 import SelectMuscles from '@/lib/exercise/ExerciseFormButton/SelectMuscles';
 import { XIcon } from 'lucide-react';
+import { usePrompt } from '@/lib/prompt/prompt-context';
 
 type ProgramFormButtonProps = PropsWithChildren<{ program: Program } & GButtonProps>;
 
@@ -20,6 +21,7 @@ export function ProgramFormButton({
 }: ProgramFormButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [inProgram, setInProgram] = useState<Program>(program);
+	const { createPrompt } = usePrompt();
 
 	const { createProgram, updateProgram, deleteProgram } = usePrograms();
 
@@ -50,8 +52,15 @@ export function ProgramFormButton({
 
 	async function handleDelete() {
 		try {
-			void deleteProgram(inProgram);
-			setIsOpen(false);
+			if (
+				await createPrompt({
+					title: 'Delete program',
+					message: 'Are you sure you want to delete this program?',
+				})
+			) {
+				void deleteProgram(inProgram);
+				setIsOpen(false);
+			}
 		} catch (error) {
 			console.error('Error deleting program:', error);
 		}
