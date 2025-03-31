@@ -71,11 +71,11 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 					gridTemplateColumns: '24px 1fr 1fr minmax(70px, 1fr) 30px',
 				}}
 			>
-				<p className="w-6"></p>
+				<p></p>
 				<GText className="text-center">Reps</GText>
 				<GText className="text-center">Weight</GText>
 				<GText className="text-center">Time</GText>
-				<p className="w-6"></p>
+				<p></p>
 			</li>
 			{latestWorkout.sets.map((set, index) => (
 				<li
