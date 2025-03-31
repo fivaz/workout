@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/auth/authContext';
+import { useAuth } from '@/lib/auth/auth.hook';
 import { buildEmptyWorkout, type Workout } from '@/lib/workout/workout.model';
 import {
 	createWorkout,

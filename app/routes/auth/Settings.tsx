@@ -1,7 +1,7 @@
 import DarkModeSwitch from '@/components/DarkMode/DarkModeSwitch';
 import GText from '@/components/GText';
 import GButton from '@/components/GButton';
-import { useAuth } from '@/lib/auth/authContext';
+import { useAuth } from '@/lib/auth/auth.hook';
 import GImage from '@/components/GImage';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase.client';

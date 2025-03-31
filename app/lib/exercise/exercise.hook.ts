@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/auth/authContext';
+import { useAuth } from '@/lib/auth/auth.hook';
 import type { Exercise } from '@/lib/exercise/exercise.model';
 import {
 	createExercise,
