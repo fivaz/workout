@@ -72,9 +72,9 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 				}}
 			>
 				<p className="w-6"></p>
-				<p className="text-center">Reps</p>
-				<p className="text-center">Weight</p>
-				<p className="text-center">Time</p>
+				<GText className="text-center">Reps</GText>
+				<GText className="text-center">Weight</GText>
+				<GText className="text-center">Time</GText>
 				<p className="w-6"></p>
 			</li>
 			{latestWorkout.sets.map((set, index) => (
