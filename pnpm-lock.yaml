@@ -60,6 +60,12 @@ importers:
       react-toastify:
         specifier: ^11.0.4
         version: 11.0.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      sharp:
+        specifier: 0.32.6
+        version: 0.32.6
+      sharp-ico:
+        specifier: 0.1.5
+        version: 0.1.5
     devDependencies:
       '@eslint/js':
         specifier: ^9.21.0
