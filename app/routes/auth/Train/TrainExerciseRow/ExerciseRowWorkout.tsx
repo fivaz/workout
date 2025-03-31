@@ -5,9 +5,10 @@ import GButton from '@/components/GButton';
 import { PlusIcon, XIcon } from 'lucide-react';
 import GInput from '@/components/GInput';
 import GText from '@/components/GText';
-import { buildEmptyWorkout, type Workout, type WorkoutSet } from '@/lib/workout/workout.model';
-import { useCallback, useEffect, useState } from 'react';
+import { type Workout, type WorkoutSet } from '@/lib/workout/workout.model';
+import { useCallback } from 'react';
 import { debounce } from 'lodash-es';
+import { usePrompt } from '@/lib/prompt/prompt.hook';
 
 interface ExerciseRowWorkoutProps {
 	exercise: Exercise;
@@ -18,6 +19,8 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 		exercise.id,
 		gFormatDate(new Date()),
 	);
+
+	const { createPrompt } = usePrompt();
 
 	// Memoize the debounced update function
 	const debouncedUpdateWorkout = useCallback(
@@ -38,14 +41,43 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 		});
 	}
 
-	function handleDeleteSet(index: number): void {
+	function deleteSet(index: number): void {
 		setLatestWorkout((prevWorkout) => {
 			const newSets = [...prevWorkout.sets];
 			newSets.splice(index, 1);
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			debouncedUpdateWorkout(updatedWorkout); // Persist changes to Firestore
+			debouncedUpdateWorkout(updatedWorkout);
 			return updatedWorkout;
 		});
+	}
+
+	// Main async function to handle deletion logic
+	async function handleDeleteSet(index: number): Promise<void> {
+		// Get the current workout state
+		const setToDelete = latestWorkout.sets[index];
+
+		// Check if all three keys (time, reps, weight) are falsy
+		const isEmptySet = !setToDelete.time && !setToDelete.reps && !setToDelete.weight;
+
+		if (isEmptySet) {
+			// If all fields are falsy, delete immediately
+			deleteSet(index);
+			return;
+		}
+
+		// If any field has a value, prompt for confirmation
+		try {
+			const confirmed = await createPrompt({
+				title: 'Delete set',
+				message: 'Are you sure you want to delete this set?',
+			});
+
+			if (confirmed) {
+				deleteSet(index); // Call the helper function after confirmation
+			}
+		} catch (error) {
+			console.error('Error during set deletion prompt:', error);
+		}
 	}
 
 	function handleAddNewSet(): void {
@@ -104,7 +136,7 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 						value={set.time}
 						onChange={(e) => handleChange(index, 'time', e.target.value)}
 					/>
-					<GButton color="white" size="p-1.5" onClick={() => handleDeleteSet(index)}>
+					<GButton color="white" size="p-1.5" onClick={() => void handleDeleteSet(index)}>
 						<XIcon className="size-4" />
 					</GButton>
 				</li>
