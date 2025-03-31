@@ -83,7 +83,7 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 					style={{
 						gridTemplateColumns: '24px 1fr 1fr minmax(70px, 1fr) 30px',
 					}}
-					key={set.time || index}
+					key={index}
 				>
 					<GText>{index + 1}</GText>
 					<GInput
