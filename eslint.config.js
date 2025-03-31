@@ -19,7 +19,13 @@ export default tseslint.config(
 		},
 		rules: {
 			...reactHooks.configs.recommended.rules,
-			'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+			'react-refresh/only-export-components': [
+				'warn',
+				{
+					allowConstantExport: true,
+					allowExportNames: ['meta', 'links', 'headers', 'loader', 'action'],
+				},
+			],
 			'@typescript-eslint/consistent-type-imports': 'error',
 			'@typescript-eslint/no-unused-vars': 'warn',
 		},

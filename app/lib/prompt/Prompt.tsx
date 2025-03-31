@@ -13,7 +13,7 @@ type PromptProps = {
 	closePrompt: () => void;
 };
 
-export function Prompt({
+export default function Prompt({
 	isOpen,
 	title,
 	message,

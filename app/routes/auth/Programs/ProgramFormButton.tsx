@@ -5,10 +5,9 @@ import GInput from '@/components/GInput';
 import type { Program } from '@/lib/program/program.model';
 import { usePrograms } from '@/lib/program/programContext';
 import { cloneDeep } from 'lodash-es';
-import SelectPrograms from '@/lib/exercise/ExerciseFormButton/SelectPrograms';
 import SelectMuscles from '@/lib/exercise/ExerciseFormButton/SelectMuscles';
 import { XIcon } from 'lucide-react';
-import { usePrompt } from '@/lib/prompt/prompt-context';
+import { usePrompt } from '@/lib/prompt/prompt.hook';
 
 type ProgramFormButtonProps = PropsWithChildren<{ program: Program } & GButtonProps>;
 

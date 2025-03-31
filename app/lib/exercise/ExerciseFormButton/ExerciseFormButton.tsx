@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash-es';
 import SelectPrograms from '@/lib/exercise/ExerciseFormButton/SelectPrograms';
 import SelectMuscles from '@/lib/exercise/ExerciseFormButton/SelectMuscles';
 import { XIcon } from 'lucide-react';
-import { usePrompt } from '@/lib/prompt/prompt-context';
+import { usePrompt } from '@/lib/prompt/prompt.hook';
 
 type ExerciseFormButtonProps = PropsWithChildren<{ exercise: Exercise } & GButtonProps>;
 

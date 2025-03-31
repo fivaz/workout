@@ -4,7 +4,7 @@ import { ExerciseProvider } from '@/lib/exercise/ExerciseProvider';
 import { ToastContainer } from 'react-toastify';
 import { ProgramProvider } from '@/lib/program/ProgramProvider';
 import Footer from '@/routes/auth/Footer';
-import { PromptProvider } from '@/lib/prompt/prompt-context';
+import PromptProvider from '@/lib/prompt/PromptProvider';
 
 export default function AuthLayout() {
 	return (

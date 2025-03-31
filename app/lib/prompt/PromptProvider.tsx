@@ -1,27 +1,12 @@
-import type { ReactNode } from 'react';
-import { createContext, useContext, useState } from 'react';
-import { Prompt } from '@/lib/prompt/Prompt';
-
-type PromptOptions = {
-	title: string;
-	message?: string;
-	confirmText?: string;
-	cancelText?: string;
-};
-
+import { type PropsWithChildren, useState } from 'react';
+import PromptContext, { type PromptOptions } from '@/lib/prompt/promptContext';
+import Prompt from './Prompt';
 type PromptState = PromptOptions & {
 	isOpen: boolean;
 	resolve?: (value: boolean | null) => void;
 };
 
-type PromptContextType = {
-	createPrompt: (options: PromptOptions) => Promise<boolean | null>;
-	closePrompt: () => void;
-};
-
-const PromptContext = createContext<PromptContextType | undefined>(undefined);
-
-export const PromptProvider = ({ children }: { children: ReactNode }) => {
+export default function PromptProvider({ children }: PropsWithChildren) {
 	const [prompt, setPrompt] = useState<PromptState>({
 		isOpen: false,
 		title: '',
@@ -52,12 +37,4 @@ export const PromptProvider = ({ children }: { children: ReactNode }) => {
 			<Prompt {...prompt} closePrompt={closePrompt} />
 		</PromptContext.Provider>
 	);
-};
-
-export const usePrompt = () => {
-	const context = useContext(PromptContext);
-	if (!context) {
-		throw new Error('usePrompt must be used within a PromptProvider');
-	}
-	return context;
-};
+}
