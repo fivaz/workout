@@ -31,5 +31,5 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 		return () => unsubscribe();
 	}, [navigate]);
 
-	return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
 }

@@ -25,7 +25,7 @@ export default function GButton({
 		red: 'bg-red-600 text-white hover:bg-red-500 focus-visible:outline-red-600',
 		blue: 'bg-blue-600 text-white hover:bg-blue-500 focus-visible:outline-blue-600',
 		white:
-			'bg-white border dark:border-gray-600 border-gray-300 dark:bg-gray-800 dark:text-gray-300 text-gray-700 dark:bg-gray-300 hover:bg-gray-100 dark:bg-gray-700 focus-visible:outline-blue-600',
+			'bg-white border dark:border-gray-600 border-gray-300 dark:bg-gray-800 dark:text-gray-300 text-gray-700 dark:bg-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 dark:bg-gray-700 focus-visible:outline-blue-600',
 	};
 
 	return (

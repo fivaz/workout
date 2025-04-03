@@ -12,6 +12,6 @@ export default [
 		route('programs', 'routes/auth/Programs/Programs.tsx'),
 		route('programs/:programId', 'routes/auth/Programs/ProgramRow/ProgramPage/ProgramPage.tsx'),
 		route('stats', 'routes/auth/Stats/Stats.tsx'),
-		route('settings', 'routes/auth/Settings.tsx'),
+		route('settings', 'routes/auth/Settings/Settings.tsx'),
 	]),
 ] satisfies RouteConfig;
