@@ -5,9 +5,11 @@ import {
 	signInWithPopup,
 	updateProfile,
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase.client';
+import { auth, db } from '@/lib/firebase.client';
 import { FirebaseError } from 'firebase/app';
 import type { FormEvent } from 'react';
+import { doc, setDoc } from 'firebase/firestore';
+import { DB } from '@/lib/consts';
 
 const FIREBASE_ERROR_MESSAGES: Record<string, string> = {
 	'auth/weak-password': 'The password is too weak. Please use at least 6 characters.',
@@ -33,7 +35,12 @@ export function getErrorMessage(error: unknown): string {
 
 export async function googleSignIn() {
 	const provider = new GoogleAuthProvider();
-	await signInWithPopup(auth, provider);
+	const userCredential = await signInWithPopup(auth, provider);
+	void addUser(
+		userCredential.user.uid,
+		userCredential.user.displayName || 'unknown name',
+		userCredential.user.email || 'unknown email',
+	);
 }
 
 export async function login(event: FormEvent<HTMLFormElement>) {
@@ -62,4 +69,17 @@ export async function register(event: FormEvent<HTMLFormElement>) {
 
 	// Update user profile with name
 	await updateProfile(userCredential.user, { displayName: name });
+	await addUser(userCredential.user.uid, name, email);
+}
+
+export async function addUser(id: string, name: string, email: string) {
+	const ref = doc(db, `${DB.USERS}/${id}`);
+	void setDoc(
+		ref,
+		{
+			displayName: name,
+			email: email,
+		},
+		{ merge: true },
+	);
 }
