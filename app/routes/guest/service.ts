@@ -69,7 +69,7 @@ export async function register(event: FormEvent<HTMLFormElement>) {
 
 	// Update user profile with name
 	await updateProfile(userCredential.user, { displayName: name });
-	await addUser(userCredential.user.uid, name, email);
+	void addUser(userCredential.user.uid, name, email);
 }
 
 export async function addUser(id: string, name: string, email: string) {
