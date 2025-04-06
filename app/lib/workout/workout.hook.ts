@@ -57,7 +57,7 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 		}
 	}
 
-	function handleUpdateWorkout(workout: Workout) {
+	async function handleUpdateWorkout(workout: Workout) {
 		if (!user || !exerciseId) {
 			toast.error('User must be authenticated and exercise ID must be provided', {
 				toastId: 'exercise-error',
@@ -67,7 +67,7 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 
 		try {
 			if (workout.id) {
-				void updateWorkout(user.uid, exerciseId, workout);
+				return updateWorkout(user.uid, exerciseId, workout);
 			} else {
 				void createWorkout(user.uid, exerciseId, workout);
 			}

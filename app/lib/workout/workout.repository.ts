@@ -112,7 +112,7 @@ export function createWorkout(userId: string, exerciseId: string, workout: Worko
 
 export function updateWorkout(userId: string, exerciseId: string, workout: Workout) {
 	const workoutRef = doc(db, getWorkoutsPath(userId, exerciseId), workout.id);
-	void updateDoc(workoutRef, workout);
+	return updateDoc(workoutRef, workout);
 }
 
 export function deleteWorkout(userId: string, exerciseId: string, workoutId: string) {

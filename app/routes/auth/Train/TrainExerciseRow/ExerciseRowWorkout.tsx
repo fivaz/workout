@@ -12,9 +12,10 @@ import { usePrompt } from '@/lib/prompt/prompt.hook';
 
 interface ExerciseRowWorkoutProps {
 	exercise: Exercise;
+	setLoading: (loading: boolean) => void;
 }
 
-export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
+export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutProps) {
 	const { latestWorkout, setLatestWorkout, updateWorkout } = useCRUDWorkouts(
 		exercise.id,
 		gFormatDate(new Date()),
@@ -25,10 +26,14 @@ export function ExerciseRowWorkout({ exercise }: ExerciseRowWorkoutProps) {
 	// Memoize the debounced update function
 	const debouncedUpdateWorkout = useCallback(
 		(workout: Workout) => {
-			const debouncedFn = debounce(() => updateWorkout(workout), 1000);
-			debouncedFn();
+			const debouncedFn = debounce(async () => {
+				setLoading(true);
+				await updateWorkout(workout);
+				setLoading(false);
+			}, 1000);
+			void debouncedFn();
 		},
-		[updateWorkout],
+		[setLoading, updateWorkout],
 	);
 
 	function handleChange(index: number, field: keyof WorkoutSet, value: string) {
