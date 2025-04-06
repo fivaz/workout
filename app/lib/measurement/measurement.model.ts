@@ -2,6 +2,6 @@ export type Measurement = {
 	id?: string;
 	weight: number;
 	bodyFat: number;
-	muscleFat: number;
+	muscle: number;
 	date: string;
 };

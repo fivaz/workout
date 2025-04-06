@@ -3,37 +3,29 @@ import GText from '@/components/GText';
 import GButton from '@/components/GButton';
 import { PencilIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { isSameDay } from 'date-fns';
 import { useCRUDMeasurements } from '@/lib/measurement/measurement.hook';
+import type { Measurement } from '@/lib/measurement/measurement.model';
 
 export default function Measurements() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [formData, setFormData] = useState<{
 		weight: number | '';
 		bodyFat: number | '';
-		muscleFat: number | '';
+		muscle: number | '';
 	}>({
 		weight: '',
 		bodyFat: '',
-		muscleFat: '',
+		muscle: '',
 	});
-
-	const { latestMeasurement, createMeasurement } = useCRUDMeasurements();
+	const { latestMeasurement, createMeasurement, updateMeasurement } = useCRUDMeasurements();
 
 	// Update form data when latest measurement changes
 	useEffect(() => {
 		if (latestMeasurement) {
-			setFormData({
-				weight: latestMeasurement.weight,
-				bodyFat: latestMeasurement.bodyFat,
-				muscleFat: latestMeasurement.muscleFat,
-			});
+			setLatestMeasurement(latestMeasurement);
 		} else {
-			// Reset form when there's no measurements
-			setFormData({
-				weight: '',
-				bodyFat: '',
-				muscleFat: '',
-			});
+			reset();
 		}
 	}, [latestMeasurement]);
 
@@ -41,38 +33,57 @@ export default function Measurements() {
 		setIsEditing(true);
 	};
 
+	const reset = () => {
+		setFormData({
+			weight: '',
+			bodyFat: '',
+			muscle: '',
+		});
+	};
+
+	const setLatestMeasurement = (measurement: Measurement) => {
+		setFormData({
+			weight: measurement.weight,
+			bodyFat: measurement.bodyFat,
+			muscle: measurement.muscle,
+		});
+	};
+
 	const handleCancel = () => {
 		setIsEditing(false);
-		// Reset form to latest measurement values or 0 if none exist
 		if (latestMeasurement) {
-			setFormData({
-				weight: latestMeasurement.weight,
-				bodyFat: latestMeasurement.bodyFat,
-				muscleFat: latestMeasurement.muscleFat,
-			});
+			setLatestMeasurement(latestMeasurement);
 		} else {
-			setFormData({
-				weight: 0,
-				bodyFat: 0,
-				muscleFat: 0,
-			});
+			reset();
 		}
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		// Convert empty strings to 0 for submission
-		const weight = formData.weight === '' ? 0 : formData.weight;
-		const bodyFat = formData.bodyFat === '' ? 0 : formData.bodyFat;
-		const muscleFat = formData.muscleFat === '' ? 0 : formData.muscleFat;
+		const weight = Number(formData.weight);
+		const bodyFat = Number(formData.bodyFat);
+		const muscle = Number(formData.muscle);
+		const currentDate = new Date().toISOString();
 
 		try {
-			await createMeasurement({
-				weight,
-				bodyFat,
-				muscleFat,
-			});
+			if (latestMeasurement && isSameDay(new Date(latestMeasurement.date), new Date())) {
+				// Update existing measurement if it's from today
+				await updateMeasurement({
+					...latestMeasurement,
+					weight,
+					bodyFat,
+					muscle,
+					date: currentDate,
+				});
+			} else {
+				// Create new measurement
+				await createMeasurement({
+					weight,
+					bodyFat,
+					muscle,
+				});
+			}
 			setIsEditing(false);
 		} catch (error) {
 			console.error('Error submitting measurement:', error);
@@ -80,11 +91,15 @@ export default function Measurements() {
 	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value === '' ? '' : Number(e.target.value);
-		setFormData({
-			...formData,
-			[e.target.name]: value,
-		});
+		const newValue = e.target.value;
+
+		// Allow empty string, digits, or a single dot with optional digits
+		if (/^\d*\.?\d*$/.test(newValue)) {
+			setFormData({
+				...formData,
+				[e.target.name]: newValue,
+			});
+		}
 	};
 
 	return (
@@ -112,6 +127,7 @@ export default function Measurements() {
 			<GInput
 				label="weight"
 				type="number"
+				step="0.1"
 				disabled={!isEditing}
 				value={formData.weight}
 				name="weight"
@@ -120,6 +136,7 @@ export default function Measurements() {
 			<GInput
 				label="Body fat %"
 				type="number"
+				step="0.1"
 				disabled={!isEditing}
 				value={formData.bodyFat}
 				name="bodyFat"
@@ -129,8 +146,8 @@ export default function Measurements() {
 				label="Muscle %"
 				type="number"
 				disabled={!isEditing}
-				value={formData.muscleFat}
-				name="muscleFat"
+				value={formData.muscle}
+				name="muscle"
 				onChange={handleChange}
 			/>
 		</form>
