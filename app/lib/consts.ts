@@ -14,6 +14,7 @@ export const DB = {
 	EXERCISES: 'exercises',
 	WORKOUTS: 'workouts',
 	PROGRAMS: 'programs',
+	MEASUREMENTS: 'measurements',
 };
 
 export const DATE = 'yyyy-MM-dd';

@@ -1,14 +1,7 @@
 import DarkModeSwitch from '@/components/DarkMode/DarkModeSwitch';
 import GText from '@/components/GText';
-import GButton from '@/components/GButton';
-import { useAuth } from '@/lib/auth/auth.hook';
-import GImage from '@/components/GImage';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase.client';
-import { toast } from 'react-toastify';
-import { ROUTES } from '@/lib/consts';
-import { useNavigate } from 'react-router';
 import Profile from '@/routes/auth/Settings/Profile';
+import Measurements from '@/routes/auth/Settings/Measurements';
 
 export default function Stats() {
 	const commitHash = `${import.meta.env.VITE_COMMIT_HASH}`;
@@ -19,6 +12,9 @@ export default function Stats() {
 				Settings
 			</GText>
 			<ul role="list" className="divide-y divide-gray-200">
+				<li className="py-5 flex gap-2 justify-between items-center">
+					<Measurements />
+				</li>
 				<li className="py-5 flex gap-2 justify-between items-center">
 					<GText>Dark mode:</GText>
 					<DarkModeSwitch label />
