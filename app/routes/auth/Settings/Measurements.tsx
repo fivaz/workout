@@ -9,11 +9,7 @@ import type { Measurement } from '@/lib/measurement/measurement.model';
 
 export default function Measurements() {
 	const [isEditing, setIsEditing] = useState(false);
-	const [formData, setFormData] = useState<{
-		weight: number | '';
-		bodyFat: number | '';
-		muscle: number | '';
-	}>({
+	const [formData, setFormData] = useState<Omit<Measurement, 'id' | 'date'>>({
 		weight: '',
 		bodyFat: '',
 		muscle: '',
@@ -61,9 +57,9 @@ export default function Measurements() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		const weight = Number(formData.weight);
-		const bodyFat = Number(formData.bodyFat);
-		const muscle = Number(formData.muscle);
+		const weight = formData.weight;
+		const bodyFat = formData.bodyFat;
+		const muscle = formData.muscle;
 		const currentDate = new Date().toISOString();
 
 		try {

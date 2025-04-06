@@ -21,7 +21,9 @@ const GInput = forwardRef<HTMLInputElement, GInputProps>(
 
 		const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 			const newValue = e.target.value;
-			if (!isNumber || /^\d*\.?\d*$/.test(newValue)) {
+
+			// Allow empty string or valid decimal number
+			if (!isNumber || newValue === '' || /^\d*\.?\d*$/.test(newValue)) {
 				onChange?.(e);
 			}
 		};
