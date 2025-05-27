@@ -15,7 +15,7 @@ const GInput = forwardRef<HTMLInputElement, GInputProps>(
 		const usedName = name || label || generatedName;
 
 		const baseClassName =
-			'rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-blue-500 sm:text-sm/6';
+			'rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-blue-500';
 
 		const isNumber = type === 'number';
 
@@ -38,6 +38,7 @@ const GInput = forwardRef<HTMLInputElement, GInputProps>(
 			value,
 			onChange: handleChange,
 		};
+		// ""
 
 		return label ? (
 			<div className="flex flex-col gap-2 capitalize">
