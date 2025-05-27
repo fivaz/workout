@@ -6,6 +6,7 @@ import {
 	deleteExercise,
 	getExercises,
 	updateExercise,
+	updateExercisesOrder,
 } from '@/lib/exercise/exercise.repository';
 import type { ExerciseContextType } from '@/lib/exercise/exerciseContext';
 import { toast } from 'react-toastify';
@@ -21,7 +22,7 @@ export function useCRUDExercises(): ExerciseContextType {
 			return;
 		}
 
-		return getExercises(
+		getExercises(
 			user.uid,
 			(exercisesData) => setExercises(exercisesData),
 			(error) => toast.error(error, { toastId: 'exercise-error' }),
@@ -65,6 +66,22 @@ export function useCRUDExercises(): ExerciseContextType {
 		}
 	}
 
+	// Update exercises order
+	async function handleUpdateExercisesOrder(exercises: Exercise[]): Promise<void> {
+		if (!user) {
+			toast.error('User must be authenticated');
+			return;
+		}
+
+		try {
+			await updateExercisesOrder(user.uid, exercises);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : 'Failed to update exercise';
+			toast.error(message);
+			console.error(err);
+		}
+	}
+
 	// Delete exercise
 	function handleDeleteExercise(exercise: Exercise): void {
 		if (!user) {
@@ -86,6 +103,7 @@ export function useCRUDExercises(): ExerciseContextType {
 		exercises,
 		createExercise: handleCreateExercise,
 		updateExercise: handleUpdateExercise,
+		updateExercisesOrder: handleUpdateExercisesOrder,
 		deleteExercise: handleDeleteExercise,
 	};
 }

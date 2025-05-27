@@ -5,16 +5,22 @@ import { EllipsisVerticalIcon, LoaderCircleIcon } from 'lucide-react';
 import { ExerciseRowWorkout } from '@/routes/auth/Train/TrainExerciseRow/ExerciseRowWorkout';
 import GImage from '@/components/GImage';
 import { useState } from 'react';
+import { useSortable } from '@dnd-kit/react/sortable';
 
 interface ExerciseRowProps {
 	exercise: Exercise;
+	index: number;
 }
 
-export function TrainExerciseRow({ exercise }: ExerciseRowProps) {
+export function TrainExerciseRow({ exercise, index }: ExerciseRowProps) {
+	const { ref } = useSortable({ id: exercise.id, index });
 	const [loading, setLoading] = useState(false);
 
 	return (
-		<li className="w-full flex gap-2 hover-group hover:bg-gray-300 dark:hover:bg-gray-900 p-2 border border-gray-200 dark:border-gray-500 rounded-md bg-gray-100 dark:bg-gray-900">
+		<li
+			ref={ref}
+			className="w-full flex gap-2 hover-group hover:bg-gray-300 dark:hover:bg-gray-900 p-2 border border-gray-200 dark:border-gray-500 rounded-md bg-gray-100 dark:bg-gray-900"
+		>
 			<GImage alt="exercise" src={exercise.image} />
 
 			<div className="flex flex-col gap-3 flex-1">

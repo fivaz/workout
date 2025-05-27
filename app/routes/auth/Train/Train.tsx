@@ -2,33 +2,47 @@ import GText from '@/components/GText';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { TrainExerciseRow } from '@/routes/auth/Train/TrainExerciseRow/TrainExerciseRow';
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFormButton';
-import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
+import { buildEmptyExercise, type Exercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
 import { usePrograms } from '@/lib/program/programContext';
 import { useSearchParams } from 'react-router';
 import NoProgramSelected from '@/routes/auth/Train/NoProgramSelected';
 import NoProgramExercises from '@/routes/auth/Programs/NoProgramExercises';
+import { useProgramId } from '@/lib/program/program.hook';
+import { DragDropProvider } from '@dnd-kit/react';
+import { move } from '@dnd-kit/helpers';
+import { useEffect, useState } from 'react';
+import { useCRUDExercises } from '@/lib/exercise/exercise.hook';
 
 export default function Train() {
-	const [searchParams] = useSearchParams();
 	const { exercises } = useExercises();
 	const { programs } = usePrograms();
+	const programId = useProgramId();
+	const { updateExercisesOrder } = useCRUDExercises();
 
-	const selectedProgram = programs.find(
-		(program) => program.id === searchParams.get('selectedProgramId'),
-	);
+	const selectedProgram = programs.find((program) => program.id === programId);
+
+	const [programExercises, setProgramExercises] = useState<Exercise[]>([]);
+
+	useEffect(() => {
+		setProgramExercises(
+			exercises.filter((exercise) => exercise.programsIds.includes(selectedProgram?.id || '')),
+		);
+	}, [exercises, selectedProgram]);
 
 	const newExercise = buildEmptyExercise(selectedProgram);
 
-	const programExercises =
-		(selectedProgram &&
-			exercises.filter((exercise) => exercise.programsIds.includes(selectedProgram.id))) ||
-		exercises;
+	const handleDragEnd = (event: Parameters<typeof move>[1]) => {
+		const newExercises = move(programExercises, event);
+		setProgramExercises(newExercises);
+
+		void updateExercisesOrder(newExercises);
+	};
 
 	return (
 		<>
 			{selectedProgram ? (
-				<div className="flex flex-col gap-3 rounded-md">
+				<div className="flex flex-col gap-3 rounded-md pb-4">
 					<div className="flex gap-2 justify-between items-center">
 						<GText tag="h1" className="text-lg">
 							{selectedProgram.name}
@@ -40,11 +54,13 @@ export default function Train() {
 					</div>
 
 					{programExercises.length ? (
-						<ul className="flex-1 flex flex-col gap-3">
-							{programExercises.map((exercise) => (
-								<TrainExerciseRow key={exercise.id} exercise={exercise} />
-							))}
-						</ul>
+						<DragDropProvider onDragEnd={handleDragEnd}>
+							<ul className="flex-1 flex flex-col gap-3">
+								{programExercises.map((exercise, index) => (
+									<TrainExerciseRow index={index} key={exercise.id} exercise={exercise} />
+								))}
+							</ul>
+						</DragDropProvider>
 					) : (
 						<NoProgramExercises />
 					)}

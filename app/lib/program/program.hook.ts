@@ -9,6 +9,18 @@ import {
 } from '@/lib/program/program.repository';
 import type { ProgramContextType } from '@/lib/program/programContext';
 import { toast } from 'react-toastify';
+import { useSearchParams } from 'react-router';
+
+export function useProgramId() {
+	const [searchParams] = useSearchParams();
+	const programId = searchParams.get('selectedProgramId');
+	if (programId) {
+		localStorage.setItem('selectedProgramId', programId);
+		return programId;
+	}
+
+	return localStorage.getItem('selectedProgramId');
+}
 
 export function useCRUDPrograms(): ProgramContextType {
 	const { user } = useAuth();

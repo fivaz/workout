@@ -8,6 +8,7 @@ export interface ExerciseContextType {
 	createExercise: (exercise: Exercise, file: File | null) => void;
 	updateExercise: (exercise: Exercise, file: File | null) => void;
 	deleteExercise: (exercise: Exercise) => void;
+	updateExercisesOrder: (exercises: Exercise[]) => void;
 }
 
 // Create the context
@@ -16,6 +17,7 @@ export const ExerciseContext = createContext<ExerciseContextType>({
 	createExercise: (exercise: Exercise, file: File | null) => {},
 	updateExercise: (exercise: Exercise, file: File | null) => {},
 	deleteExercise: (exercise: Exercise) => {},
+	updateExercisesOrder: (exercises: Exercise[]) => {},
 });
 
 export function useExercises() {

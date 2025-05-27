@@ -1,4 +1,14 @@
-import { collection, deleteDoc, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import {
+	collection,
+	deleteDoc,
+	doc,
+	onSnapshot,
+	orderBy,
+	query,
+	setDoc,
+	updateDoc,
+	writeBatch,
+} from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from '../firebase.client';
 import { DB, gFormatDate } from '@/lib/consts';
@@ -12,7 +22,8 @@ export function getExercises(
 	callback: (exercises: Exercise[]) => void,
 	onError: (error: string) => void,
 ) {
-	const exercisesRef = collection(db, getExercisePath(userId));
+	const exercisesRef = query(collection(db, getExercisePath(userId)), orderBy('order'));
+
 	return onSnapshot(
 		exercisesRef,
 		(snapshot) => {
@@ -69,6 +80,18 @@ export async function updateExercise(
 		...exercise,
 		image: imageUrl,
 	});
+}
+
+// Update existing exercise with optional new image
+export async function updateExercisesOrder(userId: string, exercises: Exercise[]): Promise<void> {
+	const batch = writeBatch(db);
+
+	exercises.forEach((exercise, index) => {
+		const taskRef = doc(db, getExercisePath(userId), exercise.id);
+		batch.update(taskRef, { order: index });
+	});
+
+	return batch.commit();
 }
 
 // Delete exercise and its associated image
