@@ -43,8 +43,8 @@ export default function ProgramPage() {
 	return (
 		<>
 			{program ? (
-				<div className="relative w-full flex flex-col gap-3 rounded-md flex-1">
-					<div className="flex gap-2 justify-between items-center">
+				<div className="relative flex w-full flex-1 flex-col gap-3 rounded-md">
+					<div className="flex items-center justify-between gap-2">
 						<GText tag="h1" className="text-lg capitalize">
 							{program.name}
 						</GText>
@@ -84,7 +84,7 @@ export default function ProgramPage() {
 					)}
 					<NavLink
 						to={`${ROUTES.HOME}?selectedProgramId=${program.id}`}
-						className="fixed z-10 left-1/2 bottom-15 mb-3 -translate-x-1/2"
+						className="fixed bottom-15 left-1/2 z-10 mb-3 -translate-x-1/2"
 					>
 						<GButton>
 							<DumbbellIcon />

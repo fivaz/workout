@@ -43,7 +43,7 @@ export default function Train() {
 		<>
 			{selectedProgram ? (
 				<div className="flex flex-col gap-3 rounded-md pb-4">
-					<div className="flex gap-2 justify-between items-center">
+					<div className="flex items-center justify-between gap-2">
 						<GText tag="h1" className="text-lg">
 							{selectedProgram.name}
 						</GText>
@@ -55,7 +55,7 @@ export default function Train() {
 
 					{programExercises.length ? (
 						<DragDropProvider onDragEnd={handleDragEnd}>
-							<ul className="flex-1 flex flex-col gap-3">
+							<ul className="flex flex-1 flex-col gap-3">
 								{programExercises.map((exercise, index) => (
 									<TrainExerciseRow index={index} key={exercise.id} exercise={exercise} />
 								))}

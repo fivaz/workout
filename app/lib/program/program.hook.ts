@@ -9,17 +9,28 @@ import {
 } from '@/lib/program/program.repository';
 import type { ProgramContextType } from '@/lib/program/programContext';
 import { toast } from 'react-toastify';
-import { useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 export function useProgramId() {
 	const [searchParams] = useSearchParams();
-	const programId = searchParams.get('selectedProgramId');
-	if (programId) {
-		localStorage.setItem('selectedProgramId', programId);
-		return programId;
-	}
+	const navigate = useNavigate();
 
-	return localStorage.getItem('selectedProgramId');
+	const key = 'selectedProgramId';
+
+	useEffect(() => {
+		const myParam = searchParams.get(key);
+		const stored = localStorage.getItem(key);
+
+		if (!myParam && stored) {
+			// If URL is missing the param, navigate with it
+			navigate(`?${key}=${stored}`, { replace: true });
+		} else if (myParam) {
+			// Update localStorage if URL param is present
+			localStorage.setItem(key, myParam);
+		}
+	}, [searchParams, navigate]);
+
+	return searchParams.get(key) ?? localStorage.getItem(key);
 }
 
 export function useCRUDPrograms(): ProgramContextType {
