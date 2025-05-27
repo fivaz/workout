@@ -25,7 +25,7 @@ export default function SelectMuscles({
 
 				<div className="relative mt-2">
 					<ListboxButton className="flex w-full cursor-default gap-2 rounded-md bg-white px-3 py-1.5 text-left text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-blue-500">
-						<span className="grow truncate pr-6">{muscles.join(', ')}</span>
+						<span className="h-6 grow truncate pr-6">{muscles.join(', ')}</span>
 						<ChevronsUpDownIcon
 							className="size-5 self-center justify-self-end text-gray-500 sm:size-4"
 							aria-hidden="true"
