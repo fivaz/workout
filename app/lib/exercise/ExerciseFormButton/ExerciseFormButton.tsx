@@ -1,5 +1,13 @@
 import GButton, { type GButtonProps } from '@/components/GButton';
-import { type ChangeEvent, type FormEvent, type PropsWithChildren, useState, useRef } from 'react';
+import {
+	type ChangeEvent,
+	type FormEvent,
+	type PropsWithChildren,
+	useState,
+	useRef,
+	type Dispatch,
+	type SetStateAction,
+} from 'react';
 import { DialogActions, DialogBody, DialogTitle, GDialog } from '@/components/GDialog';
 import GInput from '@/components/GInput';
 import type { Exercise } from '@/lib/exercise/exercise.model';
