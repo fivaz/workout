@@ -17,12 +17,17 @@ import {
 	getProgramExercises,
 } from '@/routes/auth/Programs/ProgramRow/ProgramPage/service';
 import { ExercisesList } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExercisesList';
+import { useEffect } from 'react';
 
 export default function ProgramPage() {
 	const { programId } = useParams();
 
 	const { programs } = usePrograms();
 	const { exercises } = useExercises();
+
+	useEffect(() => {
+		console.log(exercises);
+	}, [exercises]);
 
 	const program = programs.find((program) => program.id === programId);
 

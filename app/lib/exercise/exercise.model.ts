@@ -7,6 +7,7 @@ export type Exercise = {
 	createdAt: string;
 	muscles: string[];
 	programsIds: string[];
+	order: number;
 };
 
 export function buildEmptyExercise(program?: Program): Exercise {
@@ -17,5 +18,6 @@ export function buildEmptyExercise(program?: Program): Exercise {
 		createdAt: '',
 		muscles: program?.muscles || [],
 		programsIds: program ? [program.id] : [],
+		order: Infinity,
 	};
 }
