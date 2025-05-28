@@ -2,7 +2,7 @@ import { usePrograms } from '@/lib/program/programContext';
 import GText from '@/components/GText';
 import { DumbbellIcon, PlusIcon } from 'lucide-react';
 import { NavLink, useParams } from 'react-router';
-import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
+import { buildEmptyExercise, type Exercise } from '@/lib/exercise/exercise.model';
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFormButton';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { ProgramExerciseRow } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ProgramExerciseRow';
@@ -11,6 +11,12 @@ import GButton from '@/components/GButton';
 import DropProgramHere from '@/routes/auth/Programs/ProgramRow/ProgramPage/DropProgramHere';
 import NoExercises from '@/routes/auth/Programs/ProgramRow/ProgramPage/NoExercises';
 import ProgramNotFound from '@/routes/auth/Programs/ProgramRow/ProgramPage/ProgramNotFound';
+import {
+	getMuscleExercises,
+	getOtherExercises,
+	getProgramExercises,
+} from '@/routes/auth/Programs/ProgramRow/ProgramPage/service';
+import { ExercisesList } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExercisesList';
 
 export default function ProgramPage() {
 	const { programId } = useParams();
@@ -20,81 +26,40 @@ export default function ProgramPage() {
 
 	const program = programs.find((program) => program.id === programId);
 
-	const programExercises = program
-		? exercises.filter((exercises) => exercises.programsIds.includes(program.id))
-		: [];
+	const programExercises = getProgramExercises(exercises, programId);
 
-	const muscleExercises = program
-		? exercises.filter((exercise) => {
-				// Check if exercise is not in programExercises
-				const notInProgram = !programExercises.some((pe) => pe.id === exercise.id);
+	const muscleExercises = getMuscleExercises(exercises, program?.muscles);
 
-				// Check if any exercise.muscles exists in program.muscles
-				const hasMatchingMuscle = exercise.muscles.some((muscle) =>
-					program.muscles.includes(muscle),
-				);
-
-				return notInProgram && hasMatchingMuscle;
-			})
-		: [];
+	const otherExercises = getOtherExercises(programExercises, muscleExercises);
 
 	const newExercise = buildEmptyExercise(program);
 
-	return (
-		<>
-			{program ? (
-				<div className="relative flex w-full flex-1 flex-col gap-3 rounded-md">
-					<div className="flex items-center justify-between gap-2">
-						<GText tag="h1" className="text-lg capitalize">
-							{program.name}
-						</GText>
-						<ExerciseFormButton exercise={newExercise}>
-							<PlusIcon className="size-5" />
-							Exercise
-						</ExerciseFormButton>
-					</div>
+	if (!programId || !program) return <ProgramNotFound />;
 
-					{programExercises.length || muscleExercises.length ? (
-						<>
-							<GText tag="h2" className="text-sm">
-								Existing exercises
-							</GText>
-							<ul className="flex flex-col gap-3">
-								{programExercises.map((exercise) => (
-									<ProgramExerciseRow key={exercise.id} exercise={exercise} />
-								))}
-								<li>
-									<DropProgramHere />
-								</li>
-							</ul>
-							<GText tag="h2" className="text-sm">
-								Others
-							</GText>
-							<ul className="flex flex-col gap-3 pb-10">
-								{muscleExercises.map((exercise) => (
-									<ProgramExerciseRow key={exercise.id} exercise={exercise} />
-								))}
-								<li>
-									<DropProgramHere />
-								</li>
-							</ul>
-						</>
-					) : (
-						<NoExercises />
-					)}
-					<NavLink
-						to={`${ROUTES.HOME}?selectedProgramId=${program.id}`}
-						className="fixed bottom-15 left-1/2 z-10 mb-3 -translate-x-1/2"
-					>
-						<GButton>
-							<DumbbellIcon />
-							Use Program
-						</GButton>
-					</NavLink>
-				</div>
+	return (
+		<div className="relative flex w-full flex-1 flex-col gap-3 rounded-md">
+			<div className="flex items-center justify-between gap-2">
+				<GText tag="h1" className="text-lg capitalize">
+					{program.name}
+				</GText>
+				<ExerciseFormButton exercise={newExercise} />
+			</div>
+
+			{programExercises.length || muscleExercises.length ? (
+				<ExercisesList programExercises={programExercises} otherExercises={otherExercises} />
 			) : (
-				<ProgramNotFound />
+				<NoExercises />
 			)}
-		</>
+
+			<NavLink
+				to={ROUTES.TRAIN(programId)}
+				className="fixed bottom-15 left-1/2 z-10 mb-3 -translate-x-1/2"
+			>
+				<GButton>
+					<DumbbellIcon />
+					Use Program
+				</GButton>
+			</NavLink>
+		</div>
 	);
 }

@@ -52,7 +52,6 @@ export default function Train() {
 							Exercise
 						</ExerciseFormButton>
 					</div>
-
 					{programExercises.length ? (
 						<DragDropProvider onDragEnd={handleDragEnd}>
 							<ul className="flex flex-1 flex-col gap-3">

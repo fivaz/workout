@@ -15,10 +15,12 @@ import { useExercises } from '@/lib/exercise/exerciseContext';
 import { cloneDeep } from 'lodash-es';
 import SelectPrograms from '@/lib/exercise/ExerciseFormButton/SelectPrograms';
 import SelectMuscles from '@/lib/exercise/ExerciseFormButton/SelectMuscles';
-import { XIcon } from 'lucide-react';
+import { PlusIcon, XIcon } from 'lucide-react';
 import { usePrompt } from '@/lib/prompt/prompt.hook';
 
-type ExerciseFormButtonProps = PropsWithChildren<{ exercise: Exercise } & GButtonProps>;
+type ExerciseFormButtonProps = PropsWithChildren<
+	{ exercise: Exercise } & Omit<GButtonProps, 'children'>
+>;
 
 export function ExerciseFormButton({
 	children,
@@ -100,7 +102,12 @@ export function ExerciseFormButton({
 	return (
 		<>
 			<GButton color={color} className={className} size={size} type="button" onClick={handleOpen}>
-				{children}
+				{children || (
+					<>
+						<PlusIcon className="size-5" />
+						Exercise
+					</>
+				)}
 			</GButton>
 
 			<GDialog open={isOpen} onClose={handleClose}>
