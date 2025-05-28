@@ -12,6 +12,7 @@
     "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
+    "@dnd-kit/abstract": "^0.1.18",
     "@dnd-kit/helpers": "^0.1.18",
     "@dnd-kit/react": "^0.1.18",
     "@headlessui/react": "^2.2.0",
