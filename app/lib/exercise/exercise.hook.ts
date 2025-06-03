@@ -7,6 +7,8 @@ import {
 	getExercises,
 	updateExercise,
 	updateExercisesOrder,
+	addExercisesToProgram,
+	removeExercisesFromProgram,
 } from '@/lib/exercise/exercise.repository';
 import type { ExerciseContextType } from '@/lib/exercise/exerciseContext';
 import { toast } from 'react-toastify';
@@ -68,7 +70,6 @@ export function useCRUDExercises(): ExerciseContextType {
 		}
 	}
 
-	// Update exercises order
 	async function handleUpdateExercisesOrder(exercises: Exercise[]): Promise<void> {
 		if (!user) {
 			toast.error('User must be authenticated');
@@ -84,7 +85,42 @@ export function useCRUDExercises(): ExerciseContextType {
 		}
 	}
 
-	// Delete exercise
+	async function handleAddExercisesToProgram(
+		exercises: Exercise[],
+		programId: string,
+	): Promise<void> {
+		if (!user) {
+			toast.error('User must be authenticated');
+			return;
+		}
+
+		try {
+			await addExercisesToProgram(user.uid, exercises, programId);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : 'Failed to update exercise';
+			toast.error(message);
+			console.error(err);
+		}
+	}
+
+	async function handleRemoveExercisesFromProgram(
+		exercises: Exercise[],
+		programId: string,
+	): Promise<void> {
+		if (!user) {
+			toast.error('User must be authenticated');
+			return;
+		}
+
+		try {
+			await removeExercisesFromProgram(user.uid, exercises, programId);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : 'Failed to update exercise';
+			toast.error(message);
+			console.error(err);
+		}
+	}
+
 	function handleDeleteExercise(exercise: Exercise): void {
 		if (!user) {
 			toast.error('User must be authenticated');
@@ -107,5 +143,7 @@ export function useCRUDExercises(): ExerciseContextType {
 		updateExercise: handleUpdateExercise,
 		updateExercisesOrder: handleUpdateExercisesOrder,
 		deleteExercise: handleDeleteExercise,
+		addExercisesToProgram: handleAddExercisesToProgram,
+		removeExercisesFromProgram: handleRemoveExercisesFromProgram,
 	};
 }

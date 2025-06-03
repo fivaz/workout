@@ -23,6 +23,7 @@ export function getExercises(
 	onError: (error: string) => void,
 ) {
 	const exercisesRef = query(collection(db, getExercisePath(userId)), orderBy('order'));
+	// const exercisesRef = collection(db, getExercisePath(userId));
 
 	return onSnapshot(
 		exercisesRef,
@@ -37,7 +38,6 @@ export function getExercises(
 	);
 }
 
-// Create new exercise with optional image
 export async function createExercise(
 	userId: string,
 	exercise: Omit<Exercise, 'id'>,
@@ -62,7 +62,6 @@ export async function createExercise(
 	return newExercise;
 }
 
-// Update existing exercise with optional new image
 export async function updateExercise(
 	userId: string,
 	exercise: Exercise,
@@ -82,18 +81,63 @@ export async function updateExercise(
 	});
 }
 
-// Update existing exercise with optional new image
-export async function updateExercisesOrder(userId: string, exercises: Exercise[]): Promise<void> {
+export async function updateExercises(userId: string, exercises: Exercise[]): Promise<void> {
 	const batch = writeBatch(db);
 
-	exercises.forEach((exercise, index) => {
+	exercises.forEach((exercise) => {
 		const taskRef = doc(db, getExercisePath(userId), exercise.id);
-		batch.update(taskRef, { order: index });
+		batch.update(taskRef, exercise);
 	});
 
 	return batch.commit();
 }
 
+export async function updateExercisesOrder(userId: string, exercises: Exercise[]): Promise<void> {
+	const updatedExercises = exercises.map<Exercise>((exercise, index) => ({
+		...exercise,
+		order: index,
+	}));
+
+	return updateExercises(userId, updatedExercises);
+}
+
+function attachProgramAndOrder(exercise: Exercise, programId: string, order: number): Exercise {
+	return {
+		...exercise,
+		programsIds: exercise.programsIds.includes(programId)
+			? exercise.programsIds
+			: [...exercise.programsIds, programId],
+		order,
+	};
+}
+
+export async function addExercisesToProgram(
+	userId: string,
+	exercises: Exercise[],
+	programId: string,
+): Promise<void> {
+	const updatedExercises = exercises.map((ex, i) => attachProgramAndOrder(ex, programId, i));
+	return updateExercises(userId, updatedExercises);
+}
+
+function detachProgramAndOrder(exercise: Exercise, programId: string, order: number): Exercise {
+	return {
+		...exercise,
+		programsIds: exercise.programsIds.includes(programId)
+			? exercise.programsIds.filter((id) => id !== programId)
+			: exercise.programsIds,
+		order,
+	};
+}
+
+export async function removeExercisesFromProgram(
+	userId: string,
+	exercises: Exercise[],
+	programId: string,
+): Promise<void> {
+	const updatedExercises = exercises.map((ex, i) => detachProgramAndOrder(ex, programId, i));
+	return updateExercises(userId, updatedExercises);
+}
 // Delete exercise and its associated image
 export function deleteExercise(userId: string, exercise: Exercise): void {
 	const exerciseRef = doc(db, getExercisePath(userId), exercise.id);

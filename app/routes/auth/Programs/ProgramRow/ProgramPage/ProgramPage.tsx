@@ -51,7 +51,11 @@ export default function ProgramPage() {
 			</div>
 
 			{programExercises.length || muscleExercises.length ? (
-				<ExercisesList programExercises={programExercises} otherExercises={otherExercises} />
+				<ExercisesList
+					programExercises={programExercises}
+					otherExercises={otherExercises}
+					programId={programId}
+				/>
 			) : (
 				<NoExercises />
 			)}

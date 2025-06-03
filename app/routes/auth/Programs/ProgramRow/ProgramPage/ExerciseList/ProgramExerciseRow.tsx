@@ -16,7 +16,7 @@ export function ProgramExerciseRow({ exercise, index, group }: ProgramExerciseRo
 		id: exercise.id,
 		index,
 		type: 'item',
-		accept: ['item'],
+		accept: 'item',
 		group,
 	});
 
