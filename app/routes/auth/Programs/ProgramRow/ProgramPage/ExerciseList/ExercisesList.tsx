@@ -1,14 +1,9 @@
-import GText from '@/components/GText';
 import { ProgramExerciseRow } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/ProgramExerciseRow';
-import DropProgramHere from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/DropProgramHere';
 import type { Exercise } from '@/lib/exercise/exercise.model';
-import { useState, type ReactNode, useEffect } from 'react';
-import { DragDropProvider, useDroppable } from '@dnd-kit/react';
+import { useState } from 'react';
+import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
-import { CollisionPriority } from '@dnd-kit/abstract';
-import { useSortable } from '@dnd-kit/react/sortable';
 import { useCRUDExercises } from '@/lib/exercise/exercise.hook';
-import { Button } from '@headlessui/react';
 import { Group } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/ExerciseGroup';
 
 export function ExercisesList({

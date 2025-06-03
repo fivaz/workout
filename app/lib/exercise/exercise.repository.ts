@@ -23,7 +23,6 @@ export function getExercises(
 	onError: (error: string) => void,
 ) {
 	const exercisesRef = query(collection(db, getExercisePath(userId)), orderBy('order'));
-	// const exercisesRef = collection(db, getExercisePath(userId));
 
 	return onSnapshot(
 		exercisesRef,
