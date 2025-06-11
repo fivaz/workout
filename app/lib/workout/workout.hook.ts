@@ -15,24 +15,16 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 
 	// Fetch the latest workout
 	useEffect(() => {
-		async function fetchWorkout() {
-			if (!user || !exerciseId) {
-				setLatestWorkout(buildEmptyWorkout());
-				return;
-			}
-
-			try {
-				const workout = await getWorkout(user.uid, exerciseId, currentDate);
-				setLatestWorkout(workout);
-			} catch (err) {
-				toast.error(err instanceof Error ? err.message : 'Failed to fetch latest workout', {
-					toastId: 'exercise-error',
-				});
-				console.error(err);
-			}
+		if (!user || !exerciseId) {
+			setLatestWorkout(buildEmptyWorkout());
+			return;
 		}
 
-		void fetchWorkout();
+		const unsubscribe = getWorkout(user.uid, exerciseId, currentDate, setLatestWorkout);
+
+		return () => {
+			unsubscribe();
+		};
 	}, [user, exerciseId, currentDate]);
 
 	// CRUD operations with shared state
@@ -67,9 +59,11 @@ export function useCRUDWorkouts(exerciseId: string, currentDate: string) {
 
 		try {
 			if (workout.id) {
+				console.log('workout existed already');
 				return updateWorkout(user.uid, exerciseId, workout);
 			} else {
-				void createWorkout(user.uid, exerciseId, workout);
+				console.log('workout does not exist, creating...');
+				return createWorkout(user.uid, exerciseId, workout);
 			}
 			// toast.success('Workout updated successfully', {
 			// 	toastId: 'exercise-success',

@@ -2,18 +2,17 @@ import { db } from '../firebase.client';
 import { DB, gFormatDate } from '@/lib/consts';
 import { buildEmptyWorkout, type Workout } from '@/lib/workout/workout.model';
 import {
-	addDoc,
 	collection,
 	deleteDoc,
 	doc,
 	getDocs,
+	limit,
 	onSnapshot,
 	orderBy,
 	query,
+	setDoc,
 	updateDoc,
 	where,
-	limit,
-	setDoc,
 } from 'firebase/firestore';
 
 // Base path generator
@@ -45,30 +44,27 @@ export async function getLatestWorkout(
 	} as Workout;
 }
 
-// New function to get workout for specific date
-export async function getWorkout(
+export function getWorkout(
 	userId: string,
 	exerciseId: string,
 	targetDate: string,
-): Promise<Workout> {
-	// Try to get the workout for the specific date
+	callback: (workout: Workout) => void,
+): () => void {
 	const workoutsRef = collection(db, getWorkoutsPath(userId, exerciseId));
 	const exactDateQuery = query(workoutsRef, where('createdAt', '==', targetDate), limit(1));
 
-	const snapshot = await getDocs(exactDateQuery);
-
-	// If workout exists for the target date, return it
-	if (!snapshot.empty) {
-		const doc = snapshot.docs[0];
-		return {
-			id: doc.id,
-			...doc.data(),
-		} as Workout;
-	}
-
-	// If no workout exists, get the latest workout and build a new one
-	const latestWorkout = await getLatestWorkout(userId, exerciseId, targetDate);
-	return buildEmptyWorkout(latestWorkout);
+	return onSnapshot(exactDateQuery, async (snapshot) => {
+		if (!snapshot.empty) {
+			const doc = snapshot.docs[0];
+			callback({
+				id: doc.id,
+				...doc.data(),
+			} as Workout);
+		} else {
+			const latestWorkout = await getLatestWorkout(userId, exerciseId, targetDate);
+			callback(buildEmptyWorkout(latestWorkout));
+		}
+	});
 }
 
 // CRUD Functions
