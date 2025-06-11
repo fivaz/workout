@@ -55,14 +55,35 @@ export function getWorkout(
 
 	return onSnapshot(exactDateQuery, async (snapshot) => {
 		if (!snapshot.empty) {
-			const doc = snapshot.docs[0];
+			const docSnap = snapshot.docs[0];
 			callback({
-				id: doc.id,
-				...doc.data(),
+				id: docSnap.id,
+				...docSnap.data(),
 			} as Workout);
 		} else {
-			const latestWorkout = await getLatestWorkout(userId, exerciseId, targetDate);
-			callback(buildEmptyWorkout(latestWorkout));
+			// Generate new doc ID
+			const newDocRef = doc(workoutsRef);
+			const newDocId = newDocRef.id;
+
+			// Try to find latest previous workout
+			const q = query(
+				workoutsRef,
+				where('createdAt', '<', targetDate),
+				orderBy('createdAt', 'desc'),
+				limit(1),
+			);
+
+			const prevSnapshot = await getDocs(q);
+			const latestWorkout = !prevSnapshot.empty
+				? (prevSnapshot.docs[0].data() as Workout)
+				: undefined;
+
+			const newWorkout = buildEmptyWorkout(latestWorkout, {
+				id: newDocId,
+				createdAt: targetDate,
+			});
+
+			callback(newWorkout);
 		}
 	});
 }
@@ -108,7 +129,7 @@ export function createWorkout(userId: string, exerciseId: string, workout: Worko
 
 export function updateWorkout(userId: string, exerciseId: string, workout: Workout) {
 	const workoutRef = doc(db, getWorkoutsPath(userId, exerciseId), workout.id);
-	return updateDoc(workoutRef, workout);
+	return setDoc(workoutRef, workout);
 }
 
 export function deleteWorkout(userId: string, exerciseId: string, workoutId: string) {

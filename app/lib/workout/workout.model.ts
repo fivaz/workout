@@ -10,11 +10,14 @@ export type WorkoutSet = {
 	time: string;
 };
 
-export function buildEmptyWorkout(latestWorkout?: Workout): Workout {
+export function buildEmptyWorkout(latestWorkout?: Workout, override?: Partial<Workout>): Workout {
+	const newId = override?.id ?? '';
+	const newDate = override?.createdAt ?? '';
+
 	if (latestWorkout) {
 		return {
-			id: '',
-			createdAt: '',
+			id: newId,
+			createdAt: newDate,
 			sets: latestWorkout.sets.map((set) => ({
 				reps: set.reps,
 				weight: set.weight,
@@ -24,24 +27,12 @@ export function buildEmptyWorkout(latestWorkout?: Workout): Workout {
 	}
 
 	return {
-		id: '',
-		createdAt: '',
+		id: newId,
+		createdAt: newDate,
 		sets: [
-			{
-				time: '',
-				reps: '',
-				weight: '',
-			},
-			{
-				time: '',
-				reps: '',
-				weight: '',
-			},
-			{
-				time: '',
-				reps: '',
-				weight: '',
-			},
+			{ time: '', reps: '', weight: '' },
+			{ time: '', reps: '', weight: '' },
+			{ time: '', reps: '', weight: '' },
 		],
 	};
 }

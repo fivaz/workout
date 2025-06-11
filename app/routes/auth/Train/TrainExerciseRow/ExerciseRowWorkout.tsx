@@ -101,9 +101,9 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 	}
 
 	return (
-		<ul className="w-full text-sm dark:text-gray-300 flex flex-col gap-2">
+		<ul className="flex w-full flex-col gap-2 text-sm dark:text-gray-300">
 			<li
-				className="w-full grid gap-2 items-center"
+				className="grid w-full items-center gap-2"
 				style={{
 					gridTemplateColumns: '24px 1fr 1fr minmax(70px, 1fr) 30px',
 				}}
@@ -116,7 +116,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 			</li>
 			{latestWorkout.sets.map((set, index) => (
 				<li
-					className="w-full grid gap-2 items-center"
+					className="grid w-full items-center gap-2"
 					style={{
 						gridTemplateColumns: '24px 1fr 1fr minmax(70px, 1fr) 30px',
 					}}
@@ -124,19 +124,19 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 				>
 					<GText>{index + 1}</GText>
 					<GInput
-						className="w-full h-9"
+						className="h-9 w-full"
 						type="number"
 						value={set.reps}
 						onChange={(e) => handleChange(index, 'reps', e.target.value)}
 					/>
 					<GInput
-						className="w-full h-9"
+						className="h-9 w-full"
 						type="number"
 						value={set.weight}
 						onChange={(e) => handleChange(index, 'weight', e.target.value)}
 					/>
 					<GInput
-						className="w-full h-9"
+						className="h-9 w-full"
 						type="time"
 						value={set.time}
 						onChange={(e) => handleChange(index, 'time', e.target.value)}
@@ -152,7 +152,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 						<div className="w-full border-t border-gray-300 dark:border-gray-600" />
 					</div>
 					<div className="relative flex justify-center">
-						<span className="dark:bg-gray-900 bg-gray-50 px-2 text-gray-500 rounded-lg border border-gray-300 dark:border-gray-600">
+						<span className="rounded-lg border border-gray-300 bg-gray-50 px-2 text-gray-500 dark:border-gray-600 dark:bg-gray-900">
 							<PlusIcon aria-hidden="true" className="size-4 text-gray-500 dark:text-gray-400" />
 						</span>
 					</div>
