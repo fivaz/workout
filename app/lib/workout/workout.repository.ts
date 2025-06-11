@@ -114,19 +114,6 @@ export function getWorkouts(
 	);
 }
 
-export function createWorkout(userId: string, exerciseId: string, workout: Workout) {
-	const workoutsRef = collection(db, getWorkoutsPath(userId, exerciseId));
-
-	const newDocRef = doc(workoutsRef);
-	const newWorkout = {
-		...workout,
-		id: newDocRef.id, // Include the ID in the document
-		createdAt: gFormatDate(new Date()),
-	};
-	void setDoc(newDocRef, newWorkout);
-	return newWorkout;
-}
-
 export function updateWorkout(userId: string, exerciseId: string, workout: Workout) {
 	const workoutRef = doc(db, getWorkoutsPath(userId, exerciseId), workout.id);
 	return setDoc(workoutRef, workout);
