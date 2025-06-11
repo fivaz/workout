@@ -122,7 +122,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 					}}
 					key={index}
 				>
-					<GText>{index + 1}</GText>
+					<GText className="text-center">{index + 1}</GText>
 					<GInput
 						className="h-9 w-full"
 						type="number"
