@@ -6,7 +6,7 @@ import { PlusIcon, XIcon } from 'lucide-react';
 import GInput from '@/components/GInput';
 import GText from '@/components/GText';
 import { type Workout, type WorkoutSet } from '@/lib/workout/workout.model';
-import { useCallback } from 'react';
+import { useMemo, useEffect } from 'react';
 import { debounce } from 'lodash-es';
 import { usePrompt } from '@/lib/prompt/prompt.hook';
 
@@ -23,25 +23,33 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 
 	const { createPrompt } = usePrompt();
 
-	// Memoize the debounced update function
-	const debouncedUpdateWorkout = useCallback(
-		(workout: Workout) => {
-			const debouncedFn = debounce(async () => {
+	// Create a memoized debounced function
+	const debouncedUpdate = useMemo(
+		() =>
+			debounce(async (workout: Workout) => {
 				setLoading(true);
-				await updateWorkout(workout);
-				setLoading(false);
-			}, 1000);
-			void debouncedFn();
-		},
+				try {
+					await updateWorkout(workout);
+				} finally {
+					setLoading(false);
+				}
+			}, 1000),
 		[setLoading, updateWorkout],
 	);
+
+	// Cleanup debounce on unmount
+	useEffect(() => {
+		return () => {
+			debouncedUpdate.cancel();
+		};
+	}, [debouncedUpdate]);
 
 	function handleChange(index: number, field: keyof WorkoutSet, value: string) {
 		setLatestWorkout((prevWorkout) => {
 			const newSets = [...prevWorkout.sets];
 			newSets[index] = { ...newSets[index], [field]: value };
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			debouncedUpdateWorkout(updatedWorkout);
+			debouncedUpdate(updatedWorkout);
 			return updatedWorkout;
 		});
 	}
@@ -51,7 +59,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 			const newSets = [...prevWorkout.sets];
 			newSets.splice(index, 1);
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			debouncedUpdateWorkout(updatedWorkout);
+			debouncedUpdate(updatedWorkout);
 			return updatedWorkout;
 		});
 	}
@@ -95,7 +103,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 		setLatestWorkout((prevWorkout) => {
 			const newSets = [...prevWorkout.sets, newSet];
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			debouncedUpdateWorkout(updatedWorkout); // Persist changes to Firestore
+			debouncedUpdate(updatedWorkout);
 			return updatedWorkout;
 		});
 	}
@@ -152,7 +160,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 						<div className="w-full border-t border-gray-300 dark:border-gray-600" />
 					</div>
 					<div className="relative flex justify-center">
-						<span className="rounded-lg border border-gray-300 bg-gray-50 px-2 text-gray-500 dark:border-gray-600 dark:bg-gray-900">
+						<span className="rounded-lg border border-gray-300 bg-gray-50 px-2 dark:border-gray-600 dark:bg-gray-900">
 							<PlusIcon aria-hidden="true" className="size-4 text-gray-500 dark:text-gray-400" />
 						</span>
 					</div>
