@@ -5,7 +5,6 @@ import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFo
 import { buildEmptyExercise, type Exercise } from '@/lib/exercise/exercise.model';
 import { PlusIcon } from 'lucide-react';
 import { usePrograms } from '@/lib/program/programContext';
-import { useSearchParams } from 'react-router';
 import NoProgramSelected from '@/routes/auth/Train/NoProgramSelected';
 import NoProgramExercises from '@/routes/auth/Programs/NoProgramExercises';
 import { useProgramId } from '@/lib/program/program.hook';
@@ -13,16 +12,24 @@ import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
 import { useEffect, useState } from 'react';
 import { useCRUDExercises } from '@/lib/exercise/exercise.hook';
+import { useNavigate } from 'react-router';
 
 export default function Train() {
 	const { exercises } = useExercises();
 	const { programs } = usePrograms();
 	const programId = useProgramId();
 	const { updateExercisesOrder } = useCRUDExercises();
+	const navigate = useNavigate();
 
 	const selectedProgram = programs.find((program) => program.id === programId);
 
 	const [programExercises, setProgramExercises] = useState<Exercise[]>([]);
+
+	useEffect(() => {
+		if (!programId) {
+			navigate('/programs');
+		}
+	}, [programId, navigate]);
 
 	useEffect(() => {
 		setProgramExercises(
