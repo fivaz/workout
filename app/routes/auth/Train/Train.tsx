@@ -13,6 +13,7 @@ import { move } from '@dnd-kit/helpers';
 import { useEffect, useState } from 'react';
 import { useCRUDExercises } from '@/lib/exercise/exercise.hook';
 import { useNavigate } from 'react-router';
+import { ROUTES } from '@/lib/consts';
 
 export default function Train() {
 	const { exercises } = useExercises();
@@ -27,7 +28,7 @@ export default function Train() {
 
 	useEffect(() => {
 		if (!programId) {
-			navigate('/programs');
+			navigate(ROUTES.PROGRAMS);
 		}
 	}, [programId, navigate]);
 
