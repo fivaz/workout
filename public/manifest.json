@@ -2,7 +2,7 @@
   "name": "Workout",
   "short_name": "Workout",
   "description": "A workout tracking app",
-  "start_url": "/programs",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#2b7fff",
   "background_color": "#ffffff",
