@@ -6,6 +6,7 @@ export type Session = {
 	programId: string;
 	programNameSnapshot: string;
 	startAt: string;
+	endAt: string;
 	date: string;
 };
 
@@ -19,7 +20,8 @@ export function buildEmptySession(program: Program): Session {
 		id: '',
 		programId: program.id,
 		programNameSnapshot: program.name,
-		startAt,
 		date,
+		startAt,
+		endAt: '',
 	};
 }

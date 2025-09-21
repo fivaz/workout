@@ -11,7 +11,7 @@ import {
 import type { SessionContextType } from '@/lib/session/sessionContext';
 import { toast } from 'react-toastify';
 import type { Program } from '@/lib/program/program.model';
-import { gFormatDate } from '@/lib/consts';
+import { gFormatDate, gFormatTime } from '@/lib/consts';
 
 export function useCRUDSessions(): SessionContextType {
 	const { user } = useAuth();
@@ -33,28 +33,56 @@ export function useCRUDSessions(): SessionContextType {
 		return () => unsubscribe();
 	}, [user]);
 
-	// Create a new session
-	async function handleCreateSession(program: Program): Promise<Session | null> {
+	// Start a new session
+	async function handleStartSession(program: Program): Promise<void> {
 		if (!user) {
 			toast.error('User must be authenticated');
-			return null;
+			return;
 		}
 
 		try {
 			// Check if session exists today
-			let session = await getSessionByProgramAndDate(user.uid, program.id, gFormatDate(new Date()));
+			const session = await getSessionByProgramAndDate(
+				user.uid,
+				program.id,
+				gFormatDate(new Date()),
+			);
 
-			if (!session) {
+			if (session) {
+				// reset session's end field to make it continue
+				void updateSession(user.uid, { ...session, endAt: '' });
+			} else {
 				// Create a new session
-				session = await createSession(user.uid, buildEmptySession(program));
+				void createSession(user.uid, buildEmptySession(program));
 			}
-
-			return session;
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Failed to create session';
 			toast.error(message);
 			console.error(err);
-			return null;
+			return;
+		}
+	}
+
+	// end existing session
+	async function handleEndSession(programId: Program['id']): Promise<void> {
+		if (!user) {
+			toast.error('User must be authenticated');
+			return;
+		}
+
+		const session = await getSessionByProgramAndDate(user.uid, programId, gFormatDate(new Date()));
+		if (!session) {
+			toast.error("This session wasn't started");
+			return;
+		}
+
+		try {
+			await updateSession(user.uid, { ...session, endAt: gFormatTime(new Date()) });
+			toast.success(`Session updated successfully`);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : 'Failed to update session';
+			toast.error(message);
+			console.error(err);
 		}
 	}
 
@@ -109,10 +137,7 @@ export function useCRUDSessions(): SessionContextType {
 	}
 
 	return {
-		sessions,
-		getSession: handleGetSession,
-		createSession: handleCreateSession,
-		updateSession: handleUpdateSession,
-		deleteSession: handleDeleteSession,
+		startSession: handleStartSession,
+		endSession: handleEndSession,
 	};
 }

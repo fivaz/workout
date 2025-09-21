@@ -25,7 +25,7 @@ export default function ProgramPage() {
 	const { exercises } = useExercises();
 	const navigate = useNavigate();
 
-	const { createSession } = useSessions();
+	const { startSession } = useSessions();
 
 	useEffect(() => {
 		console.log(exercises);
@@ -43,10 +43,8 @@ export default function ProgramPage() {
 
 	if (!programId || !program) return <ProgramNotFound />;
 
-	const handleUseProgram = async () => {
-		createSession(program);
-
-		// Navigate to the session page
+	const handleUseProgram = () => {
+		startSession(program);
 		navigate(ROUTES.TRAIN(program.id));
 	};
 

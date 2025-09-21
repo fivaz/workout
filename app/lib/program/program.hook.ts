@@ -15,7 +15,7 @@ export function useProgramId() {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 
-	const key = 'selectedProgramId';
+	const key = 'program';
 
 	useEffect(() => {
 		const myParam = searchParams.get(key);

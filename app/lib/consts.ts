@@ -7,7 +7,8 @@ export const ROUTES = {
 	PROGRAMS: '/programs',
 	STATS: '/stats',
 	SETTINGS: '/settings',
-	TRAIN: (programId: string) => `/?selectedProgramId=${programId}`,
+	REPORT: (programId: string) => `/report?program=${programId}`,
+	TRAIN: (programId: string) => `/?program=${programId}`,
 };
 
 export const DB = {
