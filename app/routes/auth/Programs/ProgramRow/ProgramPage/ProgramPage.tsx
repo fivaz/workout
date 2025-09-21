@@ -1,14 +1,12 @@
 import { usePrograms } from '@/lib/program/programContext';
 import GText from '@/components/GText';
-import { DumbbellIcon, PlusIcon } from 'lucide-react';
+import { DumbbellIcon } from 'lucide-react';
 import { NavLink, useNavigate, useParams } from 'react-router';
-import { buildEmptyExercise, type Exercise } from '@/lib/exercise/exercise.model';
+import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFormButton';
 import { useExercises } from '@/lib/exercise/exerciseContext';
-import { ProgramExerciseRow } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/ProgramExerciseRow';
-import { gFormatDate, gFormatTime, ROUTES } from '@/lib/consts';
+import { ROUTES } from '@/lib/consts';
 import GButton from '@/components/GButton';
-import DropProgramHere from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/DropProgramHere';
 import NoExercises from '@/routes/auth/Programs/ProgramRow/ProgramPage/NoExercises';
 import ProgramNotFound from '@/routes/auth/Programs/ProgramRow/ProgramPage/ProgramNotFound';
 import {
@@ -19,7 +17,6 @@ import {
 import { ExercisesList } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/ExercisesList';
 import { useEffect } from 'react';
 import { useSessions } from '@/lib/session/sessionContext';
-import { toast } from 'react-toastify';
 
 export default function ProgramPage() {
 	const { programId } = useParams();

@@ -1,5 +1,5 @@
 import GText from '@/components/GText';
-import { ClipboardListIcon, TextSelectIcon } from 'lucide-react';
+import { TextSelectIcon } from 'lucide-react';
 
 export default function ProgramNotFound() {
 	return (

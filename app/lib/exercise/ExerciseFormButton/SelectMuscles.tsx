@@ -1,5 +1,5 @@
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react';
-import { type Dispatch, type JSX, type SetStateAction, useState } from 'react';
+import { type JSX } from 'react';
 import Badge from '@/lib/exercise/ExerciseFormButton/Badge';
 import { MUSCLES } from '@/lib/utils';
 import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';

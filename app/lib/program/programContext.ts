@@ -13,9 +13,9 @@ export interface ProgramContextType {
 // Create the context
 export const ProgramContext = createContext<ProgramContextType>({
 	programs: [],
-	createProgram: (program: Program) => {},
-	updateProgram: (program: Program) => {},
-	deleteProgram: (program: Program) => {},
+	createProgram: (_program: Program) => {},
+	updateProgram: (_program: Program) => {},
+	deleteProgram: (_program: Program) => {},
 });
 
 export function usePrograms() {

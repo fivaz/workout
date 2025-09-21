@@ -1,4 +1,3 @@
-import type { Program } from '@/lib/program/program.model';
 import type { PropsWithChildren } from 'react';
 
 export default function Badge({ children }: PropsWithChildren) {

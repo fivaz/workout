@@ -1,5 +1,4 @@
 import GText from '@/components/GText';
-import { ClipboardListIcon, TextSelectIcon } from 'lucide-react';
 
 export default function DropProgramHere() {
 	return (

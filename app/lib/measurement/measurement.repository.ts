@@ -1,6 +1,6 @@
 import { collection, deleteDoc, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase.client';
-import { DB, gFormatDate } from '@/lib/consts';
+import { DB } from '@/lib/consts';
 import type { Measurement } from '@/lib/measurement/measurement.model';
 
 export const getMeasurementsPath = (userId: string) => `${DB.USERS}/${userId}/${DB.MEASUREMENTS}`;

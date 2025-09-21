@@ -1,5 +1,4 @@
 import type { Exercise } from '@/lib/exercise/exercise.model';
-import type { Program } from '@/lib/program/program.model';
 
 export const getProgramExercises = (exercises: Exercise[], programId?: string) => {
 	return programId

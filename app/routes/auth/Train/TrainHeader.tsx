@@ -1,7 +1,5 @@
 import {
 	BellElectricIcon,
-	ChevronDownIcon,
-	EllipsisIcon,
 	EllipsisVerticalIcon,
 	PlusIcon,
 } from 'lucide-react';
@@ -10,10 +8,8 @@ import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFo
 
 import WorkoutTimer from '@/routes/auth/Train/WorkoutTimer';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/GDropDown';
-import { Link } from '@/components/link';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
-import { move } from '@dnd-kit/helpers';
 import { buildEmptyExercise } from '@/lib/exercise/exercise.model';
 import type { Program } from '@/lib/program/program.model';
 

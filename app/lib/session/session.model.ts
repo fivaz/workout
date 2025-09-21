@@ -1,5 +1,4 @@
 import type { Program } from '../program/program.model';
-import type { Exercise } from '@/lib/exercise/exercise.model';
 import { gFormatDate, gFormatTime } from '@/lib/consts';
 
 export type Session = {

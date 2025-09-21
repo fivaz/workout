@@ -4,7 +4,6 @@ import * as Headless from '@headlessui/react';
 import clsx from 'clsx';
 import type React from 'react';
 import Button from './GButton';
-import { Link } from './link';
 
 export function Dropdown(props: Headless.MenuProps) {
 	return <Headless.Menu {...props} />;

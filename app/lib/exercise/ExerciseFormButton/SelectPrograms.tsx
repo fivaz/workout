@@ -1,8 +1,7 @@
-import type { Program } from '@/lib/program/program.model';
 import { usePrograms } from '@/lib/program/programContext';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Label } from '@headlessui/react';
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react';
-import { type JSX, useState } from 'react';
+import { type JSX } from 'react';
 import Badge from '@/lib/exercise/ExerciseFormButton/Badge';
 
 export default function SelectPrograms({

@@ -16,12 +16,12 @@ export interface ExerciseContextType {
 // Create the context
 export const ExerciseContext = createContext<ExerciseContextType>({
 	exercises: [],
-	createExercise: (exercise: Exercise, file: File | null) => {},
-	updateExercise: (exercise: Exercise, file: File | null) => {},
-	deleteExercise: (exercise: Exercise) => {},
-	updateExercisesOrder: (exercises: Exercise[]) => {},
-	addExercisesToProgram: (exercises: Exercise[], programId: string) => {},
-	removeExercisesFromProgram: (exercises: Exercise[], programId: string) => {},
+	createExercise: (_exercise: Exercise, _file: File | null) => {},
+	updateExercise: (_exercise: Exercise, _file: File | null) => {},
+	deleteExercise: (_exercise: Exercise) => {},
+	updateExercisesOrder: (_exercises: Exercise[]) => {},
+	addExercisesToProgram: (_exercises: Exercise[], _programId: string) => {},
+	removeExercisesFromProgram: (_exercises: Exercise[], _programId: string) => {},
 });
 
 export function useExercises() {

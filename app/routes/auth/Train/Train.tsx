@@ -1,7 +1,7 @@
 import GText from '@/components/GText';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { TrainExerciseRow } from '@/routes/auth/Train/TrainExerciseRow/TrainExerciseRow';
-import { buildEmptyExercise, type Exercise } from '@/lib/exercise/exercise.model';
+import { type Exercise } from '@/lib/exercise/exercise.model';
 
 import { usePrograms } from '@/lib/program/programContext';
 import NoProgramSelected from '@/routes/auth/Train/NoProgramSelected';

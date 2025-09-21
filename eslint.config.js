@@ -3,6 +3,7 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
+import unusedImports from 'eslint-plugin-unused-imports';
 
 export default tseslint.config(
 	{ ignores: ['dist', '.react-router'] },
@@ -16,8 +17,10 @@ export default tseslint.config(
 		plugins: {
 			'react-hooks': reactHooks,
 			'react-refresh': reactRefresh,
+			'unused-imports': unusedImports,
 		},
 		rules: {
+			'@typescript-eslint/no-unused-vars': 'off',
 			...reactHooks.configs.recommended.rules,
 			'react-refresh/only-export-components': [
 				'warn',
@@ -27,14 +30,14 @@ export default tseslint.config(
 				},
 			],
 			'@typescript-eslint/consistent-type-imports': 'error',
-			'@typescript-eslint/no-unused-vars': [
-				'warn', // or 'error'
+			'unused-imports/no-unused-imports': 'warn',
+			'unused-imports/no-unused-vars': [
+				'warn',
 				{
-					vars: 'all',              // check all variables
-					args: 'after-used',       // check function arguments
-					ignoreRestSiblings: true, // ignore rest siblings
-					varsIgnorePattern: '^_',  // ignore vars starting with _
-					argsIgnorePattern: '^_',  // ignore function args starting with _
+					vars: 'all',
+					varsIgnorePattern: '^_',
+					args: 'after-used',
+					argsIgnorePattern: '^_',
 				},
 			],
 		},

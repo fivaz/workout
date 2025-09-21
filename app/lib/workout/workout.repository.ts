@@ -1,5 +1,5 @@
 import { db } from '../firebase.client';
-import { DB, gFormatDate } from '@/lib/consts';
+import { DB } from '@/lib/consts';
 import { buildEmptyWorkout, type Workout } from '@/lib/workout/workout.model';
 import {
 	collection,
@@ -11,7 +11,6 @@ import {
 	orderBy,
 	query,
 	setDoc,
-	updateDoc,
 	where,
 } from 'firebase/firestore';
 

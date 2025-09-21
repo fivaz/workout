@@ -1,4 +1,3 @@
-import type { Exercise } from '@/lib/exercise/exercise.model';
 
 export type Program = {
 	id: string;

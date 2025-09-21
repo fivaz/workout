@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, redirect } from 'react-router';
+import { createCookieSessionStorage } from 'react-router';
 import { adminAuth } from '@/lib/firebase.server';
 
 type SessionData = {
