@@ -6,20 +6,19 @@ import { type Exercise } from '@/lib/exercise/exercise.model';
 import { usePrograms } from '@/lib/program/programContext';
 import NoProgramSelected from '@/routes/auth/Train/NoProgramSelected';
 import NoProgramExercises from '@/routes/auth/Programs/NoProgramExercises';
-import { useProgramId } from '@/lib/program/program.hook';
+import { useCurrentProgramId } from '@/lib/program/program.hook';
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
 import { useEffect, useState } from 'react';
 import { useCRUDExercises } from '@/lib/exercise/exercise.hook';
 import { useNavigate } from 'react-router';
-import { ROUTES } from '@/lib/consts';
 
 import TrainHeader from '@/routes/auth/Train/TrainHeader';
 
 export default function Train() {
 	const { exercises } = useExercises();
 	const { programs } = usePrograms();
-	const programId = useProgramId();
+	const programId = useCurrentProgramId();
 	const { updateExercisesOrder } = useCRUDExercises();
 	const navigate = useNavigate();
 
@@ -27,11 +26,11 @@ export default function Train() {
 
 	const [programExercises, setProgramExercises] = useState<Exercise[]>([]);
 
-	useEffect(() => {
-		if (!programId) {
-			navigate(ROUTES.PROGRAMS);
-		}
-	}, [programId, navigate]);
+	// useEffect(() => {
+	// 	if (!programId) {
+	// 		navigate(ROUTES.PROGRAMS);
+	// 	}
+	// }, [programId, navigate]);
 
 	useEffect(() => {
 		setProgramExercises(

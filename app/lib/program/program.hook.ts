@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/auth/auth.hook';
 import type { Program } from '@/lib/program/program.model';
 import {
 	createProgram,
@@ -9,28 +7,25 @@ import {
 } from '@/lib/program/program.repository';
 import type { ProgramContextType } from '@/lib/program/programContext';
 import { toast } from 'react-toastify';
-import { useNavigate, useSearchParams } from 'react-router';
 
-export function useProgramId() {
-	const [searchParams] = useSearchParams();
-	const navigate = useNavigate();
+import { useAuth } from '@/lib/auth/auth.hook';
 
-	const key = 'program';
+import { useState, useEffect } from 'react';
+import { useCRUDSessions } from '@/lib/session/session.hook';
+
+export function useCurrentProgramId() {
+	const { currentSession } = useCRUDSessions();
+	const [currentProgramId, setCurrentProgramId] = useState<string | null>(null);
 
 	useEffect(() => {
-		const myParam = searchParams.get(key);
-		const stored = localStorage.getItem(key);
-
-		if (!myParam && stored) {
-			// If URL is missing the param, navigate with it
-			navigate(`?${key}=${stored}`, { replace: true });
-		} else if (myParam) {
-			// Update localStorage if URL param is present
-			localStorage.setItem(key, myParam);
+		if (currentSession) {
+			setCurrentProgramId(currentSession.programId);
+		} else {
+			setCurrentProgramId(null);
 		}
-	}, [searchParams, navigate]);
+	}, [currentSession]);
 
-	return searchParams.get(key) ?? localStorage.getItem(key);
+	return currentProgramId;
 }
 
 export function useCRUDPrograms(): ProgramContextType {

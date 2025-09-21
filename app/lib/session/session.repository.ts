@@ -2,7 +2,6 @@ import {
 	collection,
 	deleteDoc,
 	doc,
-	onSnapshot,
 	setDoc,
 	updateDoc,
 	query,
@@ -15,24 +14,21 @@ import { type Session } from '@/lib/session/session.model';
 
 export const getSessionPath = (userId: string) => `${DB.USERS}/${userId}/${DB.SESSIONS}`;
 
-// Get real-time session updates
-export function getSessions(
-	userId: string,
-	callback: (sessions: Session[]) => void,
-	onError: (error: string) => void,
-) {
-	const sessionsRef = collection(db, getSessionPath(userId));
-	return onSnapshot(
-		sessionsRef,
-		(snapshot) => {
-			const sessionsData = snapshot.docs.map((doc) => ({
-				id: doc.id,
-				...doc.data(),
-			})) as Session[];
-			callback(sessionsData);
-		},
-		(err) => onError(err.message),
-	);
+// Get the ongoing session (endAt === '') for the user
+export async function getOngoingSession(userId: string): Promise<Session | null> {
+	try {
+		const sessionsRef = collection(db, getSessionPath(userId));
+		const q = query(sessionsRef, where('endAt', '==', '')); // only unfinished sessions
+		const snapshot = await getDocs(q);
+
+		if (snapshot.empty) return null;
+
+		const docData = snapshot.docs[0].data() as Session;
+		return { ...docData, id: snapshot.docs[0].id };
+	} catch (err) {
+		console.error('Failed to fetch ongoing session', err);
+		return null;
+	}
 }
 
 // Get sessions for a specific program on a specific date (optional helper)
@@ -69,11 +65,11 @@ export async function createSession(
 // Update existing session
 export async function updateSession(userId: string, session: Session): Promise<void> {
 	const sessionRef = doc(db, getSessionPath(userId), session.id);
-	void updateDoc(sessionRef, session);
+	return updateDoc(sessionRef, session);
 }
 
 // Delete session
-export function deleteSession(userId: string, session: Session): void {
+export async function deleteSession(userId: string, session: Session): Promise<void> {
 	const sessionRef = doc(db, getSessionPath(userId), session.id);
-	void deleteDoc(sessionRef);
+	return deleteDoc(sessionRef);
 }

@@ -3,12 +3,11 @@ import { format, parse } from 'date-fns';
 export const ROUTES = {
 	LOGIN: '/login',
 	REGISTER: '/register',
-	HOME: '/',
 	PROGRAMS: '/programs',
 	STATS: '/stats',
 	SETTINGS: '/settings',
 	REPORT: (programId: string) => `/report?program=${programId}`,
-	TRAIN: (programId: string) => `/?program=${programId}`,
+	TRAIN: '/',
 };
 
 export const DB = {
