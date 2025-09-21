@@ -24,7 +24,7 @@ export default function TrainHeader({ selectedProgram }: TrainHeaderProps) {
 	const handleEndSession = () => {
 		endSession(selectedProgram.id);
 
-		navigate(ROUTES.REPORT(selectedProgram.id));
+		navigate(ROUTES.SUMMARY(selectedProgram.id));
 	};
 
 	return (
