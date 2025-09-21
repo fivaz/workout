@@ -2,7 +2,7 @@ import { BellElectricIcon, EllipsisVerticalIcon, PlusIcon } from 'lucide-react';
 
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFormButton';
 
-import WorkoutTimer from '@/routes/auth/Train/WorkoutTimer';
+import SessionTimer from '@/routes/auth/Train/SessionTimer';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/GDropDown';
 import GButton from '@/components/GButton';
 import GText from '@/components/GText';
@@ -33,7 +33,7 @@ export default function TrainHeader({ selectedProgram }: TrainHeaderProps) {
 				{selectedProgram.name}
 			</GText>
 			<div className="flex items-center gap-2">
-				<WorkoutTimer />
+				<SessionTimer />
 				<Dropdown>
 					<DropdownButton size="px-1.5 py-1">
 						<EllipsisVerticalIcon className="size-5" />
