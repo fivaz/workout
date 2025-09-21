@@ -30,6 +30,7 @@ export function TrainExerciseRow({ exercise, index }: ExerciseRowProps) {
 						<EllipsisVerticalIcon className="size-4" />
 					</ExerciseFormButton>
 				</div>
+
 				<ExerciseRowWorkout exercise={exercise} setLoading={setLoading} />
 			</div>
 		</li>
