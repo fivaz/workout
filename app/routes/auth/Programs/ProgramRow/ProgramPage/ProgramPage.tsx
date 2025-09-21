@@ -1,12 +1,12 @@
 import { usePrograms } from '@/lib/program/programContext';
 import GText from '@/components/GText';
 import { DumbbellIcon, PlusIcon } from 'lucide-react';
-import { NavLink, useParams } from 'react-router';
+import { NavLink, useNavigate, useParams } from 'react-router';
 import { buildEmptyExercise, type Exercise } from '@/lib/exercise/exercise.model';
 import { ExerciseFormButton } from '@/lib/exercise/ExerciseFormButton/ExerciseFormButton';
 import { useExercises } from '@/lib/exercise/exerciseContext';
 import { ProgramExerciseRow } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/ProgramExerciseRow';
-import { ROUTES } from '@/lib/consts';
+import { gFormatDate, gFormatTime, ROUTES } from '@/lib/consts';
 import GButton from '@/components/GButton';
 import DropProgramHere from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/DropProgramHere';
 import NoExercises from '@/routes/auth/Programs/ProgramRow/ProgramPage/NoExercises';
@@ -18,12 +18,17 @@ import {
 } from '@/routes/auth/Programs/ProgramRow/ProgramPage/service';
 import { ExercisesList } from '@/routes/auth/Programs/ProgramRow/ProgramPage/ExerciseList/ExercisesList';
 import { useEffect } from 'react';
+import { useSessions } from '@/lib/session/sessionContext';
+import { toast } from 'react-toastify';
 
 export default function ProgramPage() {
 	const { programId } = useParams();
 
 	const { programs } = usePrograms();
 	const { exercises } = useExercises();
+	const navigate = useNavigate();
+
+	const { sessions, createSession, getSessionByProgramAndDate } = useSessions();
 
 	useEffect(() => {
 		console.log(exercises);
@@ -40,6 +45,28 @@ export default function ProgramPage() {
 	const newExercise = buildEmptyExercise(program);
 
 	if (!programId || !program) return <ProgramNotFound />;
+
+	const handleUseProgram = async () => {
+		if (!programId) return;
+
+		const today = gFormatDate(new Date());
+
+		// Check if a session already exists today for this program
+		const session = await getSessionByProgramAndDate(programId, today);
+
+		if (!session) {
+			// Create a new session
+			void createSession({
+				programId,
+				programNameSnapshot: program.name,
+				date: today,
+				startAt: gFormatTime(new Date()), // session starts now
+			});
+		}
+
+		// Navigate to the session page
+		navigate(ROUTES.TRAIN(programId));
+	};
 
 	return (
 		<div className="relative flex w-full flex-1 flex-col gap-3 rounded-md">
@@ -61,7 +88,11 @@ export default function ProgramPage() {
 			)}
 
 			<NavLink
-				to={ROUTES.TRAIN(programId)}
+				to="#"
+				onClick={(e) => {
+					e.preventDefault();
+					void handleUseProgram();
+				}}
 				className="fixed bottom-15 left-1/2 z-10 mb-3 -translate-x-1/2"
 			>
 				<GButton>

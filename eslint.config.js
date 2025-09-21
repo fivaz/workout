@@ -27,7 +27,16 @@ export default tseslint.config(
 				},
 			],
 			'@typescript-eslint/consistent-type-imports': 'error',
-			'@typescript-eslint/no-unused-vars': 'warn',
+			'@typescript-eslint/no-unused-vars': [
+				'warn', // or 'error'
+				{
+					vars: 'all',              // check all variables
+					args: 'after-used',       // check function arguments
+					ignoreRestSiblings: true, // ignore rest siblings
+					varsIgnorePattern: '^_',  // ignore vars starting with _
+					argsIgnorePattern: '^_',  // ignore function args starting with _
+				},
+			],
 		},
 	},
 );

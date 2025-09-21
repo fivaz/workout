@@ -5,11 +5,12 @@ import { ToastContainer } from 'react-toastify';
 import { ProgramProvider } from '@/lib/program/ProgramProvider';
 import Footer from '@/routes/auth/Footer';
 import PromptProvider from '@/lib/prompt/PromptProvider';
+import { SessionProvider } from '@/lib/session/SessionProvider';
 
 export default function AuthLayout() {
 	return (
-		<div className="flex flex-col min-h-screen">
-			<main className="flex-1 overflow-y-auto pb-[65px] h-full flex flex-col p-4 md:max-w-[700px] md:mx-auto w-full">
+		<div className="flex min-h-screen flex-col">
+			<main className="flex h-full w-full flex-1 flex-col overflow-y-auto p-4 pb-[65px] md:mx-auto md:max-w-[700px]">
 				<ToastContainer
 					position="top-right"
 					autoClose={1000}
@@ -22,13 +23,15 @@ export default function AuthLayout() {
 					pauseOnHover
 				/>
 				<AuthProvider>
-					<ProgramProvider>
-						<PromptProvider>
-							<ExerciseProvider>
-								<Outlet />
-							</ExerciseProvider>
-						</PromptProvider>
-					</ProgramProvider>
+					<SessionProvider>
+						<ProgramProvider>
+							<PromptProvider>
+								<ExerciseProvider>
+									<Outlet />
+								</ExerciseProvider>
+							</PromptProvider>
+						</ProgramProvider>
+					</SessionProvider>
 				</AuthProvider>
 			</main>
 			<Footer />

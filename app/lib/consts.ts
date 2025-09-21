@@ -16,12 +16,19 @@ export const DB = {
 	WORKOUTS: 'workouts',
 	PROGRAMS: 'programs',
 	MEASUREMENTS: 'measurements',
+	SESSIONS: 'sessions',
 };
 
 export const DATE = 'yyyy-MM-dd';
 
+export const TIME = 'hh:mm:ss';
+
 export function gFormatDate(date: Date) {
 	return format(date, DATE);
+}
+
+export function gFormatTime(date: Date) {
+	return format(date, TIME);
 }
 
 export function gParseDate(dateString: string) {
