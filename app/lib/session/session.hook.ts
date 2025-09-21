@@ -16,17 +16,21 @@ import { gFormatDate, gFormatTime } from '@/lib/consts';
 export function useCRUDSessions(): SessionContextType {
 	const { user } = useAuth();
 	const [currentSession, setCurrentSession] = useState<Session | null>(null);
+	const [loading, setLoading] = useState(true);
 
 	// Fetch the ongoing session once on mount or when the user changes
 	useEffect(() => {
 		if (!user) {
 			setCurrentSession(null);
+			setLoading(false);
 			return;
 		}
 
 		const fetchOngoing = async () => {
+			setLoading(true);
 			const ongoing = await getOngoingSession(user.uid);
 			setCurrentSession(ongoing);
+			setLoading(false);
 		};
 
 		void fetchOngoing();
@@ -144,5 +148,8 @@ export function useCRUDSessions(): SessionContextType {
 		currentSession,
 		startSession: handleStartSession,
 		endSession: handleEndSession,
+		updateSession: handleUpdateSession,
+		deleteSession: handleDeleteSession,
+		loading,
 	};
 }

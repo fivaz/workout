@@ -45,7 +45,7 @@ export default function ProgramPage() {
 
 	const handleUseProgram = () => {
 		startSession(program);
-		navigate(ROUTES.TRAIN);
+		navigate(ROUTES.HOME);
 	};
 
 	return (

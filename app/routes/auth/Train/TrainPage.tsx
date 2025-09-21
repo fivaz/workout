@@ -6,31 +6,25 @@ import { type Exercise } from '@/lib/exercise/exercise.model';
 import { usePrograms } from '@/lib/program/programContext';
 import NoProgramSelected from '@/routes/auth/Train/NoProgramSelected';
 import NoProgramExercises from '@/routes/auth/Programs/NoProgramExercises';
-import { useCurrentProgramId } from '@/lib/program/program.hook';
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
 import { useEffect, useState } from 'react';
 import { useCRUDExercises } from '@/lib/exercise/exercise.hook';
-import { useNavigate } from 'react-router';
 
 import TrainHeader from '@/routes/auth/Train/TrainHeader';
+import { useCRUDSessions } from '@/lib/session/session.hook';
 
-export default function Train() {
+export default function TrainPage() {
 	const { exercises } = useExercises();
 	const { programs } = usePrograms();
-	const programId = useCurrentProgramId();
 	const { updateExercisesOrder } = useCRUDExercises();
-	const navigate = useNavigate();
 
-	const selectedProgram = programs.find((program) => program.id === programId);
+	const { currentSession, loading } = useCRUDSessions();
+	const currentProgramId = currentSession?.programId ?? null;
+
+	const selectedProgram = programs.find((program) => program.id === currentProgramId);
 
 	const [programExercises, setProgramExercises] = useState<Exercise[]>([]);
-
-	// useEffect(() => {
-	// 	if (!programId) {
-	// 		navigate(ROUTES.PROGRAMS);
-	// 	}
-	// }, [programId, navigate]);
 
 	useEffect(() => {
 		setProgramExercises(
@@ -44,6 +38,10 @@ export default function Train() {
 
 		void updateExercisesOrder(newExercises);
 	};
+
+	if (loading) {
+		return <div>Loading current program...</div>;
+	}
 
 	if (!selectedProgram) {
 		return (

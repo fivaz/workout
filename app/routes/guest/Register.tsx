@@ -40,7 +40,7 @@ export default function Register() {
 
 	return (
 		<>
-			<div className="flex gap-5 min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+			<div className="flex min-h-full flex-1 flex-col justify-center gap-5 px-6 py-12 lg:px-8">
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 					<Logo className="mx-auto h-10 w-auto" />
 					<GText className="mt-10 text-center text-2xl/9 font-bold tracking-tight" tag="h2">
@@ -84,7 +84,7 @@ export default function Register() {
 						</GButton>
 					</form>
 
-					<p className=" text-center text-sm/6 text-gray-500">
+					<p className="text-center text-sm/6 text-gray-500">
 						Already a member?{' '}
 						<NavLink to={ROUTES.LOGIN} className="font-semibold text-blue-600 hover:text-blue-500">
 							Sign in

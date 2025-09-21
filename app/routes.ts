@@ -8,7 +8,7 @@ export default [
 	]),
 
 	layout('routes/auth/AuthLayout.tsx', [
-		index('routes/auth/Train/Train.tsx'),
+		index('routes/auth/Train/TrainPage.tsx'),
 		route('programs', 'routes/auth/Programs/Programs.tsx'),
 		route('report', 'routes/auth/Report/ReportPage.tsx'),
 		route('programs/:programId', 'routes/auth/Programs/ProgramRow/ProgramPage/ProgramPage.tsx'),

@@ -9,24 +9,7 @@ import type { ProgramContextType } from '@/lib/program/programContext';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '@/lib/auth/auth.hook';
-
 import { useState, useEffect } from 'react';
-import { useCRUDSessions } from '@/lib/session/session.hook';
-
-export function useCurrentProgramId() {
-	const { currentSession } = useCRUDSessions();
-	const [currentProgramId, setCurrentProgramId] = useState<string | null>(null);
-
-	useEffect(() => {
-		if (currentSession) {
-			setCurrentProgramId(currentSession.programId);
-		} else {
-			setCurrentProgramId(null);
-		}
-	}, [currentSession]);
-
-	return currentProgramId;
-}
 
 export function useCRUDPrograms(): ProgramContextType {
 	const { user } = useAuth();

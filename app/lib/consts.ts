@@ -3,11 +3,11 @@ import { format, parse } from 'date-fns';
 export const ROUTES = {
 	LOGIN: '/login',
 	REGISTER: '/register',
+	HOME: '/',
 	PROGRAMS: '/programs',
 	STATS: '/stats',
 	SETTINGS: '/settings',
 	REPORT: (programId: string) => `/report?program=${programId}`,
-	TRAIN: '/',
 };
 
 export const DB = {
@@ -21,7 +21,7 @@ export const DB = {
 
 export const DATE = 'yyyy-MM-dd';
 
-export const TIME = 'hh:mm:ss';
+export const TIME = 'HH:mm:ss';
 
 export function gFormatDate(date: Date) {
 	return format(date, DATE);
