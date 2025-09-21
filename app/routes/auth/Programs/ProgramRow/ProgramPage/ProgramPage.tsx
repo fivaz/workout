@@ -28,7 +28,7 @@ export default function ProgramPage() {
 	const { exercises } = useExercises();
 	const navigate = useNavigate();
 
-	const { sessions, createSession, getSessionByProgramAndDate } = useSessions();
+	const { createSession } = useSessions();
 
 	useEffect(() => {
 		console.log(exercises);
@@ -47,25 +47,10 @@ export default function ProgramPage() {
 	if (!programId || !program) return <ProgramNotFound />;
 
 	const handleUseProgram = async () => {
-		if (!programId) return;
-
-		const today = gFormatDate(new Date());
-
-		// Check if a session already exists today for this program
-		const session = await getSessionByProgramAndDate(programId, today);
-
-		if (!session) {
-			// Create a new session
-			void createSession({
-				programId,
-				programNameSnapshot: program.name,
-				date: today,
-				startAt: gFormatTime(new Date()), // session starts now
-			});
-		}
+		createSession(program);
 
 		// Navigate to the session page
-		navigate(ROUTES.TRAIN(programId));
+		navigate(ROUTES.TRAIN(program.id));
 	};
 
 	return (

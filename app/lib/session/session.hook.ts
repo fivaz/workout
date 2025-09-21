@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth/auth.hook';
-import type { Session } from '@/lib/session/session.model';
+import { buildEmptySession, type Session } from '@/lib/session/session.model';
 import {
 	createSession,
 	deleteSession,
-	getSessionByProgramAndDate as repoGetSessionByProgramAndDate,
+	getSessionByProgramAndDate,
 	getSessions,
 	updateSession,
 } from '@/lib/session/session.repository';
 import type { SessionContextType } from '@/lib/session/sessionContext';
 import { toast } from 'react-toastify';
+import type { Program } from '@/lib/program/program.model';
+import { gFormatDate } from '@/lib/consts';
 
 export function useCRUDSessions(): SessionContextType {
 	const { user } = useAuth();
@@ -32,16 +34,22 @@ export function useCRUDSessions(): SessionContextType {
 	}, [user]);
 
 	// Create a new session
-	async function handleCreateSession(session: Omit<Session, 'id'>): Promise<Session | null> {
+	async function handleCreateSession(program: Program): Promise<Session | null> {
 		if (!user) {
 			toast.error('User must be authenticated');
 			return null;
 		}
 
 		try {
-			const newSession = await createSession(user.uid, session);
-			toast.success(`Session for "${session.programNameSnapshot}" created successfully`);
-			return newSession;
+			// Check if session exists today
+			let session = await getSessionByProgramAndDate(user.uid, program.id, gFormatDate(new Date()));
+
+			if (!session) {
+				// Create a new session
+				session = await createSession(user.uid, buildEmptySession(program));
+			}
+
+			return session;
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Failed to create session';
 			toast.error(message);
@@ -85,16 +93,13 @@ export function useCRUDSessions(): SessionContextType {
 	}
 
 	// Get session by program and date
-	async function handleGetSessionByProgramAndDate(
-		programId: string,
-		date: string,
-	): Promise<Session | null> {
+	async function handleGetSession(programId: string): Promise<Session | null> {
 		if (!user) {
 			toast.error('User must be authenticated');
 			return null;
 		}
 		try {
-			return await repoGetSessionByProgramAndDate(user.uid, programId, date);
+			return await getSessionByProgramAndDate(user.uid, programId, gFormatDate(new Date()));
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Failed to get session';
 			toast.error(message);
@@ -105,9 +110,9 @@ export function useCRUDSessions(): SessionContextType {
 
 	return {
 		sessions,
+		getSession: handleGetSession,
 		createSession: handleCreateSession,
 		updateSession: handleUpdateSession,
 		deleteSession: handleDeleteSession,
-		getSessionByProgramAndDate: handleGetSessionByProgramAndDate,
 	};
 }

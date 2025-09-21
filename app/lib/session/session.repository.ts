@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase.client';
 import { DB } from '@/lib/consts';
-import type { Session } from '@/lib/session/session.model';
+import { type Session } from '@/lib/session/session.model';
 
 export const getSessionPath = (userId: string) => `${DB.USERS}/${userId}/${DB.SESSIONS}`;
 
