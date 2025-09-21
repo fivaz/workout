@@ -49,7 +49,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 			const newSets = [...prevWorkout.sets];
 			newSets[index] = { ...newSets[index], [field]: value };
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			debouncedUpdate(updatedWorkout);
+			void debouncedUpdate(updatedWorkout);
 			return updatedWorkout;
 		});
 	}
@@ -59,7 +59,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 			const newSets = [...prevWorkout.sets];
 			newSets.splice(index, 1);
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			debouncedUpdate(updatedWorkout);
+			void debouncedUpdate(updatedWorkout);
 			return updatedWorkout;
 		});
 	}
@@ -103,7 +103,7 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 		setLatestWorkout((prevWorkout) => {
 			const newSets = [...prevWorkout.sets, newSet];
 			const updatedWorkout = { ...prevWorkout, sets: newSets };
-			debouncedUpdate(updatedWorkout);
+			void debouncedUpdate(updatedWorkout);
 			return updatedWorkout;
 		});
 	}
@@ -124,27 +124,31 @@ export function ExerciseRowWorkout({ exercise, setLoading }: ExerciseRowWorkoutP
 			</li>
 			{latestWorkout.sets.map((set, index) => (
 				<li
-					className="grid w-full items-center gap-2"
+					className="grid w-full items-center gap-2 overflow-hidden"
 					style={{
-						gridTemplateColumns: '24px 1fr 1fr minmax(70px, 1fr) 30px',
+						gridTemplateColumns: '24px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 30px',
 					}}
 					key={index}
 				>
 					<GText className="text-center">{index + 1}</GText>
 					<GInput
-						className="h-9 w-full"
+						className="h-9"
 						type="number"
 						value={set.reps}
 						onChange={(e) => handleChange(index, 'reps', e.target.value)}
 					/>
 					<GInput
-						className="h-9 w-full"
+						className="h-9"
 						type="number"
 						value={set.weight}
 						onChange={(e) => handleChange(index, 'weight', e.target.value)}
 					/>
 					<GInput
-						className="h-9 w-full"
+						className="h-9"
+						style={{
+							WebkitAppearance: 'none',
+							appearance: 'none',
+						}}
 						type="time"
 						value={set.time}
 						onChange={(e) => handleChange(index, 'time', e.target.value)}
