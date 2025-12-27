@@ -68,30 +68,21 @@ export function useCRUDSessions(): SessionContextType {
 	}
 
 	// End existing session
-	async function handleEndSession(programId: Program['id']): Promise<void> {
+	async function handleEndSession(): Promise<void> {
 		if (!user) {
 			toast.error('User must be authenticated');
 			return;
 		}
 
+		if (!currentSession) {
+			toast.error("This session wasn't started");
+			return;
+		}
+
 		try {
-			const session = await getSessionByProgramAndDate(
-				user.uid,
-				programId,
-				gFormatDate(new Date()),
-			);
+			await updateSession(user.uid, { ...currentSession, endAt: gFormatTime(new Date()) });
 
-			if (!session) {
-				toast.error("This session wasn't started");
-				return;
-			}
-
-			await updateSession(user.uid, { ...session, endAt: gFormatTime(new Date()) });
-
-			// Clear currentSession if it was the one just ended
-			if (currentSession?.id === session.id) {
-				setCurrentSession(null);
-			}
+			setCurrentSession(null);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Failed to end session';
 			toast.error(message);
